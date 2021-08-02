@@ -9,7 +9,7 @@
 //#include "ShaderManager.hpp"
 #include "../OpenGLError.hpp"
 #include "../renderer/Renderer.hpp"
-#include "../../../LevekEngine/LevekError.hpp"
+//#include "../../../LevekEngine/LevekError.hpp"
 
 namespace Levek {
 
