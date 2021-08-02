@@ -11,6 +11,8 @@
 #include "ImGuiRenderer.hpp"
 #include "glm/glm.hpp"
 
+#include "input/InputController.hpp"
+
 #define DEFAULT_WINDOW_WIDTH 1280
 #define DEFAULT_WINDOW_HEIGHT 720
 
@@ -18,27 +20,26 @@ namespace Levek {
 class RenderingEngine {
 
 private:
-    GLFWwindow* window;
-    Renderer* renderer;
-    ImGuiRenderer* imGuiRenderer;
-    LineRenderer* lineRenderer;
-    PointRenderer* pointRenderer;
-    int windowWidth = 0;
-    int windowHeight = 0;
+
+    GLFWwindow* window              = nullptr;
+    Renderer* renderer              = nullptr;
+    ImGuiRenderer* imGuiRenderer    = nullptr;
+    LineRenderer* lineRenderer      = nullptr;
+    PointRenderer* pointRenderer    = nullptr;
+
+    InputController* inputController = nullptr;
+
+    int windowWidth     = 0;
+    int windowHeight    = 0;
+
 public:
     
     RenderingEngine(int width, int height);
     ~RenderingEngine();
 
-    /*
-    void destroy() {
-        delete renderer;
-        delete lineRenderer;
-        delete pointRenderer;
-        imGuiRenderer->Destroy();
-        delete imGuiRenderer;
-        glfwTerminate();
-    }*/
+    bool shouldClose() {
+        return glfwWindowShouldClose(this->window);
+    }
 
     void swapBuffer() {
         glfwSwapBuffers(window);

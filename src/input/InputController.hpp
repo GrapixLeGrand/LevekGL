@@ -1,15 +1,17 @@
 #pragma once
-#include <GLFW/glfw3.h>
-
-#ifndef LEVEK_INPUT_CONTROLLER
-#define LEVEK_INPUT_CONTROLLER
 
 namespace Levek {
 
+/**
+ * @enum for labelling the key states
+ */
 enum LevekKeyStates {
     LEVEK_DOWN, LEVEK_PRESSED
 };
 
+/**
+ * @enum for labelling the keys
+ */
 enum LevekKey {
     LEVEK_KEY_A,
     LEVEK_KEY_B,
@@ -39,85 +41,58 @@ enum LevekKey {
     LEVEK_KEY_Z
 };
 
-
-
+/**
+ * Interface for IO with Mouse / Keyboard
+ */
 class InputController {
-private:
-    int LEVEK_GLFW_KEYBINDINGS[26] = {
-        GLFW_KEY_A,
-        GLFW_KEY_B,
-        GLFW_KEY_C,
-        GLFW_KEY_D,
-        GLFW_KEY_E,
-        GLFW_KEY_F,
-        GLFW_KEY_G,
-        GLFW_KEY_H,
-        GLFW_KEY_I,
-        GLFW_KEY_J,
-        GLFW_KEY_K,
-        GLFW_KEY_L,
-        GLFW_KEY_M,
-        GLFW_KEY_N,
-        GLFW_KEY_O,
-        GLFW_KEY_P,
-        GLFW_KEY_Q,
-        GLFW_KEY_R,
-        GLFW_KEY_S,
-        GLFW_KEY_T,
-        GLFW_KEY_U,
-        GLFW_KEY_V,
-        GLFW_KEY_W,
-        GLFW_KEY_X,
-        GLFW_KEY_Y,
-        GLFW_KEY_Z
-    };
-    GLFWwindow* window;
+
+protected:
+
+    
+
 public:
-    void Initialize(GLFWwindow* window) {
-        this->window = window;
-    }
+    virtual void poll();    
+    InputController() {};
+    virtual ~InputController(); 
 
-    void Poll() {
-        glfwPollEvents();
-    }
+    /**
+     * @param key the key that we want to check
+     * if pressed.
+     * @return true if the key has been pressed, false
+     * otherwise.
+     */
+    virtual bool isKeyPressed(LevekKey key) = 0;
 
-    bool shouldClose() {
-        return glfwWindowShouldClose(this->window);
-    }
+    /**
+     * @param key the key that we want to check
+     * if released.
+     * @return true if the key has been released, false
+     * otherwise.
+     */
+    virtual bool isKeyReleased(LevekKey key) = 0;
 
-    void Destroy() {}
+    /**
+     * @return true if the right mouse button has been pressed,
+     * false otherwise.
+     */
+    virtual bool isRightMouseButtonPressed() = 0;
 
-    bool IsKeyPressed(LevekKey key) {
-        int state = glfwGetKey(this->window, LEVEK_GLFW_KEYBINDINGS[key]);
-        return state == GLFW_PRESS;
-    }
+    /**
+     * @return true if the Left mouse button has been pressed,
+     * false otherwise.
+     */
+    virtual bool isLeftMouseButtonPressed() = 0;
 
-    bool IsKeyReleased(LevekKey key) {
-        int state = glfwGetKey(this->window, LEVEK_GLFW_KEYBINDINGS[key]);
-        return state == GLFW_RELEASE;
-    }
+    /**
+     * @return the position of the mouse in pixels
+     */
+    virtual float getMouseX() = 0;
 
-    bool IsRightMouseButtonPressed() {
-        return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS;
-    }
-
-    bool IsLeftMouseButtonPressed() {
-        return glfwGetMouseButton(this->window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS;    
-    }
-
-    float GetMouseX() {
-        double xpos, ypos;
-        glfwGetCursorPos(this->window, &xpos, &ypos);
-        return (float) xpos;
-    }
-
-    float GetMouseY() {
-        double xpos, ypos;
-        glfwGetCursorPos(this->window, &xpos, &ypos);
-        return (float) ypos;
-    }
+    /**
+     * @return the position of the mouse in pixels
+     */
+    virtual float getMouseY() = 0;
 
 };
-};
 
-#endif
+}

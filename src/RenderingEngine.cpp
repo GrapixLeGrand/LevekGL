@@ -1,5 +1,5 @@
 #include "RenderingEngine.hpp"
-
+#include "input/GLFWInputController.hpp"
 
 namespace Levek {
 
@@ -47,9 +47,8 @@ RenderingEngine::RenderingEngine(int width, int height)
 		GL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         //glEnable(GL_CULL_FACE);
         //glDisable(GL_CULL_FACE);
-
-        //windowWidth = DEFAULT_WINDOW_WIDTH;
-        //windowHeight = DEFAULT_WINDOW_HEIGHT;
+        
+        inputController = new GLFWInputController(window);
 
         //initialize ImGui
         imGuiRenderer = new ImGuiRenderer();
@@ -73,6 +72,7 @@ RenderingEngine::RenderingEngine(int width, int height)
         delete renderer;
         delete lineRenderer;
         delete pointRenderer;
+        delete inputController;
         imGuiRenderer->Destroy();
         delete imGuiRenderer;
         glfwTerminate();

@@ -36,9 +36,10 @@ set(LEVEKGL_SOURCES
     "src/texture/RenderBuffer.cpp"
     "src/texture/TextureProperties.cpp"
 
-    "src/input/InputController.cpp"
+    "src/input/GLFWInputController.cpp"
 
     "src/RenderingEngine.cpp"
+
 )
 
 set(IMGUI_SRC 
