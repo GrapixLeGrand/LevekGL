@@ -1,13 +1,13 @@
 
 #pragma once
 #include <memory>
-#include <GL/glew.h>
+//#include <GL/glew.h>
 #include "OpenGLError.hpp"
 #include "renderer/Renderer.hpp"
 #include "renderer/LineRenderer.hpp"
 #include "renderer/PointRenderer.hpp"
 //#include "LevekEngine/LevekError.hpp"
-#include <GLFW/glfw3.h>
+//#include <GLFW/glfw3.h>
 #include "ImGuiRenderer.hpp"
 #include "glm/glm.hpp"
 
@@ -37,7 +37,7 @@ public:
     RenderingEngine(int width, int height);
     ~RenderingEngine();
 
-    bool shouldClose() {
+    bool exit() {
         return glfwWindowShouldClose(this->window);
     }
 
@@ -52,10 +52,10 @@ public:
     int getWindowWidth() const {
         return windowWidth;
     }
-
+    /*
     GLFWwindow* getWindow() {
         return window; 
-    }
+    }*/
 
     Renderer* getRenderer() {
         return renderer;
