@@ -1,5 +1,6 @@
 #include "RenderingEngine.hpp"
 #include "input/GLFWInputController.hpp"
+#include "window/GLFWWindowController.hpp"
 
 #include <GLFW/glfw3.h>
 
@@ -51,6 +52,7 @@ RenderingEngine::RenderingEngine(int width, int height)
         //glDisable(GL_CULL_FACE);
 
         inputController = new GLFWInputController(window);
+        windowController = new GLFWWindowController(window);
 
         //initialize ImGui
         imGuiRenderer = new ImGuiRenderer();
@@ -75,6 +77,7 @@ RenderingEngine::RenderingEngine(int width, int height)
         delete lineRenderer;
         delete pointRenderer;
         delete inputController;
+        delete windowController;
         imGuiRenderer->Destroy();
         delete imGuiRenderer;
         glfwTerminate();

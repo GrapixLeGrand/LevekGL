@@ -42,7 +42,7 @@ enum LevekKey {
 };
 
 /**
- * Interface for IO with Mouse / Keyboard
+ * @interface for IO with Mouse / Keyboard
  */
 class InputController {
 
@@ -51,9 +51,9 @@ protected:
     
 
 public:
-    virtual void poll();    
-    InputController() {};
-    virtual ~InputController(); 
+
+    virtual void poll() = 0;
+    virtual ~InputController() {}; 
 
     /**
      * @param key the key that we want to check

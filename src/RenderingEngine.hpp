@@ -12,6 +12,7 @@
 #include "glm/glm.hpp"
 
 #include "input/InputController.hpp"
+#include "window/WindowController.hpp"
 
 #define DEFAULT_WINDOW_WIDTH 1280
 #define DEFAULT_WINDOW_HEIGHT 720
@@ -28,6 +29,7 @@ private:
     PointRenderer* pointRenderer    = nullptr;
 
     InputController* inputController = nullptr;
+    WindowController* windowController = nullptr;
 
     int windowWidth     = 0;
     int windowHeight    = 0;

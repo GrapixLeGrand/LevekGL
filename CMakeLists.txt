@@ -37,6 +37,7 @@ set(LEVEKGL_SOURCES
     "src/texture/TextureProperties.cpp"
 
     "src/input/GLFWInputController.cpp"
+    "src/window/GLFWWindowController.cpp"
 
     "src/RenderingEngine.cpp"
 

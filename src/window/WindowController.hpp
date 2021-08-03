@@ -8,8 +8,8 @@ namespace Levek {
 class WindowController {
 
 public:
-    WindowController() {};
-    virtual ~WindowController();
+
+    virtual ~WindowController() {};
 
     virtual bool exit() = 0;
     virtual void resize(int width, int height) = 0;
