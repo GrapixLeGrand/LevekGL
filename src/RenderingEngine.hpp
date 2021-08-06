@@ -39,13 +39,15 @@ public:
     RenderingEngine(int width, int height);
     ~RenderingEngine();
 
+    /*
     bool exit() {
         return glfwWindowShouldClose(this->window);
-    }
+    }*/
 
+    /*
     void swapBuffer() {
         glfwSwapBuffers(window);
-    }
+    }*/
 
     int getWindowHeight() const {
         return windowHeight;
@@ -59,21 +61,17 @@ public:
         return window; 
     }*/
 
-    Renderer* getRenderer() {
-        return renderer;
-    }
+    Renderer* getRenderer() { return renderer; }
 
-    ImGuiRenderer* getImGuiRenderer() {
-        return imGuiRenderer;
-    }
+    ImGuiRenderer* getImGuiRenderer() { return imGuiRenderer; }
 
-    LineRenderer* getLineRenderer() {
-        return lineRenderer;
-    }
+    LineRenderer* getLineRenderer() { return lineRenderer; }
 
-    PointRenderer* getPointRenderer() {
-        return pointRenderer;
-    }
+    PointRenderer* getPointRenderer() { return pointRenderer; }
+
+    InputController* getInputController() { return inputController; }
+
+    WindowController* getWindowController() { return windowController; }
 
 };
 };

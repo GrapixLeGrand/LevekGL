@@ -6,14 +6,14 @@ namespace Levek {
 
 VertexArray::VertexArray() : attrib_id(0) {
 	GL_CHECK(glGenVertexArrays(1, &renderer_id));
-	GL_CHECK(glBindVertexArray(renderer_id));
+	GL_CHECK(glBindVertexArray(0)); //before was renderer_id
 }
 
 VertexArray::~VertexArray() {
 	GL_CHECK(glDeleteVertexArrays(1, &renderer_id));
 }
 
-void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
+void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
 	bind();
 	vb.bind(); //bind the vertex buffer
 	//then we set up the layout
@@ -31,6 +31,9 @@ void VertexArray::AddBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 		this->attrib_id++;
 
 	}
+
+	unbind(); //added this to debug
+	vb.unbind();
 	
 }
 

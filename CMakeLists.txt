@@ -85,4 +85,5 @@ target_link_libraries(LevekGL glfw)
 
 set(LEVEKGL_INCLUDE_DIR ${LevekGL_SOURCE_DIR})
 
+add_compile_definitions(SAMPLES_DIRECTORY="${LevekGL_SOURCE_DIR}/samples")
 add_subdirectory(samples)

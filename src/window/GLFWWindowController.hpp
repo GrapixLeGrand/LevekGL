@@ -13,6 +13,7 @@ public:
     virtual ~GLFWWindowController() {};
 
     virtual bool exit();
+    virtual void swapBuffers();
     virtual void resize(int width, int height);
 
 };

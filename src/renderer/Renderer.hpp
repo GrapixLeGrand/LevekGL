@@ -62,7 +62,7 @@ public:
         VertexBuffer quadVertexBuffer = VertexBuffer(points, 16 * sizeof(float));
         VertexBufferLayout layout = VertexBufferLayout();
         layout.push<glm::vec2>(2);
-        quadVertexArray.AddBuffer(quadVertexBuffer, layout);
+        quadVertexArray.addBuffer(quadVertexBuffer, layout);
         quadIndexes.unbind();
         quadVertexArray.unbind();
         quadVertexArray.unbind();
@@ -88,6 +88,13 @@ public:
      * @param shader : the shader object
      */
     void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+
+    /**
+     * Draw the content of the buffers with the given shader on the default framebuffer.
+     * @param va : vertex array
+     * @param shader : the shader object
+     */
+    void draw(const VertexArray& va, const Shader& shader) const;
 
     /**
      * Draw a texture to the default frame buffer

@@ -55,8 +55,8 @@ RenderingEngine::RenderingEngine(int width, int height)
         windowController = new GLFWWindowController(window);
 
         //initialize ImGui
-        imGuiRenderer = new ImGuiRenderer();
-        imGuiRenderer->Initialize(window);
+        //imGuiRenderer = new ImGuiRenderer();
+        //imGuiRenderer->Initialize(window);
         renderer = new Renderer(windowWidth, windowHeight);
         renderer->setClearFlags(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         renderer->setClearColor(glm::vec4(0.0f));
@@ -64,7 +64,7 @@ RenderingEngine::RenderingEngine(int width, int height)
         glEnable(GL_DEBUG_OUTPUT);
         glDebugMessageCallback(MessageCallback, 0);
         //warning I m not sure about the parameters exactly see : https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glDebugMessageControl.xhtml
-        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_FALSE);
+        glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, GL_TRUE);
         glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, GL_DONT_CARE, 0, NULL, GL_TRUE);
         glDebugMessageControl(GL_DEBUG_SOURCE_SHADER_COMPILER, GL_DEBUG_TYPE_ERROR, GL_DONT_CARE, 0, NULL, GL_TRUE); 
 
@@ -78,8 +78,8 @@ RenderingEngine::RenderingEngine(int width, int height)
         delete pointRenderer;
         delete inputController;
         delete windowController;
-        imGuiRenderer->Destroy();
-        delete imGuiRenderer;
+        //imGuiRenderer->Destroy();
+        //delete imGuiRenderer;
         glfwTerminate();
     }
 };

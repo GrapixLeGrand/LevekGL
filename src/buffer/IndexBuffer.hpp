@@ -1,6 +1,7 @@
 #pragma once
 #include "../OpenGLError.hpp"
 
+namespace Levek {
 class IndexBuffer {
 
 	private:
@@ -13,3 +14,4 @@ class IndexBuffer {
 		void unbind() const;
 		inline unsigned int GetCount() const { return count; }
 };
+}

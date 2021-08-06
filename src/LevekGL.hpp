@@ -20,3 +20,6 @@
 #include "renderer/LineRenderer.hpp"
 
 #include "RenderingEngine.hpp"
+
+#include "window/WindowController.hpp"
+#include "input/InputController.hpp"

@@ -62,7 +62,7 @@ public:
 
         if (vbo == nullptr) {
             vbo = std::make_shared<VertexBuffer>(points.data(), points.size() * sizeof(Point), GL_DYNAMIC_DRAW);
-            vao->AddBuffer(*vbo.get(), layout);
+            vao->addBuffer(*vbo.get(), layout);
         } else {
             vbo->Update(points.data(), points.size() * sizeof(Point));
         }

@@ -8,6 +8,10 @@ namespace Levek {
         return glfwWindowShouldClose(this->window);
     }
 
+    void GLFWWindowController::swapBuffers() {
+        glfwSwapBuffers(window);
+    }
+
     void GLFWWindowController::resize(int width, int height) {
 
     }
