@@ -37,7 +37,6 @@ int main(void) {
     Levek::Renderer* renderer = engine.getRenderer();
 
     renderer->setClearColor({0.20f, 0.20f, 0.0f, 0.0f});
-    //renderer->clear();
 
     while (!windowController->exit()) {
         renderer->clear();

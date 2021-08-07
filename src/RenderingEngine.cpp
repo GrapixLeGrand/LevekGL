@@ -54,6 +54,8 @@ RenderingEngine::RenderingEngine(int width, int height)
         inputController = new GLFWInputController(window);
         windowController = new GLFWWindowController(window);
 
+        meshLoader = new AssimpMeshLoader();
+
         //initialize ImGui
         //imGuiRenderer = new ImGuiRenderer();
         //imGuiRenderer->Initialize(window);

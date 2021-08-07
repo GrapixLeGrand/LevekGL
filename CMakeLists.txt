@@ -39,6 +39,8 @@ set(LEVEKGL_SOURCES
     "src/input/GLFWInputController.cpp"
     "src/window/GLFWWindowController.cpp"
 
+    "src/mesh/loader/AssimpMeshLoader.cpp"
+
     "src/RenderingEngine.cpp"
 
 )

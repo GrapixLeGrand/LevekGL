@@ -14,6 +14,8 @@
 #include "input/InputController.hpp"
 #include "window/WindowController.hpp"
 
+#include "mesh/loader/AssimpMeshLoader.hpp"
+
 #define DEFAULT_WINDOW_WIDTH 1280
 #define DEFAULT_WINDOW_HEIGHT 720
 
@@ -27,6 +29,8 @@ private:
     ImGuiRenderer* imGuiRenderer    = nullptr;
     LineRenderer* lineRenderer      = nullptr;
     PointRenderer* pointRenderer    = nullptr;
+
+    MeshLoader* meshLoader = nullptr;
 
     InputController* inputController = nullptr;
     WindowController* windowController = nullptr;
