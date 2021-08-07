@@ -15,6 +15,7 @@ public:
     virtual bool exit();
     virtual void swapBuffers();
     virtual void resize(int width, int height);
+    virtual float getTime();
 
 };
 }

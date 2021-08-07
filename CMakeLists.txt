@@ -24,7 +24,7 @@ set(LEVEKGL_SOURCES
     "src/buffer/VertexArray.cpp"
     
     "src/layout/VertexBufferLayout.cpp"
-    "src/layout/VertexBufferLayoutInstancing.cpp"
+    #"src/layout/VertexBufferLayoutInstancing.cpp"
 
     "src/renderer/Renderer.cpp"
 
@@ -62,13 +62,14 @@ set(LEVEKGL_ALL_SOURCES ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 
 #compile the project as a library
 add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
-target_compile_features(LevekGL PRIVATE cxx_std_17)
+#target_compile_features(LevekGL PRIVATE cxx_std_17)
 
 set(LEVEKGL_TARGET_INCLUDE_DIRS 
     PUBLIC "thirdparty/imgui-1.83"
     PUBLIC "thirdparty/imgui-1.83/backends"
     PUBLIC "thirdparty/stb_image-2.27"
     PUBLIC "${LevekGL_SOURCE_DIR}/src"
+    PUBLIC "thirdparty/glm-0.9.9.8"
     #PUBLIC ""
 )
 

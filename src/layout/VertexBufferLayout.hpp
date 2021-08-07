@@ -1,10 +1,15 @@
 #pragma once
 
 #include <vector>
+#include <type_traits>
+
+#include "../OpenGLError.hpp"
+
 #include "BufferLayout.hpp"
 //#include <GL/glew.h>
 //#include "ErrorManager.h"
 #include "glm/glm.hpp"
+
 
 /*
 struct VertexBufferElement
@@ -39,18 +44,24 @@ private:
 	//unsigned int instancedStride;
 public:
 
-	VertexBufferLayout(): stride(0)/*, instancedStride(0)*/ {}
+	VertexBufferLayout(): stride(0) /*, instancedStride(0)*/ {}
 	
 	
-	template<typename K>
-	void push(unsigned int count, unsigned int instances) {
+	template<typename K> void push(unsigned int count, unsigned int instances);
+	/* 
+	{
 		//static_assert(false, "cannot call this function");
-	}
+		LEVEK_RENDERING_FAIL("type is not registered");
+	}*/
 
-	template<typename T>
-	void push(unsigned int count) {
+	template<typename T> void push(unsigned int count);
+	/*
+	{
 		//static_assert(false);
-	}
+		//LEVEK_RENDERING_FAIL("type is not registered");
+	}*/
+
+	//template<typename I> void p(I a);
 
 	inline const std::vector<VertexBufferElement> getElements() const& { return elements; }
 	//inline const std::vector<VertexBufferElement> getInstancedElements() const& { return instancedElements; }

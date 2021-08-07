@@ -5,15 +5,15 @@
 
 namespace Levek {
 
-VertexBuffer::VertexBuffer(const void * data, unsigned int size, unsigned int usage) : size(size), usage(usage) {
+VertexBuffer::VertexBuffer(const void* data, unsigned int size, unsigned int usage) : size(size), usage(usage) {
     GL_CHECK(glGenBuffers(1, &rendererID)); //generating vb0
     //GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, rendererID)); //binding...
     bind();
     GL_CHECK(glBufferData(GL_ARRAY_BUFFER, size, data, usage));
-    unbind();
+    //unbind();
 }
 
-VertexBuffer::VertexBuffer(const void * data, unsigned int size) : VertexBuffer(data, size, GL_STATIC_DRAW) {}
+VertexBuffer::VertexBuffer(const void* data, unsigned int size) : VertexBuffer(data, size, GL_STATIC_DRAW) {}
 
 
 VertexBuffer::~VertexBuffer() {

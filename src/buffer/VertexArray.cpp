@@ -6,7 +6,7 @@ namespace Levek {
 
 VertexArray::VertexArray() : attrib_id(0) {
 	GL_CHECK(glGenVertexArrays(1, &renderer_id));
-	GL_CHECK(glBindVertexArray(0)); //before was renderer_id
+	GL_CHECK(glBindVertexArray(renderer_id)); //before was renderer_id
 }
 
 VertexArray::~VertexArray() {
@@ -32,8 +32,8 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 
 	}
 
-	unbind(); //added this to debug
-	vb.unbind();
+	//unbind(); //added this to debug
+	//vb.unbind();
 	
 }
 

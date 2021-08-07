@@ -71,8 +71,8 @@ void Renderer::draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
 }
 
 void Renderer::draw(const VertexArray& va, const Shader& shader) const {
-    glViewport(0, 0, width, height);
-    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
+    //glViewport(0, 0, width, height);
+    //GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
     shader.bind();
     va.bind();
     GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 3)); /* WARNING just for now !!! */

@@ -6,7 +6,7 @@
 #include "buffer/VertexBuffer.hpp"
 
 #include "layout/VertexBufferLayout.hpp"
-#include "layout/VertexBufferLayoutInstancing.hpp"
+//#include "layout/VertexBufferLayoutInstancing.hpp"
 
 #include "texture/TextureProperties.hpp"
 #include "texture/Texture.hpp"
@@ -23,3 +23,5 @@
 
 #include "window/WindowController.hpp"
 #include "input/InputController.hpp"
+
+#include "glm/glm.hpp"

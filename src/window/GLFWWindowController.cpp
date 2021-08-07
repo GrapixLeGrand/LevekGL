@@ -16,4 +16,8 @@ namespace Levek {
 
     }
 
+    float GLFWWindowController::getTime() {
+        return (float) glfwGetTime();
+    }
+
 }
