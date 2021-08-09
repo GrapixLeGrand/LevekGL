@@ -3,8 +3,12 @@
 
 namespace Levek {
 
-Mesh AssimpMeshLoader::loadFromFile(const std::string& path) {
+Scene* AssimpSceneLoader::loadFromFile(const std::string& path) {
     
+}
+
+Mesh* AssimpSceneLoader::loadSingleObject(const std::string& path) {
+
 }
 
 }

@@ -5,13 +5,24 @@
 
 namespace Levek {
 class Mesh {
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec2> textures;
-    std::vector<glm::vec3> normals;
 private:
-
+    std::vector<glm::vec3> mVertices;
+    std::vector<glm::vec2> mTexturesCoords;
+    std::vector<glm::vec3> mNormals;
+    std::vector<int> mFaces;
 public:
 
+    Mesh(
+        const std::vector<glm::vec3>& vertices,
+        const std::vector<glm::vec2>& textureCoords,
+        const std::vector<glm::vec3>& normals,
+        const std::vector<int>& faces
+    ):
+    mVertices(vertices),
+    mTexturesCoords(textureCoords),
+    mNormals(normals),
+    mFaces(faces) {}
+    //getters and setters here
 
 };
 }

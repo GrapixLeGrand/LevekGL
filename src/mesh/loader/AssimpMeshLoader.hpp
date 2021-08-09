@@ -1,12 +1,14 @@
 #pragma once
 
-#include "MeshLoader.hpp"
+#include "SceneLoader.hpp"
 
 namespace Levek {
-class AssimpMeshLoader : public MeshLoader {
+class AssimpSceneLoader : public SceneLoader {
 public:
-    AssimpMeshLoader() {};
+    AssimpSceneLoader() {};
+    virtual ~AssimpSceneLoader() {};
 private:
-    virtual Mesh loadFromFile(const std::string& path);
+    virtual Scene* loadFromFile(const std::string& path);
+    virtual Mesh* loadSingleObject(const std::string& path);
 };
 }
