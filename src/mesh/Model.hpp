@@ -1,19 +1,16 @@
 #pragma once
 
-#include <unordered_map>
-#include <map>
+#include <vector>
 #include <string>
 
-#include "ModelNode.hpp"
+#include "Mesh.hpp"
 
 namespace Levek {
 class Model {
 
 private:
-
     const std::string mPath;
     std::vector<Mesh*> mMeshes;
-
 public:
     Model(const std::string& path): mPath(path) {
         //here use ModelLoader
