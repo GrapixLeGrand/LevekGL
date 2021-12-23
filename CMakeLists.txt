@@ -16,6 +16,7 @@ add_subdirectory(src)
 link_directories(${LevekGL_SOURCE_DIR}/src)
 
 set(LEVEKGL_SOURCES
+
     "src/OpenGLError.cpp"
 
     "src/buffer/FrameBuffer.cpp"
@@ -72,6 +73,7 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
     PUBLIC "thirdparty/stb_image-2.27"
     PUBLIC "${LevekGL_SOURCE_DIR}/src"
     PUBLIC "thirdparty/glm-0.9.9.8"
+    PUBLIC "thirdparty/assimp-5.1.4"
     #PUBLIC ""
 )
 
@@ -85,6 +87,7 @@ include_directories(${GLEW_INCLUDE_DIRS})
 
 target_link_libraries(LevekGL ${OPENGL_LIBRARIES} ${GLUT_LIBRARY}  ${GLEW_LIBRARIES})
 target_link_libraries(LevekGL glfw)
+target_link_libraries(LevekGL assimp)
 
 set(LEVEKGL_INCLUDE_DIR ${LevekGL_SOURCE_DIR})
 

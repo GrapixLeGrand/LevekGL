@@ -5,11 +5,14 @@
 
 namespace Levek {
 class Mesh {
+
 private:
+
     std::vector<glm::vec3> mVertices;
     std::vector<glm::vec2> mTexturesCoords;
     std::vector<glm::vec3> mNormals;
     std::vector<unsigned int> mIndices;
+
 public:
 
     Mesh(

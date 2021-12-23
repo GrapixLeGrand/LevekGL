@@ -31,7 +31,7 @@ private:
     LineRenderer* lineRenderer      = nullptr;
     PointRenderer* pointRenderer    = nullptr;
 
-    ModelLoader* meshLoader = nullptr;
+    ModelLoader* modelLoader = nullptr;
 
     InputController* inputController = nullptr;
     WindowController* windowController = nullptr;
@@ -67,16 +67,12 @@ public:
     }*/
 
     Renderer* getRenderer() { return renderer; }
-
     ImGuiRenderer* getImGuiRenderer() { return imGuiRenderer; }
-
     LineRenderer* getLineRenderer() { return lineRenderer; }
-
     PointRenderer* getPointRenderer() { return pointRenderer; }
-
     InputController* getInputController() { return inputController; }
-
     WindowController* getWindowController() { return windowController; }
+    ModelLoader* getModelLoader() { return modelLoader; }
 
 };
 };
