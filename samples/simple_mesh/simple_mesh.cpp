@@ -19,14 +19,28 @@ int main(void) {
     Levek::Mesh* mesh = model->getMesh(0);
     Levek::Transform* transform = model->getTransform(0);
 
-    Levek::VertexArray vertexArray();
+    Levek::VertexArray vertexArray;
     Levek::VertexBuffer vertexBuffer(mesh);
     Levek::IndexBuffer indexBuffer(mesh);
 
     Levek::VertexBufferLayout layout = Levek::VertexBufferLayout();
     layout.push<glm::vec3>(2);
 
-    
+    Levek::Shader* shader = Levek::ShaderFactory::makeFromFile(
+        SAMPLES_DIRECTORY"/simple_mesh/phong.vert",
+        SAMPLES_DIRECTORY"/simple_mesh/phong.frag"
+    );
+
+    Levek::Camera camera({0, 0, 0}, {0, 0, 1}, {0, 1, 0});
+    glm::vec3 lightDirection = glm::vec3(0.1, -1, 0.1);
+    glm::mat4 projection = engine->getProjectionMatrix();
+
+    Levek::FrameBuffer depthMap (1024, 1024);
+    Levek::Texture depthTexture(1024, 1024, DEPTH_24);
+
+    depthMap.addDepthAttachment(depthTexture);
+    depthMap.finalize();
+    depthMap.unbind();
 
     while (!windowController->exit()) {
         renderer->clear();
@@ -35,7 +49,7 @@ int main(void) {
         //shader.setUniform1f("u_time", windowController->getTime() / 5);
         //shader.unbind();
 
-        //renderer->draw(vertexArray, shader);
+        //renderer->draw(&vertexArray, &indexBuffer, shader);
 
         inputController->poll();
         windowController->swapBuffers();

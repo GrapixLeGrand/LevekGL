@@ -29,7 +29,7 @@ int main(void) {
     vertexArray.addBuffer(vertexBuffer, layout);
     vertexArray.unbind();
 
-    Levek::Shader shader = Levek::ShaderFactory::makeFromFile(
+    Levek::Shader* shader = Levek::ShaderFactory::makeFromFile(
         SAMPLES_DIRECTORY"/hello_triangle/triangle.vert",
         SAMPLES_DIRECTORY"/hello_triangle/triangle.frag"
     );
@@ -41,11 +41,11 @@ int main(void) {
     while (!windowController->exit()) {
         renderer->clear();
 
-        shader.bind();
-        shader.setUniform1f("u_time", windowController->getTime() / 5);
-        shader.unbind();
+        shader->bind();
+        shader->setUniform1f("u_time", windowController->getTime() / 5);
+        shader->unbind();
 
-        renderer->draw(vertexArray, shader);
+        renderer->draw(vertexArray, *shader);
 
         inputController->poll();
         windowController->swapBuffers();

@@ -24,4 +24,6 @@
 #include "window/WindowController.hpp"
 #include "input/InputController.hpp"
 
+#include "scene/Camera.hpp"
+
 #include "glm/glm.hpp"

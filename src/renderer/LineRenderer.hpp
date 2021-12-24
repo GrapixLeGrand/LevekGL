@@ -23,7 +23,7 @@ private:
     VertexBufferLayout layout;
     std::vector<Point> points;
     glm::mat4 viewProjection;
-    Shader lineShader = ShaderFactory::makeFromFile(
+    Shader* lineShader = ShaderFactory::makeFromFile(
         RESOURCES_DIRECTORY"/shaders/Line.vert",
         RESOURCES_DIRECTORY"/shaders/Line.frag"
     );
@@ -67,8 +67,8 @@ public:
         } else {
             vbo->Update(points.data(), points.size() * sizeof(Point));
         }
-        lineShader.bind();
-        lineShader.setUniformMat4f("viewProjection", viewProjection);
+        lineShader->bind();
+        lineShader->setUniformMat4f("viewProjection", viewProjection);
         vao->bind();
 
         GL_CHECK(glLineWidth(lineWidth));

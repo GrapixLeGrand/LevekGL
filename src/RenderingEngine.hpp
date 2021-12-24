@@ -39,6 +39,12 @@ private:
     int windowWidth     = 0;
     int windowHeight    = 0;
 
+    glm::mat4 projection;
+
+    float mFov = 90.0f;
+    float mNearPlane = 0.01f;
+    float mFarPlane = 100.0f;
+
 public:
     
     RenderingEngine(int width, int height);
@@ -74,5 +80,8 @@ public:
     WindowController* getWindowController() { return windowController; }
     ModelLoader* getModelLoader() { return modelLoader; }
 
+    glm::mat4& getProjectionMatrix() {
+        return projection;
+    }
 };
 };

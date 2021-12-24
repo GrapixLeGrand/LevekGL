@@ -44,6 +44,7 @@ set(LEVEKGL_SOURCES
 
     "src/RenderingEngine.cpp"
 
+    "src/scene/Camera.cpp"
 )
 
 set(IMGUI_SRC 

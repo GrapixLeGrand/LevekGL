@@ -53,9 +53,9 @@ void Renderer::setClearColor(glm::vec4 color) {
 void Renderer::draw(const Texture& texture) const {
     glViewport(0, 0, width, height);
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
-    quadToScreenShader.bind();
+    quadToScreenShader->bind();
     texture.activateAndBind(0);
-    quadToScreenShader.setUniform1i("screenTexture", 0);
+    quadToScreenShader->setUniform1i("screenTexture", 0);
     quadVertexArray.bind();
     quadIndexes.bind();
     GL_CHECK(glDrawElements(GL_TRIANGLES, quadIndexes.GetCount(), GL_UNSIGNED_INT, nullptr));
@@ -70,6 +70,15 @@ void Renderer::draw(const VertexArray& va, const IndexBuffer& ib, const Shader& 
     GL_CHECK(glDrawElements(GL_TRIANGLES, ib.GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
+void Renderer::draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const {
+    glViewport(0, 0, width, height);
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
+    shader->bind();
+    va->bind();
+    ib->bind();
+    GL_CHECK(glDrawElements(GL_TRIANGLES, ib->GetCount(), GL_UNSIGNED_INT, nullptr));
+}
+
 void Renderer::draw(const VertexArray& va, const Shader& shader) const {
     //glViewport(0, 0, width, height);
     //GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
@@ -78,6 +87,7 @@ void Renderer::draw(const VertexArray& va, const Shader& shader) const {
     GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 3)); /* WARNING just for now !!! */
 }
 
+/*
 void Renderer::draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const {
 
     glViewport(0, 0, width, height);
@@ -87,7 +97,7 @@ void Renderer::draw(const VertexArray* va, const IndexBuffer* ib, const Shader* 
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));   
     GL_CHECK(glDrawElements(GL_TRIANGLES, ib->GetCount(), GL_UNSIGNED_INT, nullptr));
     //GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 36));
-}
+}*/
 
 void Renderer::draw(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const {
     glViewport(0, 0, frameBuffer->getWidth(), frameBuffer->getHeight());

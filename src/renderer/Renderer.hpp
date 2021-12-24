@@ -42,7 +42,7 @@ private:
 
     VertexArray quadVertexArray;
     IndexBuffer quadIndexes = IndexBuffer(indices, 6);
-    Shader quadToScreenShader = ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader); //= ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader);
+    Shader* quadToScreenShader = ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader); //= ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader);
     
     /*
     Shader(
@@ -88,6 +88,8 @@ public:
      * @param shader : the shader object
      */
     void draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
+    
+    void draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const;
 
     /**
      * Draw the content of the buffers with the given shader on the default framebuffer.
@@ -111,7 +113,7 @@ public:
     void draw(const FrameBuffer& frameBuffer, const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
     
     //will need to remove these ones later
-    void draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const;
+    //void draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const;
     void draw(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const;
     void drawInstances(const VertexArray* va, const IndexBuffer* ib, const Shader* shader, unsigned int instances) const;
 
