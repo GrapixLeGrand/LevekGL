@@ -1,5 +1,7 @@
 #pragma once
 
+#include "mesh/Mesh.hpp"
+#include <stddef.h>
 
 namespace Levek {
 	/*
@@ -14,7 +16,9 @@ class VertexBuffer {
 		unsigned int size;
 		unsigned int usage;
 	public:
+		VertexBuffer(Mesh* mesh);
 		VertexBuffer(const void* data, unsigned int size);
+		VertexBuffer(const void* data, size_t size);
 		VertexBuffer(const void* data, unsigned int size, unsigned int usage);
 		~VertexBuffer();
 		void Update(const void* data, unsigned int size);

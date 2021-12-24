@@ -13,6 +13,7 @@ IndexBuffer::IndexBuffer(const unsigned int* data, unsigned int count)
     unbind();
 }
 
+IndexBuffer::IndexBuffer(const Mesh* mesh): IndexBuffer(mesh->getIndices().data(), mesh->getIndices().size()) {}
 
 IndexBuffer::~IndexBuffer() {
     GL_CHECK(glDeleteBuffers(1, &rendererID));

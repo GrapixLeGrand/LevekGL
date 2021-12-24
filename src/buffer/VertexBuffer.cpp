@@ -5,6 +5,13 @@
 
 namespace Levek {
 
+/**
+ * @brief Construct a new Vertex Buffer:: Vertex Buffer object
+ * 
+ * @param data 
+ * @param size the size in bytes
+ * @param usage 
+ */
 VertexBuffer::VertexBuffer(const void* data, unsigned int size, unsigned int usage) : size(size), usage(usage) {
     GL_CHECK(glGenBuffers(1, &rendererID)); //generating vb0
     //GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, rendererID)); //binding...
@@ -13,8 +20,10 @@ VertexBuffer::VertexBuffer(const void* data, unsigned int size, unsigned int usa
     //unbind();
 }
 
-VertexBuffer::VertexBuffer(const void* data, unsigned int size) : VertexBuffer(data, size, GL_STATIC_DRAW) {}
+VertexBuffer::VertexBuffer(const void* data, size_t size): VertexBuffer(data, (unsigned int) size, GL_STATIC_DRAW) {}
+VertexBuffer::VertexBuffer(const void* data, unsigned int size): VertexBuffer(data, size, GL_STATIC_DRAW) {}
 
+VertexBuffer::VertexBuffer(Mesh* mesh): VertexBuffer(mesh->getVertices().data(), mesh->getVerticesBytes()) {}
 
 VertexBuffer::~VertexBuffer() {
     GL_CHECK(glDeleteBuffers(1, &rendererID)); //1 for 1 buffer

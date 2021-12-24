@@ -74,7 +74,7 @@ namespace Levek {
         }
         return new Mesh(vertices, texturesCoords, normals, indexBuffer);
     }
-    
+
 Model* AssimpModelLoader::loadFromFile(const std::string& path) {
 
     Assimp::Importer import;
@@ -111,7 +111,8 @@ Model* AssimpModelLoader::loadFromFile(const std::string& path) {
                 rotation=glm::conjugate(rotation);
                 glm::vec3 rotationXYZ(glm::eulerAngles(rotation));
                 //result.push_back({*surfaceMesh.get(), Transform(translation, rotation, scale), physicalState});
-                model->addMesh(mesh, Transform(translation, rotation, scale));
+                Transform* t = new Transform(translation, rotation, scale);
+                model->addMesh(mesh, t);
             }
         }
 
