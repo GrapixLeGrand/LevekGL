@@ -8,6 +8,8 @@ class GLFWWindowController : public WindowController {
 
 private:
     GLFWwindow* window = nullptr;
+    float dt = 0.0f;
+    float lastFrameTime = 0.0f;
 public:
     GLFWWindowController(GLFWwindow* window);
     virtual ~GLFWWindowController() {};
@@ -16,6 +18,7 @@ public:
     virtual void swapBuffers();
     virtual void resize(int width, int height);
     virtual float getTime();
+    virtual float getDeltaTime();
 
 };
 }

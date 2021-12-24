@@ -4,6 +4,7 @@
 #include <GLFW/glfw3.h>
 #include <functional>
 #include "glm/glm.hpp"
+#include "glm/gtc/matrix_transform.hpp"
 
 namespace Levek {
 class Camera {
@@ -14,13 +15,20 @@ public:
 	glm::vec3 up;
 	float yaw, pitch, roll;
 
-    glm::mat4 view;
+    glm::mat4 view = glm::mat4(1.0);
+    glm::mat3 normalView = glm::mat3(1.0);
 
 	Camera(glm::vec3 eye, glm::vec3 front, glm::vec3 up);
 	Camera();
 	
     glm::mat4& getView() {
+        view = glm::lookAt(eye, eye + front, up);
         return view;
+    }
+
+    glm::mat3& getNormalView() {
+        normalView = glm::inverse(glm::transpose(getView()));
+        return normalView;
     }
 
 	void setEye(const glm::vec3& newEye) {

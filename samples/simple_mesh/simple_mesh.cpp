@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "LevekGL.hpp"
+#include "../Utils.hpp"
 
 int main(void) {
 
@@ -26,6 +27,8 @@ int main(void) {
     Levek::VertexBufferLayout layout = Levek::VertexBufferLayout();
     layout.push<glm::vec3>(2);
 
+    vertexArray.addBuffer(vertexBuffer, layout);
+
     Levek::Shader* shader = Levek::ShaderFactory::makeFromFile(
         SAMPLES_DIRECTORY"/simple_mesh/phong.vert",
         SAMPLES_DIRECTORY"/simple_mesh/phong.frag"
@@ -33,6 +36,7 @@ int main(void) {
 
     Levek::Camera camera({0, 0, 0}, {0, 0, 1}, {0, 1, 0});
     glm::vec3 lightDirection = glm::vec3(0.1, -1, 0.1);
+    glm::vec3 lightDirectionView;
     glm::mat4 projection = engine->getProjectionMatrix();
 
     Levek::FrameBuffer depthMap (1024, 1024);
@@ -44,6 +48,12 @@ int main(void) {
 
     while (!windowController->exit()) {
         renderer->clear();
+
+        glm::mat4& view = camera.getView();
+        glm::mat3& normalView = camera.getNormalView();
+
+        lightDirectionView = glm::normalize(normalView * lightDirection);
+
 
         //shader.bind();
         //shader.setUniform1f("u_time", windowController->getTime() / 5);

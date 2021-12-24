@@ -1,7 +1,7 @@
 
 project(simple_mesh)
 
-add_executable(simple_mesh simple_mesh.cpp)
+add_executable(simple_mesh simple_mesh.cpp ../Utils.cpp)
 
 target_link_libraries(simple_mesh LevekGL)
 

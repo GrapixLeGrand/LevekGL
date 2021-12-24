@@ -5,6 +5,9 @@ namespace Levek {
     GLFWWindowController::GLFWWindowController(GLFWwindow* window) : window(window) {}
 
     bool GLFWWindowController::exit() {
+        float currentTime = getTime();
+        dt = currentTime - lastFrameTime;
+        lastFrameTime = currentTime;
         return glfwWindowShouldClose(this->window);
     }
 
@@ -18,6 +21,10 @@ namespace Levek {
 
     float GLFWWindowController::getTime() {
         return (float) glfwGetTime();
+    }
+
+    float GLFWWindowController::getDeltaTime() {
+        return dt;
     }
 
 }
