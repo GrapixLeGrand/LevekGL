@@ -25,5 +25,7 @@
 #include "input/InputController.hpp"
 
 #include "scene/Camera.hpp"
+#include "scene/PerspectiveCamera.hpp"
+#include "scene/OrthographicCamera.hpp"
 
 #include "glm/glm.hpp"

@@ -34,10 +34,12 @@ int main(void) {
         SAMPLES_DIRECTORY"/simple_mesh/phong.frag"
     );
 
-    Levek::Camera camera({0, 0, 0}, {0, 0, 1}, {0, 1, 0});
+    Levek::PerspectiveCamera camera({0, 0, 0}, {0, 0, 1}, {0, 1, 0}, 800, 600);
     glm::vec3 lightDirection = glm::vec3(0.1, -1, 0.1);
     glm::vec3 lightDirectionView;
-    glm::mat4 projection = engine->getProjectionMatrix();
+    glm::mat4 projection = camera.getProjection();
+
+    Levek::OrthographicCamera lightCamera({0, 0, 0}, {0, 0, 1}, {0, 1, 0}, -10.0f, 10.0f, -10.0f, 10.0f,  0.1f, 100.0f);
 
     Levek::FrameBuffer depthMap (1024, 1024);
     Levek::Texture depthTexture(1024, 1024, DEPTH_24);

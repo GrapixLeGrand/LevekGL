@@ -7,6 +7,10 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 namespace Levek {
+
+/**
+ * @brief Base camera class
+ */
 class Camera {
 public:
 
@@ -20,7 +24,9 @@ public:
 
 	Camera(glm::vec3 eye, glm::vec3 front, glm::vec3 up);
 	Camera();
-	
+
+    virtual glm::mat4& getProjection() = 0;
+
     glm::mat4& getView() {
         view = glm::lookAt(eye, eye + front, up);
         return view;

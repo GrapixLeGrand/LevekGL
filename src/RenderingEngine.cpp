@@ -87,7 +87,6 @@ RenderingEngine::RenderingEngine(int width, int height)
         lineRenderer = new LineRenderer();
         pointRenderer = new PointRenderer();
 
-        projection = glm::perspective(glm::radians(mFov), width / (1.0f * height), mNearPlane, mFarPlane);
     }
 
     RenderingEngine::~RenderingEngine() {
