@@ -30,7 +30,8 @@ static void UpdateCameraWithMouseOnDrag(Levek::InputController* inputController,
 
 	float mouseX = inputController->getMouseX();
 	float mouseY = inputController->getMouseY();
-	if (inputController->isLeftMouseButtonPressed() && !ImGui::IsItemHovered() && !ImGui::IsWindowHovered()) {
+    //&& !ImGui::IsItemHovered() && !ImGui::IsWindowHovered()
+	if (inputController->isLeftMouseButtonPressed()) {
 
 		if (!wasLeftButtonPressed) {
 			lastMouseValueX = mouseX;

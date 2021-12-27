@@ -33,6 +33,6 @@ void main() {
     float thisDepth = coordinatesNormalized.z;
     float shadow = otherDepth > (thisDepth - 0.005) ? 1.0 : 0.0;
     //float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
-	color = ambiant + shadow * ((diff * diffuse) + (specular * spec));
+	color = vec4(1.0, 0.0, 0.0, 1.0); // ambiant + shadow * ((diff * diffuse) + (specular * spec));
 
 }

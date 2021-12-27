@@ -47,6 +47,8 @@ set(LEVEKGL_SOURCES
     "src/scene/Camera.cpp"
     "src/scene/PerspectiveCamera.cpp"
     "src/scene/OrthographicCamera.cpp"
+
+    "src/utils/Utils.cpp"
 )
 
 set(IMGUI_SRC 

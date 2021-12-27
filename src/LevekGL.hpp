@@ -28,4 +28,6 @@
 #include "scene/PerspectiveCamera.hpp"
 #include "scene/OrthographicCamera.hpp"
 
+#include "utils/Utils.hpp"
+
 #include "glm/glm.hpp"
