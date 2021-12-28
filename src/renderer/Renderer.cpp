@@ -53,9 +53,9 @@ void Renderer::setClearColor(glm::vec4 color) {
 void Renderer::draw(const Texture& texture) const {
     glViewport(0, 0, width, height);
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
-    quadToScreenShader->bind();
+    quadToScreenShader.bind();
     texture.activateAndBind(0);
-    quadToScreenShader->setUniform1i("screenTexture", 0);
+    quadToScreenShader.setUniform1i("screenTexture", 0);
     quadVertexArray.bind();
     quadIndexes.bind();
     GL_CHECK(glDrawElements(GL_TRIANGLES, quadIndexes.GetCount(), GL_UNSIGNED_INT, nullptr));

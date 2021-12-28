@@ -56,6 +56,8 @@ void Shader::inizializeFromFile(const std::string& vertexShaderPath, const std::
 
 	readShaderFromSource(vertexShaderPath, vertexShaderSource);
 	readShaderFromSource(fragmentShaderPath, fragmentShaderSource);
+	//sudo apt install -y libgmock-dev
+	//here check the correctness
 
 	this->renderer_id = ShaderManager::requestShader(vertexShaderSource, fragmentShaderSource);
 }

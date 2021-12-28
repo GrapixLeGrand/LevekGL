@@ -42,7 +42,7 @@ private:
 
     VertexArray quadVertexArray;
     IndexBuffer quadIndexes = IndexBuffer(indices, 6);
-    Shader* quadToScreenShader = ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader); //= ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader);
+    Shader quadToScreenShader = ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader); //= ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader);
     
     /*
     Shader(
@@ -76,9 +76,24 @@ public:
     void clear(const FrameBuffer& frameBuffer) const {
         frameBuffer.bind();
         //TODO tomorrow : create functions in the framebuffer that allows clearing data
-        /*glClearBufferfi(frameBuffer.getId(), GLint drawbuffer,
-  	    GLfloat depth,
-  	    GLint stencil);*/
+        /*glClearBufferfi(
+            GL_DEPTH, 
+            0,
+  	        0,
+  	        0
+        );*/
+        //float r = 0;
+        /*glClearBufferfv(GL_COLOR,
+ 	        0,
+ 	        &r
+        );*/
+        float r = 1.0f;
+        glClearNamedFramebufferfv(frameBuffer.getId(),
+ 	        GL_DEPTH,
+ 	        0,
+ 	        &r
+        );
+
     }
 
     /**

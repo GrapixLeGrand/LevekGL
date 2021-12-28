@@ -26,7 +26,7 @@ public:
         mTop(top),
         mNear(near),
         mFar(far),
-        mProjection(glm::ortho(left, right, bottom, top, mNear, mFar)) {}
+        mProjection(glm::ortho(left, right, bottom, top, near, far)) {}
     
     virtual ~OrthographicCamera() {};
 

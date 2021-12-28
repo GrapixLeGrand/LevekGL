@@ -19,7 +19,7 @@ private:
     VertexBufferLayout layout;
     std::vector<Point> points;
     glm::mat4 viewProjection;
-    Shader* pointShader = ShaderFactory::makeFromFile(
+    Shader pointShader = ShaderFactory::makeFromFile(
         RESOURCES_DIRECTORY"/shaders/Point.vert",
         RESOURCES_DIRECTORY"/shaders/Point.frag"
     );
@@ -66,8 +66,8 @@ public:
         } else {
             vbo->Update(points.data(), points.size() * sizeof(Point));
         }
-        pointShader->bind();
-        pointShader->setUniformMat4f("viewProjection", viewProjection);
+        pointShader.bind();
+        pointShader.setUniformMat4f("viewProjection", viewProjection);
         vao->bind();
 
         GL_CHECK(glPointSize(pointWidth));
