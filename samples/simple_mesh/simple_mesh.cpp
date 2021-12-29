@@ -105,7 +105,7 @@ int main(void) {
         depthShader.unbind();
 
         renderer->draw(&depthMap, &vertexArray, &indexBuffer, &depthShader);
-        renderer->draw(depthTexture);
+        renderer->draw(depthTexture, {0.75f, 0.75f}, {0.25f, 0.25f});
         
         //render the object here 
 

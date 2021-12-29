@@ -12,11 +12,12 @@ const std::string Renderer::quadVertexShader =
 
     "out vec2 TexCoords;"
     
-    "uniform vec2 offset;"
+    "uniform vec2 position;"
+    "uniform vec2 scale;"
 
     "void main()"
     "{"
-        "gl_Position = vec4(aPos.x + offset.x, aPos.y + offset.y, 0.0, 1.0);"
+        "gl_Position = vec4(scale.x * (aPos.x + position.x), scale.y * (aPos.y + position.y), 0.0, 1.0);"
         "TexCoords = aTexCoords;"
     "}";
 
@@ -66,6 +67,19 @@ void Renderer::draw(const Texture& texture) const {
 
 void Renderer::draw(const Texture& texture, const glm::vec2& position) const {
 
+}
+
+void Renderer::draw(const Texture& texture, const glm::vec2& position, const glm::vec2& scale) const {
+    glViewport(0, 0, width, height);
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
+    quadToScreenShader.bind();
+    texture.activateAndBind(0);
+    quadToScreenShader.setUniform2f("position", position / scale);
+    quadToScreenShader.setUniform2f("scale", scale);
+    quadToScreenShader.setUniform1i("screenTexture", 0);
+    quadVertexArray.bind();
+    quadIndexes.bind();
+    GL_CHECK(glDrawElements(GL_TRIANGLES, quadIndexes.GetCount(), GL_UNSIGNED_INT, nullptr));
 }
 
 void Renderer::draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const {
