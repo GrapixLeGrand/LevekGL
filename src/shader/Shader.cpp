@@ -74,21 +74,25 @@ void Shader::setUniform4f(const std::string& name, float v0, float v1, float v2,
 	GL_CHECK(glUniform4f(ShaderManager::getUniformLocation(renderer_id, name), v0, v1, v2, v3));
 }
 
-void Shader::setUniform4f(const std::string& name, glm::vec4 v) const {
+void Shader::setUniform1f(const std::string& name, float v) const {
+	GL_CHECK(glUniform1f(ShaderManager::getUniformLocation(renderer_id, name), v));
+}
+
+void Shader::setUniform2f(const std::string& name, const glm::vec2& v) const {
+	GL_CHECK(glUniform2f(ShaderManager::getUniformLocation(renderer_id, name), v.x, v.y));
+}
+
+void Shader::setUniform3f(const std::string& name, const glm::vec3& v) const {
+	GL_CHECK(glUniform3f(ShaderManager::getUniformLocation(renderer_id, name), v.x, v.y, v.z));
+}
+
+void Shader::setUniform4f(const std::string& name, const glm::vec4& v) const {
 	//bool res = glIsProgram(this->renderer_id) == GL_TRUE;
 	GLint params = -1;
 	glGetProgramiv(this->renderer_id, GL_LINK_STATUS, &params);
 	bool res = params == GL_TRUE;
 	float a = v.x;
 	GL_CHECK(glUniform4f(ShaderManager::getUniformLocation(renderer_id, name), v.x, v.y, v.z, v.w));
-}
-
-void Shader::setUniform3f(const std::string& name, glm::vec3 v) const {
-	GL_CHECK(glUniform3f(ShaderManager::getUniformLocation(renderer_id, name), v.x, v.y, v.z));
-}
-
-void Shader::setUniform1f(const std::string& name, float v) const {
-	GL_CHECK(glUniform1f(ShaderManager::getUniformLocation(renderer_id, name), v));
 }
 
 void Shader::setUniform1i(const std::string& name, int v) const {

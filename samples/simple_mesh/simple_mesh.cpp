@@ -8,7 +8,7 @@ int main(void) {
 
     std::cout << "Launching dragon example" << std::endl; 
 
-    Levek::RenderingEngine* engine = new Levek::RenderingEngine(800, 600);
+    Levek::RenderingEngine* engine = new Levek::RenderingEngine(1000, 800);
     Levek::WindowController* windowController = engine->getWindowController();
     Levek::InputController* inputController = engine->getInputController();
     
@@ -20,7 +20,7 @@ int main(void) {
 
     renderer->setClearColor({0.40f, 0.40f, 0.0f, 0.0f});
     
-    Levek::PerspectiveCamera camera({0, 0, 1}, {0, 0, -1}, {0, 1, 0}, 800, 600);
+    Levek::PerspectiveCamera camera({0, 0, 1}, {0, 0, -1}, {0, 1, 0}, 1000, 800);
 
     
     Levek::Mesh* mesh = model->getMesh(0);
@@ -48,7 +48,7 @@ int main(void) {
         SAMPLES_DIRECTORY"/simple_mesh/phong.frag"
     );
 
-    //Levek::PerspectiveCamera camera({1, 1, 1}, {0, 0, 0}, {0, 1, 0}, 800, 600);
+    //Levek::PerspectiveCamera camera({1, 1, 1}, {0, 0, 0}, {0, 1, 0}, 1000, 800);
     glm::vec3 lightDirection = glm::vec3(0.1, -1, 0.1);
     glm::vec3 lightDirectionView;
     glm::mat4 projection = camera.getProjection();

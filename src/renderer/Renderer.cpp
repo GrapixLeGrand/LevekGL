@@ -11,10 +11,12 @@ const std::string Renderer::quadVertexShader =
     "layout (location = 1) in vec2 aTexCoords;"
 
     "out vec2 TexCoords;"
+    
+    "uniform vec2 offset;"
 
     "void main()"
     "{"
-        "gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);"
+        "gl_Position = vec4(aPos.x + offset.x, aPos.y + offset.y, 0.0, 1.0);"
         "TexCoords = aTexCoords;"
     "}";
 
@@ -55,10 +57,15 @@ void Renderer::draw(const Texture& texture) const {
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
     quadToScreenShader.bind();
     texture.activateAndBind(0);
+    quadToScreenShader.setUniform2f("offset", defaultQuadToScreenOffset);
     quadToScreenShader.setUniform1i("screenTexture", 0);
     quadVertexArray.bind();
     quadIndexes.bind();
     GL_CHECK(glDrawElements(GL_TRIANGLES, quadIndexes.GetCount(), GL_UNSIGNED_INT, nullptr));
+}
+
+void Renderer::draw(const Texture& texture, const glm::vec2& position) const {
+
 }
 
 void Renderer::draw(const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const {

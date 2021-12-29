@@ -32,17 +32,17 @@ class FrameBuffer {
 private:
     unsigned int id;
     bool finalized;
-    int width;
-    int height;
+    int width = 0;
+    int height = 0;
 
     //how many color attachments are expected, default is 1
     int expectedColorAttachments    = 1;
     int currentColorAttachments     = 0;
 
     //these two are mutually exclusive
-    bool hasColorAttachment         = false;
-    bool hasDepthAttachment         = false;  //at most 1
-    bool hasDepthStencilAttachment  = false;  //at most 1
+    bool hasColor         = false;
+    bool hasDepth         = false;  //at most 1
+    bool hasDepthStencil  = false;  //at most 1
 
     glm::vec4 clearColor {0.0f, 0.0f, 0.0f, 0.0f};
     float clearDepth = 1.0f;
@@ -130,6 +130,35 @@ public:
     unsigned int getId() const { return id; }
     int getWidth() const { return width; }
     int getHeight() const { return height; }
+
+    /**
+     * @brief The number of color attachment
+     * 
+     * @return int 
+     */
+    int hasColorAttachment() const {
+        return currentColorAttachments;
+    }
+
+    /**
+     * @brief true iff a depth attachment is present
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool hasDepthAttachment() const {
+        return hasDepth;
+    }
+
+    /**
+     * @brief true iff a depth stencil attachment is present
+     * 
+     * @return true 
+     * @return false 
+     */
+    bool hasDepthStencilAttachment() const {
+        return hasDepthStencil;
+    }
 
 };
 };

@@ -43,7 +43,8 @@ private:
     VertexArray quadVertexArray;
     IndexBuffer quadIndexes = IndexBuffer(indices, 6);
     Shader quadToScreenShader = ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader); //= ShaderFactory::makeFromSource(quadVertexShader, quadFragmentShader);
-    
+    const glm::vec2 defaultQuadToScreenOffset = glm::vec2(-1.0f, -1.0f);
+
     /*
     Shader(
         RESOURCES_DIRECTORY"/shaders/Quad.vert",
@@ -59,6 +60,8 @@ public:
 
     Renderer(int width, int height)
         : clearFlags(0), clearColor({0, 0, 0, 0}), width(width), height(height) {
+
+        //creating rendering objects for the quad that can be rendered on the screen
         VertexBuffer quadVertexBuffer = VertexBuffer(points, 16 * sizeof(float));
         VertexBufferLayout layout = VertexBufferLayout();
         layout.push<glm::vec2>(2);
@@ -74,25 +77,38 @@ public:
     void clear() const;
 
     void clear(const FrameBuffer& frameBuffer) const {
-        frameBuffer.bind();
-        //TODO tomorrow : create functions in the framebuffer that allows clearing data
-        /*glClearBufferfi(
-            GL_DEPTH, 
-            0,
-  	        0,
-  	        0
-        );*/
-        //float r = 0;
-        /*glClearBufferfv(GL_COLOR,
- 	        0,
- 	        &r
-        );*/
-        float r = 1.0f;
-        glClearNamedFramebufferfv(frameBuffer.getId(),
- 	        GL_DEPTH,
- 	        0,
- 	        &r
-        );
+
+        //for clearing framebuffers but cannot be const :(
+        glm::vec4 defaultFrameBufferClearColor = glm::vec4(0.0f);
+        float defaultFrameBufferDepth = 1.0f;
+        float defaultFrameBufferDepthStencil = 0; //TODO WARNING I'm not sure
+        
+        if (frameBuffer.hasColorAttachment() > 0) {
+           glClearNamedFramebufferfv(
+               frameBuffer.getId(),
+               GL_COLOR,
+               0,
+               &defaultFrameBufferClearColor[0]
+            ); 
+        }
+
+        if (frameBuffer.hasDepthAttachment()) {
+            glClearNamedFramebufferfv(
+                frameBuffer.getId(),
+ 	            GL_DEPTH,
+ 	            0,
+ 	            &defaultFrameBufferDepth
+            );
+        }
+
+        if (frameBuffer.hasDepthStencilAttachment()) {
+            glClearNamedFramebufferfv(
+                frameBuffer.getId(),
+ 	            GL_DEPTH_STENCIL,
+ 	            0,
+ 	            &defaultFrameBufferDepthStencil
+            );
+        }
 
     }
 
@@ -117,6 +133,11 @@ public:
      * Draw a texture to the default frame buffer
     */
     void draw(const Texture& texture) const;
+
+    /**
+     * Draw a texture to the default frame buffer at the specified position
+    */
+    void draw(const Texture& texture, const glm::vec2& position) const;
 
     /**
      * Draw the content of the buffers with the given shader on the given framebuffer.

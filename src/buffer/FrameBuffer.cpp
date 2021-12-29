@@ -30,7 +30,7 @@ FrameBuffer::FrameBuffer(int width, int height, int colorAttachments):
     width(width), height(height),
     finalized(false),
     expectedColorAttachments(colorAttachments),
-    hasColorAttachment(colorAttachments > 0 ? true : false)
+    hasColor(colorAttachments > 0 ? true : false)
 {   
     LEVEK_RENDERING_ASSERT_(colorAttachments >= 0);
     LEVEK_RENDERING_ASSERT_(width > 0);
@@ -202,13 +202,13 @@ void FrameBuffer::addDepthAttachment(const Texture& texture) {
         "Texture Depth attachment must have DEPTH_24 type"
     );
     LEVEK_RENDERING_ASSERT(
-        !hasDepthStencilAttachment,
+        !hasDepthStencil,
         "cannot have depth attachment as well as depth stencil attachment"
     );
     
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
     texture.bind();
-    hasDepthAttachment = true;
+    hasDepth = true;
     GL_CHECK(
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture.getId(), 0);
     );
@@ -223,13 +223,13 @@ void FrameBuffer::addDepthAttachment(const RenderBuffer& buffer) {
         "RenderBuffer Depth attachment must have DEPTH_24 type"
     );
     LEVEK_RENDERING_ASSERT(
-        !hasDepthStencilAttachment,
+        !hasDepthStencil,
         "cannot have depth attachment as well as depth stencil attachment"
     );
     
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
     buffer.bind();
-    hasDepthAttachment = true;
+    hasDepth = true;
     GL_CHECK(
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, buffer.getId());
     )
@@ -244,13 +244,13 @@ void FrameBuffer::addDepthStencilAttachment(const Texture& texture) {
         "Texture depth stencil attachment must have DEPTH_24 type"
     );
     LEVEK_RENDERING_ASSERT(
-        !hasDepthAttachment,
+        !hasDepth,
         "cannot have depth attachment as well as depth stencil attachment"
     );
     
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
     texture.bind();
-    hasDepthStencilAttachment = true;
+    hasDepthStencil = true;
     GL_CHECK(
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture.getId(), 0);
     )
@@ -263,12 +263,12 @@ void FrameBuffer::addDepthStencilAttachment(const RenderBuffer& buffer) {
     LEVEK_RENDERING_ASSERT(buffer.getType() == DEPTH_24_STENCIL_8,
         "RenderBuffer Depth stencil attachment must have DEPTH_24 type");
     LEVEK_RENDERING_ASSERT(
-        !hasDepthAttachment,
+        !hasDepth,
         "cannot have depth attachment as well as depth stencil attachment"
     );
     buffer.bind();
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
-    hasDepthStencilAttachment = true;
+    hasDepthStencil = true;
     GL_CHECK(
         glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, buffer.getId());
     )
@@ -279,28 +279,28 @@ void FrameBuffer::addDepthStencilAttachment(const RenderBuffer& buffer) {
 void FrameBuffer::finalize() {
     LEVEK_RENDERING_ASSERT(!finalized, "framebuffer already finalized");
     LEVEK_RENDERING_ASSERT(
-        hasDepthAttachment && hasDepthStencilAttachment,
+        hasDepth && hasDepthStencil,
         "cannot attach single depth and depth stencil attachment"
     );
     finalized = true;
 
-    if (hasDepthAttachment) {
+    if (hasDepth) {
         clearBits |= GL_DEPTH_BUFFER_BIT;
         GL_CHECK(glClearDepth(clearDepth));
     }
 
-    if (hasDepthStencilAttachment) {
+    if (hasDepthStencil) {
         clearBits |= GL_STENCIL_BUFFER_BIT;
         GL_CHECK(glClearStencil(clearStencil));
     }
 
-    if (hasColorAttachment) {
+    if (hasColor) {
         clearBits |= GL_COLOR_BUFFER_BIT;
         GL_CHECK(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
     }
 
     bind();
-    if (!hasColorAttachment) {
+    if (!hasColor) {
         GL_CHECK(glDrawBuffer(GL_NONE));
         GL_CHECK(glReadBuffer(GL_NONE));
     }
