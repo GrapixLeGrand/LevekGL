@@ -53,23 +53,23 @@ public:
     const std::vector<Vertex>& getVertices() const { return mVertices; }
     const std::vector<unsigned int>& getIndices() const { return mIndices; }
 
-    size_t getVerticesBytes() {
+    size_t getVerticesBytes() const {
         return mVertices.size() * sizeof(Vertex);
     }
 
-    size_t getPositionsBytes() {
+    size_t getPositionsBytes() const {
         return mPositions.size() * sizeof(glm::vec3);
     }
 
-    size_t getTexturesCoordsBytes() {
+    size_t getTexturesCoordsBytes() const {
         return mTexturesCoords.size() * sizeof(glm::vec2);
     }
 
-    size_t getNormalsBytes() {
+    size_t getNormalsBytes() const {
         return mNormals.size() * sizeof(glm::vec3);
     }
 
-    size_t getIndicesBytes() {
+    size_t getIndicesBytes() const {
         return mIndices.size() * sizeof(unsigned int);
     }
 

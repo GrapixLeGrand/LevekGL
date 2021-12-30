@@ -14,8 +14,7 @@ class Model {
 private:
     const std::string mPath;
     std::vector<Mesh*> mMeshes;
-    std::vector<Transform*> mTransform;
-
+    std::vector<Transform*> mTransforms;
 public:
     //should be only instanciated by the loader I think
     Model(const std::string& path): mPath(path) {
@@ -25,17 +24,25 @@ public:
 
     void addMesh(Mesh* mesh, Transform* transform) {
         mMeshes.push_back(mesh);
-        mTransform.push_back(transform);
+        mTransforms.push_back(transform);
     }
 
-    Mesh* getMesh(std::size_t i) {
+    const Mesh* getMesh(std::size_t i) {
         return mMeshes[i];
     }
 
-    Transform* getTransform(std::size_t i) {
-        return mTransform[i];
+    const Transform* getTransform(std::size_t i) {
+        return mTransforms[i];
     }
 
+    size_t getNumMeshes() const {
+        return mMeshes.size();
+    }
+
+    /* too prematured
+    std::pair<const Mesh*, const Transform*> operator[](size_t i) {
+        return std::make_pair(mMeshes[i], mTransforms[i]);
+    }*/
 
 };
 }

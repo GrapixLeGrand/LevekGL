@@ -37,6 +37,30 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 	
 }
 
+void VertexArray::addBuffer(const VertexBuffer* vb, const VertexBufferLayout* layout) {
+	bind();
+	vb->bind(); //bind the vertex buffer
+	//then we set up the layout
+	const auto& elements = layout->getElements();
+	unsigned long long offset = 0;
+	for (unsigned int i = 0; i < elements.size(); i++) {
+		
+		const auto& element = elements[i];
+		GL_CHECK(glEnableVertexAttribArray(attrib_id)); //index of the attribute array
+		GL_CHECK(glVertexAttribPointer(attrib_id, element.count, element.type, element.normalized, layout->getStride(), (const void *) offset));
+		if (element.instances) {
+			GL_CHECK(glVertexAttribDivisor(attrib_id, element.instances));
+		}
+		offset += (unsigned long long) element.count * VertexBufferElement::getSizeOfType(element.type);
+		this->attrib_id++;
+
+	}
+
+	//unbind(); //added this to debug
+	//vb.unbind();
+	
+}
+
 /*
 void VertexArray::AddInstancedBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
 	bind();

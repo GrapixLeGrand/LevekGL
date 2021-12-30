@@ -32,7 +32,7 @@ namespace Levek {
     static const std::string LevekRenderingYellowBegin("\033[1;33m");
 
     static void LevekRenderingInfo(const char* message) {
-        std::string type = LevekRenderingYellowBegin + "Rendering: Info " + LevekRenderingResetColor;
+        std::string type = LevekRenderingYellowBegin + "Rendering::info " + LevekRenderingResetColor;
         std::cout << type << message << std::endl;
     }
 
