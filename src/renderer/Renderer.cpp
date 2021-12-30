@@ -32,7 +32,7 @@ const std::string Renderer::quadFragmentShader =
 
     "void main()"
     "{"
-        "FragColor = texture(screenTexture, TexCoords);"
+        "FragColor = vec4(texture(screenTexture, TexCoords));"
     "}";
 
 void Renderer::setClearFlags(unsigned int flags) {

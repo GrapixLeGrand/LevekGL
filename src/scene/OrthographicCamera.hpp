@@ -34,5 +34,28 @@ public:
         return mProjection;
     }
 
+    float getLeft() const {
+        return mLeft;
+    }
+
+    float getRight() const {
+        return mRight;
+    }
+
+    float getBottom() const {
+        return mBottom;
+    }
+
+    float getTop() const {
+        return mTop;
+    }
+
+    float getNear() const {
+        return mNear;
+    }
+
+    float getFar() const {
+        return mFar;
+    }
 };
 };

@@ -4,7 +4,7 @@
 #include "LineRenderer.hpp"
 
 namespace Levek {
-static void AddBox(LineRenderer* lineRenderer, const glm::vec3& position, const glm::vec3& half) {
+static void addBox(LineRenderer* lineRenderer, const glm::vec3& position, const glm::vec3& half) {
 
     glm::vec3 v1 = position;
     v1.x -= half.x;
@@ -62,4 +62,5 @@ static void AddBox(LineRenderer* lineRenderer, const glm::vec3& position, const 
     lineRenderer->AddLine(v5, v6);
 
 };
+
 };

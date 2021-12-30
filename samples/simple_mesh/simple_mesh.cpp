@@ -85,7 +85,7 @@ int main(void) {
     glm::mat4 projection = camera.getProjection();
 
     //or {0, 0, 0}, {0, 1, 0}, {0, 0, 1}
-    Levek::OrthographicCamera lightCamera({0, 0, 0}, {0, -1, 0}, {0, 0, 1}, -10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 100.0f);
+    Levek::OrthographicCamera lightCamera({0, 0, 0}, {0, -1, 0}, {0, 0, 1}, -50.0f, 50.0f, -50.0f, 50.0f, -100.0f, 100.0f);
 
     Levek::FrameBuffer depthMap (1024, 1024);
     Levek::Texture depthTexture(1024, 1024, DEPTH_24);
@@ -162,6 +162,11 @@ int main(void) {
         lineRenderer->AddLine({0, 0, 0}, {1, 0, 0}, {1.0, 0, 0, 1.0});
         lineRenderer->AddLine({0, 0, 0}, {0, 1, 0}, {0.0, 1.0, 0, 1.0});
         lineRenderer->AddLine({0, 0, 0}, {0, 0, 1}, {0, 0, 1.0, 1.0});
+
+        //drawOrthographicBoundingBox(lineRenderer, &lightCamera);
+        //glm::vec3 pos = lightCamera.getEye();
+        
+        //Levek::addBox(lineRenderer, lightCamera.getEye(), {10, 10, 10});
 
         lineRenderer->Draw();
 

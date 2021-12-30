@@ -73,15 +73,15 @@ public:
 		this->up.z += offset.z;
 	}
 
-	const glm::vec3& getEye() {
+	const glm::vec3& getEye() const {
 		return this->eye;
 	}
 
-	const glm::vec3& getFront() {
+	const glm::vec3& getFront() const {
 		return this->front;
 	}
 
-	const glm::vec3& getUp() {
+	const glm::vec3& getUp() const {
 		return this->up;
 	}
 
