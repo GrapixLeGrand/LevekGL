@@ -59,7 +59,7 @@ int main(void) {
     Levek::InputController* inputController = engine->getInputController();
     
     Levek::ModelLoader* meshLoader = engine->getModelLoader();
-    Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/simple_mesh/cats.dae");
+    Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/simple_mesh/cats_big.dae");
 
     std::vector<MeshPipelineState> pipelineStates (model->getNumMeshes());
 
@@ -87,8 +87,8 @@ int main(void) {
     //or {0, 0, 0}, {0, 1, 0}, {0, 0, 1}
     Levek::OrthographicCamera lightCamera({0, 0, 0}, {0, -1, 0}, {0, 0, 1}, -50.0f, 50.0f, -50.0f, 50.0f, -100.0f, 100.0f);
 
-    Levek::FrameBuffer depthMap (1024, 1024);
-    Levek::Texture depthTexture(1024, 1024, DEPTH_24);
+    Levek::FrameBuffer depthMap (2048, 2048);
+    Levek::Texture depthTexture(2048, 2048, DEPTH_24);
 
     depthMap.addDepthAttachment(depthTexture);
     depthMap.finalize();
@@ -104,7 +104,7 @@ int main(void) {
         renderer->clear();
         renderer->clear(depthMap);
         
-        UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 10.0f);
+        UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 5.0f);
         //UpdateCameraPositionWASD(inputController, lightCamera, windowController->getDeltaTime(), 10.0f);
         lightCamera.setEye(camera.getEye());
         UpdateCameraWithMouseOnDrag(inputController, camera, 0.5f);
@@ -137,7 +137,9 @@ int main(void) {
             depthShader.setUniformMat4f("light_mvp", lightMVP);
             depthShader.unbind();
 
+            renderer->setCullFaceMode(Levek::FRONT);
             renderer->draw(&depthMap, currentState.va, currentState.ib, &depthShader);
+            renderer->setCullFaceMode(Levek::DEFAULT);
             renderer->draw(depthTexture, {0.75f, 0.75f}, {0.25f, 0.25f});
             
             //render the object here 

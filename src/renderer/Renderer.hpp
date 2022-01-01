@@ -19,6 +19,15 @@ enum ClearBits {
     COLOR = GL_COLOR_BUFFER_BIT
 };
 
+/*
+Back for back faces and front for front faces
+*/
+enum CullFaceMode {
+    DEFAULT = GL_BACK,
+    BACK = GL_BACK,
+    FRONT = GL_FRONT
+};
+
 #define C_STR_CONC(A, B) (std::string(A) + std::string(B))
 
 class Renderer {
@@ -84,6 +93,10 @@ public:
     void setClearFlags(unsigned int flags);
     void setClearFlags(ClearBits flags);
     void clear() const;
+
+    void setCullFaceMode(CullFaceMode mode) const {
+        GL_CHECK(glCullFace(mode));
+    }
 
     void clear(const FrameBuffer& frameBuffer) const {
 

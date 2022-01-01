@@ -31,7 +31,18 @@ void main() {
     coordinatesNormalized = coordinatesNormalized * 0.5 + 0.5;
     float otherDepth = texture(shadowMap, coordinatesNormalized.xy).r;
     float thisDepth = coordinatesNormalized.z;
-    float shadow = otherDepth > (thisDepth - 0.005) ? 1.0 : 0.0;
+    //float shadow = otherDepth > (thisDepth - 0.0001) ? 1.0 : 0.0; //- 0.005
+
+    float shadow = 0.0;
+    vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
+    for(int x = -1; x <= 1; ++x) {
+        for(int y = -1; y <= 1; ++y) {
+            float pcfDepth = texture(shadowMap, coordinatesNormalized.xy + vec2(x, y) * texelSize).r; 
+            shadow += thisDepth - 0.0001 < pcfDepth ? 1.0 : 0.0;        
+        }    
+    }
+    shadow /= 9.0;
+
     //float bias = max(0.05 * (1.0 - dot(normal, lightDir)), 0.005);
 	color = ambiant + shadow * ((diff * diffuse) + (specular * spec)); //vec4(1.0, 0.0, 0.0, 1.0);
 
