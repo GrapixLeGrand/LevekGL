@@ -8,7 +8,7 @@ namespace Levek {
     template<>
 	void VertexBufferLayout::push<float>(unsigned int count, unsigned int instances) {
 		elements.push_back({ GL_FLOAT, count, GL_FALSE, instances });
-		this->stride += VertexBufferElement::getSizeOfType(GL_FLOAT) * count; //4 bytes
+		this->stride +=  VertexBufferElement::getSizeOfType(GL_FLOAT) * count;
 	}
 
 	template<>

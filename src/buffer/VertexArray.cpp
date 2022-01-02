@@ -14,7 +14,7 @@ VertexArray::~VertexArray() {
 }
 
 void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& layout) {
-	bind();
+	/*bind();
 	vb.bind(); //bind the vertex buffer
 	//then we set up the layout
 	const auto& elements = layout.getElements();
@@ -30,16 +30,20 @@ void VertexArray::addBuffer(const VertexBuffer& vb, const VertexBufferLayout& la
 		offset += (unsigned long long) element.count * VertexBufferElement::getSizeOfType(element.type);
 		this->attrib_id++;
 
-	}
+	}*/
 
 	//unbind(); //added this to debug
 	//vb.unbind();
+	addBuffer(&vb, &layout);
 	
 }
 
 void VertexArray::addBuffer(const VertexBuffer* vb, const VertexBufferLayout* layout) {
 	bind();
 	vb->bind(); //bind the vertex buffer
+
+	mVerticesNum = vb->getSize() / layout->getStride();
+
 	//then we set up the layout
 	const auto& elements = layout->getElements();
 	unsigned long long offset = 0;

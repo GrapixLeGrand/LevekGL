@@ -25,5 +25,9 @@ class VertexBuffer {
 		void bind() const;
 		void unbind() const;
 
+		size_t getSize() const {
+			return (size_t) size;
+		}
+
 };
 }

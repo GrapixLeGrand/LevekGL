@@ -4,6 +4,53 @@
 #include "../Utils.hpp"
 #include "glm/gtc/quaternion.hpp"
 
+
+//from https://learnopengl.com/code_viewer.php?code=advanced/cubemaps_skybox_data
+    float skyboxVertices[] = {
+        // positions          
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        -1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f
+    };
+
 struct MeshPipelineState {
     Levek::Transform transform;
     Levek::VertexArray* va = nullptr;
@@ -32,13 +79,13 @@ void initMeshPipelineState(MeshPipelineState* state, const Levek::Mesh* mesh, co
 
     state->transform = *transform;
 
-    Levek::printMat4(state->model);
+    //Levek::printMat4(state->model);
     state->model = glm::translate(state->model, transform->position);
-    Levek::printMat4(state->model);
+    //Levek::printMat4(state->model);
     state->model *= glm::mat4_cast(transform->rotation);
-    Levek::printMat4(state->model);
+    //Levek::printMat4(state->model);
     state->model = glm::scale(state->model, transform->scale);
-    Levek::printMat4(state->model);
+    //Levek::printMat4(state->model);
 
 }
 
@@ -75,11 +122,26 @@ int main(void) {
     Levek::PerspectiveCamera camera({0, 0, 1}, {0, 0, -1}, {0, 1, 0}, 1000, 800);
 
     Levek::Shader shader = Levek::ShaderFactory::makeFromFile(
-        SAMPLES_DIRECTORY"/simple_mesh/phong.vert",
-        SAMPLES_DIRECTORY"/simple_mesh/phong.frag"
+        SAMPLES_DIRECTORY"/simple_mesh/shaders/phong.vert",
+        SAMPLES_DIRECTORY"/simple_mesh/shaders/phong.frag"
     );
 
-    //Levek::PerspectiveCamera camera({1, 1, 1}, {0, 0, 0}, {0, 1, 0}, 1000, 800);
+    std::vector<std::string> skyBoxImagesPaths { "right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg" };
+
+    for (auto it = skyBoxImagesPaths.begin(); it != skyBoxImagesPaths.end(); it++) {
+        (*it) = SAMPLES_DIRECTORY"/simple_mesh/skybox/" + (*it);
+    }
+
+    Levek::CubeMap cubeMap = Levek::CubeMap(skyBoxImagesPaths, 2048, 2048);
+    Levek::VertexBuffer cubeMapVbo = Levek::VertexBuffer(skyboxVertices, sizeof(skyboxVertices));
+    Levek::VertexBufferLayout cubeMapLayout = Levek::VertexBufferLayout(); cubeMapLayout.push<glm::vec3>(1);
+    Levek::VertexArray cubeMapVa; cubeMapVa.addBuffer(&cubeMapVbo, &cubeMapLayout);
+
+    Levek::Shader cubeMapShader = Levek::ShaderFactory::makeFromFile(
+        SAMPLES_DIRECTORY"/simple_mesh/shaders/skybox.vert",
+        SAMPLES_DIRECTORY"/simple_mesh/shaders/skybox.frag"
+    );
+
     glm::vec3 lightDirection = glm::vec3(0.1, -1, 0.1);
     glm::vec3 lightDirectionView;
     glm::mat4 projection = camera.getProjection();
@@ -95,8 +157,8 @@ int main(void) {
     depthMap.unbind();
 
     Levek::Shader depthShader = Levek::ShaderFactory::makeFromFile(
-        SAMPLES_DIRECTORY"/simple_mesh/shadow.vert",
-        SAMPLES_DIRECTORY"/simple_mesh/shadow.frag"
+        SAMPLES_DIRECTORY"/simple_mesh/shaders/shadow.vert",
+        SAMPLES_DIRECTORY"/simple_mesh/shaders/shadow.frag"
     );
 
     while (!windowController->exit()) {
@@ -126,6 +188,19 @@ int main(void) {
         model *= glm::mat4_cast(transform->rotation);
         model = glm::scale(model, transform->scale);
         */
+
+        glm::mat4 vp = camera.getProjection() * glm::mat4(glm::mat3(camera.getView()));
+
+        renderer->setDepthMask(false);
+        cubeMapShader.bind();
+        cubeMap.bind();
+        cubeMapShader.setUniform1i("skybox", 0);
+        cubeMapShader.setUniformMat4f("vp", vp);
+        cubeMapShader.unbind();
+
+        renderer->draw(cubeMapVa, cubeMapShader);
+
+        renderer->setDepthMask(true);
 
         for (size_t i = 0; i < pipelineStates.size(); i++) {
 

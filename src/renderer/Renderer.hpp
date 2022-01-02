@@ -94,6 +94,14 @@ public:
     void setClearFlags(ClearBits flags);
     void clear() const;
 
+    void setDepthMask(bool mask) const {
+        if (mask) {
+            GL_CHECK(glDepthMask(GL_TRUE));
+        } else {
+            GL_CHECK(glDepthMask(GL_FALSE));
+        } 
+    }
+
     void setCullFaceMode(CullFaceMode mode) const {
         GL_CHECK(glCullFace(mode));
     }

@@ -10,6 +10,7 @@
 
 #include "texture/TextureProperties.hpp"
 #include "texture/Texture.hpp"
+#include "texture/CubeMap.hpp"
 #include "texture/RenderBuffer.hpp"
 
 #include "shader/Shader.hpp"
