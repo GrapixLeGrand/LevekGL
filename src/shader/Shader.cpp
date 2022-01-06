@@ -11,6 +11,8 @@
 #include "../renderer/Renderer.hpp"
 //#include "../../../LevekEngine/LevekError.hpp"
 
+#include "GlslangCompiler.hpp"
+
 namespace Levek {
 
 Shader::Shader(const Shader&& s): renderer_id(ShaderManager::requestShader(s.renderer_id)) {
@@ -58,6 +60,15 @@ void Shader::inizializeFromFile(const std::string& vertexShaderPath, const std::
 	readShaderFromSource(fragmentShaderPath, fragmentShaderSource);
 	//sudo apt install -y libgmock-dev
 	//here check the correctness
+	GlslangCompiler compiler;
+
+	if (!compiler.compile(vertexShaderPath, vertexShaderSource)) {
+		LEVEK_RENDERING_FAIL(compiler.getErrorMessage().c_str());
+	}
+
+	if (!compiler.compile(fragmentShaderPath, fragmentShaderSource)) {
+		LEVEK_RENDERING_FAIL(compiler.getErrorMessage().c_str());
+	}
 
 	this->renderer_id = ShaderManager::requestShader(vertexShaderSource, fragmentShaderSource);
 }

@@ -29,6 +29,7 @@ set(LEVEKGL_SOURCES
 
     "src/renderer/Renderer.cpp"
 
+    "src/shader/GlslangCompiler.cpp"
     "src/shader/Shader.cpp"
     "src/shader/ShaderFactory.cpp"
     "src/shader/ShaderManager.cpp"
@@ -79,6 +80,7 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
     PUBLIC "${LevekGL_SOURCE_DIR}/src"
     PUBLIC "thirdparty/glm-0.9.9.8"
     PUBLIC "thirdparty/assimp-5.1.4"
+    PUBLIC "thirdparty/glslang"
     #PUBLIC ""
 )
 
@@ -93,6 +95,13 @@ include_directories(${GLEW_INCLUDE_DIRS})
 target_link_libraries(LevekGL ${OPENGL_LIBRARIES} ${GLUT_LIBRARY}  ${GLEW_LIBRARIES})
 target_link_libraries(LevekGL glfw)
 target_link_libraries(LevekGL assimp)
+
+#bellow linkages are for glslang
+target_link_libraries(LevekGL glslang)
+#target_link_libraries(LevekGL OGLCompiler)
+#target_link_libraries(LevekGL OSDependent)
+#target_link_libraries(LevekGL MachineIndependent)
+#target_link_libraries(LevekGL GenericCodeGen)
 
 set(LEVEKGL_INCLUDE_DIR ${LevekGL_SOURCE_DIR})
 
