@@ -57,11 +57,14 @@ include(CMakeDependentOption)
 option(BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
 option(BUILD_EXTERNAL "Build external dependencies in /External" ON)
 
+set(BUILD_SHARED_LIBS OFF)
 set(LIB_TYPE STATIC)
 
 if(BUILD_SHARED_LIBS)
-    set(LIB_TYPE SHARED)
+    set(LIB_TYPE SHARED)    
 endif()
+
+message("##### lib type = "${LIB_TYPE})
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
     # This logic inside SPIRV-Tools, which can upset build target dependencies
@@ -77,7 +80,7 @@ if(NOT ${SKIP_GLSLANG_INSTALL})
 endif()
 option(ENABLE_SPVREMAPPER "Enables building of SPVRemapper" ON)
 
-option(ENABLE_GLSLANG_BINARIES "Builds glslangValidator and spirv-remap" ON)
+option(ENABLE_GLSLANG_BINARIES "Builds glslangValidator and spirv-remap" OFF) # ON previously (Grapix)
 
 option(ENABLE_GLSLANG_JS
     "If using Emscripten, build glslang.js. Otherwise, builds a sample executable for binary-size testing." OFF)
@@ -280,6 +283,7 @@ function(glslang_only_export_explicit_symbols target)
         if(WIN32)
             target_compile_definitions(${target} PRIVATE "GLSLANG_EXPORTING=1")
         else()
+            message("############################# LevekGL: glslang built as shared")
             target_compile_options(${target} PRIVATE "-fvisibility=hidden")
         endif()
     endif()
@@ -324,7 +328,8 @@ endif()
 add_subdirectory(glslang)
 add_subdirectory(OGLCompilersDLL)
 if(ENABLE_GLSLANG_BINARIES)
-    add_subdirectory(StandAlone)
+    #message("#### Building standalone (Grapix)")
+    #add_subdirectory(StandAlone)
 endif()
 add_subdirectory(SPIRV)
 if(ENABLE_HLSL)

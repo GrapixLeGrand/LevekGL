@@ -139,6 +139,9 @@ glslang_add_build_info_dependency(MachineIndependent)
 
 glslang_pch(MachineIndependent MachineIndependent/pch.h)
 
+#message("############################# LevekGL: Machine Independant built as shared")
+#target_compile_options(MachineIndependent PRIVATE "-fvisibility=hidden")
+
 target_link_libraries(MachineIndependent PRIVATE OGLCompiler OSDependent GenericCodeGen)
 
 ################################################################################
@@ -178,6 +181,7 @@ target_include_directories(glslang PUBLIC
 glslang_add_build_info_dependency(glslang)
 
 glslang_only_export_explicit_symbols(glslang)
+target_compile_options(glslang PRIVATE "-fvisibility=hidden")
 
 if(WIN32 AND BUILD_SHARED_LIBS)
     set_target_properties(glslang PROPERTIES PREFIX "")
