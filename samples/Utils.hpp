@@ -5,7 +5,6 @@ void static UpdateCameraPositionWASD(Levek::InputController* inputController, Le
     
     glm::vec3 positionOffset = glm::vec3(0.0);
 	const float cameraSpeed = speed * dt;
-    inputController->isKeyPressed(Levek::LEVEK_KEY_W);
 
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_W)) {
 		positionOffset += cameraSpeed * camera.front;
@@ -14,7 +13,7 @@ void static UpdateCameraPositionWASD(Levek::InputController* inputController, Le
 		positionOffset += -cameraSpeed * camera.front;
     }
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_A)) {
-		positionOffset += glm::normalize(glm::cross(camera.front, camera.up)) * - cameraSpeed;
+		positionOffset += glm::normalize(glm::cross(camera.front, camera.up)) * -cameraSpeed;
     }
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_D)) {
 		positionOffset += glm::normalize(glm::cross(camera.front, camera.up)) * cameraSpeed;

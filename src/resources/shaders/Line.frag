@@ -2,7 +2,7 @@
 //Line Frag
 out vec4 FragColor;
 
-varying vec4 colorV2F;
+in vec4 colorV2F;
 
 void main()
 {

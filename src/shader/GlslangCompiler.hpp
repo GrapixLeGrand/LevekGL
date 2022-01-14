@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "../OpenGLError.hpp"
 #include <utility>
 #include <string>
 
@@ -362,11 +363,21 @@ bool compile(const std::string& filename, const std::string& source) {
     int ret = ShCompile(compiler, shaderStrings, 1, nullptr, EShOptNone, &Resources, EOptionNone, (EOptionNone & EOptionDefaultDesktop) ? 110 : 100, false, messages);
     mErrorMessage = ShGetInfoLog(compiler);
 
-    std::cout << mErrorMessage << std::endl;
+    //std::cout << mErrorMessage << std::endl;
 
-    return true;
+    return ret;
 }
 
+void compileWithFailure(const std::string& filename, const std::string& source) {
+
+    bool res = compile(filename, source);
+    if (!res) {
+        std::string s = "shader compilation failed for shader at" + filename + "\n";
+        s += "Glslang resume:\n" + mErrorMessage; 
+        LEVEK_RENDERING_FAIL(s.c_str());
+    }
+  
+}
 
 };
 };

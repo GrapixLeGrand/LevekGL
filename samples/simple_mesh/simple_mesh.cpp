@@ -161,15 +161,19 @@ int main(void) {
         SAMPLES_DIRECTORY"/simple_mesh/shaders/shadow.frag"
     );
 
+    
+
     while (!windowController->exit()) {
 
+        std::cout << windowController->getDeltaTime() << std::endl;
         renderer->clear();
         renderer->clear(depthMap);
         
-        UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 5.0f);
+        UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 0.00001f);
+    
         //UpdateCameraPositionWASD(inputController, lightCamera, windowController->getDeltaTime(), 10.0f);
         lightCamera.setEye(camera.getEye());
-        UpdateCameraWithMouseOnDrag(inputController, camera, 0.5f);
+        UpdateCameraWithMouseOnDrag(inputController, camera, 0.2f);
         lineRenderer->SetViewProjection(camera.getProjection() * camera.getView());
         
         UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 40.0f);
@@ -231,6 +235,7 @@ int main(void) {
             shader.setUniformMat4f("mv", modelView);
             shader.setUniformMat3f("normalMatrix", normal);
             shader.setUniform3f("lightDirectionView", lightDirectionView);
+            shader.setUniform1f("time_s", windowController->getTime());
             shader.unbind();
 
             renderer->draw(currentState.va, currentState.ib, &shader);

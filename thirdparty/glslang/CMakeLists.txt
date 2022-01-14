@@ -57,7 +57,7 @@ include(CMakeDependentOption)
 option(BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
 option(BUILD_EXTERNAL "Build external dependencies in /External" ON)
 
-set(BUILD_SHARED_LIBS OFF)
+#set(BUILD_SHARED_LIBS OFF)
 set(LIB_TYPE STATIC)
 
 if(BUILD_SHARED_LIBS)

@@ -62,13 +62,17 @@ void Shader::inizializeFromFile(const std::string& vertexShaderPath, const std::
 	//here check the correctness
 	GlslangCompiler compiler;
 
-	if (!compiler.compile(vertexShaderPath, vertexShaderSource)) {
+	/*
+	if (!compiler.compileWithFailure(vertexShaderPath, vertexShaderSource)) {
 		LEVEK_RENDERING_FAIL(compiler.getErrorMessage().c_str());
 	}
 
-	if (!compiler.compile(fragmentShaderPath, fragmentShaderSource)) {
+	if (!compiler.compileWithFailure(fragmentShaderPath, fragmentShaderSource)) {
 		LEVEK_RENDERING_FAIL(compiler.getErrorMessage().c_str());
-	}
+	}*/
+
+	compiler.compileWithFailure(fragmentShaderPath, fragmentShaderSource);
+	compiler.compileWithFailure(vertexShaderPath, vertexShaderSource);
 
 	this->renderer_id = ShaderManager::requestShader(vertexShaderSource, fragmentShaderSource);
 }
