@@ -8,7 +8,7 @@ struct VertexBufferElement
 	unsigned int type;
 	unsigned int count;
 	unsigned char normalized;
-    unsigned int instances; //the attrib divisor argument
+    unsigned int instanceDivisor; //the attrib divisor argument
 
 	static unsigned int getSizeOfType(unsigned int type) {
 		switch (type) {

@@ -46,7 +46,15 @@ private:
 public:
 
 	VertexBufferLayout(): stride(0) /*, instancedStride(0)*/ {}
-	template<typename K> void push(unsigned int count, unsigned int instances);
+
+	/**
+	 * @brief add a attribute (some amount count) to the layout stack 
+	 * 
+	 * @tparam K 
+	 * @param count how much to add
+	 * @param instanceDivisor how many instances this attribute is valid in a row
+	 */
+	template<typename K> void push(unsigned int count, unsigned int instanceDivisor);
 	template<typename T> void push(unsigned int count);
 
 	inline const std::vector<VertexBufferElement> getElements() const& { return elements; }

@@ -5,6 +5,7 @@
  * Implementation of the VertexBufferLayout
  */
 namespace Levek {
+
     template<>
 	void VertexBufferLayout::push<float>(unsigned int count, unsigned int instances) {
 		elements.push_back({ GL_FLOAT, count, GL_FALSE, instances });

@@ -161,8 +161,6 @@ int main(void) {
         SAMPLES_DIRECTORY"/simple_mesh/shaders/shadow.frag"
     );
 
-    
-
     while (!windowController->exit()) {
 
         std::cout << windowController->getDeltaTime() << std::endl;

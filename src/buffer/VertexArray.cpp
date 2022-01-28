@@ -52,8 +52,8 @@ void VertexArray::addBuffer(const VertexBuffer* vb, const VertexBufferLayout* la
 		const auto& element = elements[i];
 		GL_CHECK(glEnableVertexAttribArray(attrib_id)); //index of the attribute array
 		GL_CHECK(glVertexAttribPointer(attrib_id, element.count, element.type, element.normalized, layout->getStride(), (const void *) offset));
-		if (element.instances) {
-			GL_CHECK(glVertexAttribDivisor(attrib_id, element.instances));
+		if (element.instanceDivisor) {
+			GL_CHECK(glVertexAttribDivisor(attrib_id, element.instanceDivisor));
 		}
 		offset += (unsigned long long) element.count * VertexBufferElement::getSizeOfType(element.type);
 		this->attrib_id++;
