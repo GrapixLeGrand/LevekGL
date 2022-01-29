@@ -1,5 +1,6 @@
 #include <iostream>
 #include "LevekGL.hpp"
+#include "../Utils.hpp"
 
 int main(void) {
 
@@ -13,7 +14,8 @@ int main(void) {
     const Levek::Mesh* sphere = model->getMesh(0);
 
     Levek::PerspectiveCamera camera({0, 0, 1}, {0, 0, -1}, {0, 1, 0}, 1000, 800);
-    
+    glm::mat4 projection = camera.getProjection();
+
     Levek::Shader shaderInstances = Levek::ShaderFactory::makeFromFile(
         SAMPLES_DIRECTORY"/particles/sphere_inst.vert",
         SAMPLES_DIRECTORY"/particles/sphere_inst.frag"
@@ -23,9 +25,11 @@ int main(void) {
     Levek::VertexBuffer particlesPositionsVBO = Levek::VertexBuffer(sphere);
 
     Levek::VertexBuffer sphereVBO = Levek::VertexBuffer(sphere);
+    Levek::IndexBuffer sphereIBO = Levek::IndexBuffer(sphere);
     Levek::VertexBufferLayout sphereLayout = Levek::VertexBufferLayout();
     Levek::VertexBufferLayout instanceLayout = Levek::VertexBufferLayout(); 
     sphereLayout.push<glm::vec3>(1); //sphere position
+    sphereLayout.push<glm::vec2>(1); //sphere textures
     sphereLayout.push<glm::vec3>(1); //sphere normal 
     instanceLayout.push<glm::vec3>(1, 1); //instance offset (per instance)
 
@@ -33,9 +37,23 @@ int main(void) {
     particlesVA.addBuffer(sphereVBO, sphereLayout);
     particlesVA.addBuffer(particlesPositionsVBO, instanceLayout);
 
+    SkyBoxPipelineState skybox (getSkyBoxPaths());
+
     while (!windowController->exit()) {
         
         renderer->clear();
+
+        UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 0.00001f);
+        UpdateCameraWithMouseOnDrag(inputController, camera, 0.2f);
+
+        glm::mat4 vp = camera.getProjection() * camera.getView();
+
+        shaderInstances.bind();
+        shaderInstances.setUniformMat4f("vp", vp);
+        
+        skybox.draw(renderer, vp);
+        renderer->drawInstances(&particlesVA, &sphereIBO, &shaderInstances, particlesPositions.size());
+    
         inputController->poll();
         windowController->swapBuffers();
     }

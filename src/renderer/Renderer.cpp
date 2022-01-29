@@ -105,7 +105,16 @@ void Renderer::draw(const VertexArray& va, const Shader& shader) const {
     //GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
     shader.bind();
     va.bind();
-    GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, (unsigned int) va.getVerticesNum())); /* WARNING just for now !!! */
+    GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, (unsigned int) va.getVerticesNum())); /* WARNING just for now !!! (I think its okay now before was 3?) */
+}
+
+
+void Renderer::draw(const VertexArray* va, const Shader* shader) const {
+    //glViewport(0, 0, width, height);
+    //GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
+    shader->bind();
+    va->bind();
+    GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, (unsigned int) va->getVerticesNum())); /* WARNING just for now !!! (I think its okay now before was 3?) */
 }
 
 /*

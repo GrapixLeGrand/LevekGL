@@ -188,6 +188,8 @@ public:
      */
     void draw(const FrameBuffer& frameBuffer, const VertexArray& va, const IndexBuffer& ib, const Shader& shader) const;
     
+    void draw(const VertexArray* va, const Shader* shader) const;
+
     //will need to remove these ones later
     //void draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const;
     void draw(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const;

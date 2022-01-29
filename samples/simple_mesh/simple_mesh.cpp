@@ -5,52 +5,6 @@
 #include "glm/gtc/quaternion.hpp"
 
 
-//from https://learnopengl.com/code_viewer.php?code=advanced/cubemaps_skybox_data
-    float skyboxVertices[] = {
-        // positions          
-        -1.0f,  1.0f, -1.0f,
-        -1.0f, -1.0f, -1.0f,
-        1.0f, -1.0f, -1.0f,
-        1.0f, -1.0f, -1.0f,
-        1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-
-        -1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f, -1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-
-        1.0f, -1.0f, -1.0f,
-        1.0f, -1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f, -1.0f,
-        1.0f, -1.0f, -1.0f,
-
-        -1.0f, -1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f, -1.0f,  1.0f,
-        -1.0f, -1.0f,  1.0f,
-
-        -1.0f,  1.0f, -1.0f,
-        1.0f,  1.0f, -1.0f,
-        1.0f,  1.0f,  1.0f,
-        1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f,  1.0f,
-        -1.0f,  1.0f, -1.0f,
-
-        -1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-        1.0f, -1.0f, -1.0f,
-        1.0f, -1.0f, -1.0f,
-        -1.0f, -1.0f,  1.0f,
-        1.0f, -1.0f,  1.0f
-    };
-
 struct MeshPipelineState {
     Levek::Transform transform;
     Levek::VertexArray* va = nullptr;
@@ -129,7 +83,7 @@ int main(void) {
     std::vector<std::string> skyBoxImagesPaths { "right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg" };
 
     for (auto it = skyBoxImagesPaths.begin(); it != skyBoxImagesPaths.end(); it++) {
-        (*it) = SAMPLES_DIRECTORY"/simple_mesh/skybox/" + (*it);
+        (*it) = SAMPLES_DIRECTORY"/resources/skybox/" + (*it);
     }
 
     Levek::CubeMap cubeMap = Levek::CubeMap(skyBoxImagesPaths, 2048, 2048);
