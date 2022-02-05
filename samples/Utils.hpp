@@ -22,6 +22,7 @@ struct SkyBoxPipelineState {
 		cubeMap = new Levek::CubeMap(imagePaths, 2048, 2048);
 		cubeMapVbo = new Levek::VertexBuffer(skyboxVertices, sizeof(skyboxVertices));
     	cubeMapLayout = new Levek::VertexBufferLayout(); cubeMapLayout->push<glm::vec3>(1);
+		cubeMapVa = new Levek::VertexArray();
 		cubeMapVa->addBuffer(cubeMapVbo, cubeMapLayout);
 	}
 
@@ -63,17 +64,18 @@ void static UpdateCameraPositionWASD(Levek::InputController* inputController, Le
 	const float cameraSpeed = speed * dt;
 
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_W)) {
-		positionOffset += cameraSpeed * camera.front;
+		positionOffset += cameraSpeed * camera.mFront;
 	}
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_S)) {
-		positionOffset += -cameraSpeed * camera.front;
+		positionOffset += -cameraSpeed * camera.mFront;
     }
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_A)) {
-		positionOffset += glm::normalize(glm::cross(camera.front, camera.up)) * -cameraSpeed;
+		positionOffset += glm::normalize(glm::cross(camera.mFront, camera.mUp)) * -cameraSpeed;
     }
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_D)) {
-		positionOffset += glm::normalize(glm::cross(camera.front, camera.up)) * cameraSpeed;
+		positionOffset += glm::normalize(glm::cross(camera.mFront, camera.mUp)) * cameraSpeed;
     }
+	Levek::printVec3(camera.getEye());
 	camera.addEye(positionOffset);
 }
 
@@ -99,20 +101,20 @@ static void UpdateCameraWithMouseOnDrag(Levek::InputController* inputController,
 		lastMouseValueX = mouseX;
 		lastMouseValueY = mouseY;
 
-		camera.yaw += offsetX;
-		camera.pitch += offsetY;
+		camera.mYaw += offsetX;
+		camera.mPitch += offsetY;
 
-		if (camera.pitch > 89.0f) {
-			camera.pitch = 89.0f;
+		if (camera.mPitch > 89.0f) {
+			camera.mPitch = 89.0f;
 		}
-		if (camera.pitch < -89.0f) {
-			camera.pitch = -89.0f;
+		if (camera.mPitch < -89.0f) {
+			camera.mPitch = -89.0f;
 		}
 
 		glm::vec3 direction;
-		direction.z = cos(glm::radians(camera.yaw)) * cos(glm::radians(camera.pitch));
-		direction.y = sin(glm::radians(camera.pitch));
-		direction.x = sin(glm::radians(-camera.yaw)) * cos(glm::radians(camera.pitch));
+		direction.z = cos(glm::radians(camera.mYaw)) * cos(glm::radians(camera.mPitch));
+		direction.y = sin(glm::radians(camera.mPitch));
+		direction.x = sin(glm::radians(-camera.mYaw)) * cos(glm::radians(camera.mPitch));
 		camera.setFront(glm::normalize(direction));
 
 	} else {

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 namespace Levek {
 
 /**
@@ -16,7 +18,7 @@ public:
     virtual void resize(int width, int height) = 0;
     virtual float getTime() = 0;
     virtual float getDeltaTime() = 0;
-
+    virtual void setWindowTitle(const std::string& name) = 0;
 };  
 
 }

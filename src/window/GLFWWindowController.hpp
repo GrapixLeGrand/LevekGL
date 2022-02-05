@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 #include "WindowController.hpp"
+#include <string>
 
 namespace Levek {
 class GLFWWindowController : public WindowController {
@@ -19,6 +20,6 @@ public:
     virtual void resize(int width, int height);
     virtual float getTime();
     virtual float getDeltaTime();
-
+    virtual void setWindowTitle(const std::string& name);
 };
 }

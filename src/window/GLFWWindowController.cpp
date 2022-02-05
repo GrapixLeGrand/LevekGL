@@ -27,4 +27,7 @@ namespace Levek {
         return dt;
     }
 
+    void GLFWWindowController::setWindowTitle(const std::string& name) {
+        glfwSetWindowTitle(window, name.c_str());
+    }
 }
