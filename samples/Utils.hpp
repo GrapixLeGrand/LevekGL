@@ -64,16 +64,16 @@ void static UpdateCameraPositionWASD(Levek::InputController* inputController, Le
 	const float cameraSpeed = speed * dt;
 
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_W)) {
-		positionOffset += cameraSpeed * camera.mFront;
+		positionOffset -= cameraSpeed * camera.mFront;
 	}
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_S)) {
-		positionOffset += -cameraSpeed * camera.mFront;
+		positionOffset += cameraSpeed * camera.mFront;
     }
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_A)) {
-		positionOffset += glm::normalize(glm::cross(camera.mFront, camera.mUp)) * -cameraSpeed;
+		positionOffset += glm::normalize(glm::cross(camera.mFront, camera.mUp)) * cameraSpeed;
     }
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_D)) {
-		positionOffset += glm::normalize(glm::cross(camera.mFront, camera.mUp)) * cameraSpeed;
+		positionOffset -= glm::normalize(glm::cross(camera.mFront, camera.mUp)) * cameraSpeed;
     }
 	//Levek::printVec3(camera.getEye());
 	camera.addEye(positionOffset);
@@ -102,7 +102,7 @@ static void UpdateCameraWithMouseOnDrag(Levek::InputController* inputController,
 		lastMouseValueY = mouseY;
 
 		camera.mYaw += offsetX;
-		camera.mPitch += offsetY;
+		camera.mPitch -= offsetY;
 
 		if (camera.mPitch > 89.0f) {
 			camera.mPitch = 89.0f;
@@ -152,3 +152,8 @@ static void UpdateCameraWithMouseOnDrag(Levek::InputController* inputController,
 	//}
 	*/
 }
+
+static void addImGuiVec3(const glm::vec3& v) {
+	ImGui::Text("[%.3f, %.3f, %.3f]", v[0], v[1], v[2]);
+} 
+

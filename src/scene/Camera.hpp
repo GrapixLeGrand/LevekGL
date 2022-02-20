@@ -28,7 +28,7 @@ public:
     virtual glm::mat4& getProjection() = 0;
 
     glm::mat4& getView() {
-        mView = glm::lookAt(mEye, mEye + mFront, mUp);
+        mView = glm::lookAt(mEye, mEye - mFront, mUp);
         return mView;
     }
 

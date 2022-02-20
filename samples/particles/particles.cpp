@@ -7,6 +7,7 @@ int main(void) {
     Levek::RenderingEngine* engine = new Levek::RenderingEngine(1000, 800);
 
     Levek::Renderer* renderer = engine->getRenderer();
+    Levek::LineRenderer* lineRenderer = engine->getLineRenderer();
     Levek::WindowController* windowController = engine->getWindowController();
     Levek::InputController* inputController = engine->getInputController();
 
@@ -19,6 +20,8 @@ int main(void) {
 
     Levek::PerspectiveCamera camera({0, 0, 1}, {0, 0, 1}, {0, 1, 0}, 1000, 800);
     glm::mat4 projection = camera.getProjection();
+
+    
 
     Levek::Shader shaderInstances = Levek::ShaderFactory::makeFromFile(
         SAMPLES_DIRECTORY"/particles/sphere_inst.vert",
@@ -59,7 +62,6 @@ int main(void) {
         
         //Levek::printVec3(camera.getFront());
         //std::cout << camera.getYaw() << " " << camera.getPitch() << " " << camera.getRoll() << std::endl;
-        Levek::printMat4(camera.getView());
 
         vp = camera.getProjection() * glm::mat4(glm::mat3(camera.getView()));
         skybox.draw(renderer, vp);
@@ -71,8 +73,21 @@ int main(void) {
         ImGui::Begin("Stats");
         ImGui::Text("%d fps", (int) (1.0f / windowController->getDeltaTime()));
         ImGui::End();
+
+        ImGui::Begin("Camera");
+        addImGuiVec3(camera.getEye());
+        addImGuiVec3(camera.getFront());
+        ImGui::End();
+
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        lineRenderer->SetViewProjection(projection * camera.getView());
+        lineRenderer->AddLine({0, 0, 0}, {1, 0, 0}, {1.0, 0.0, 0.0, 1.0}); 
+        lineRenderer->AddLine({0, 0, 0}, {0, 1, 0}, {0.0, 1.0, 0.0, 1.0});
+        lineRenderer->AddLine({0, 0, 0}, {0, 0, 1}, {0.0, 0.0, 1.0, 1.0});
+
+        lineRenderer->Draw();
 
         inputController->poll();
         windowController->swapBuffers();
