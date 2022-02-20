@@ -9,6 +9,10 @@ int main(void) {
     Levek::Renderer* renderer = engine->getRenderer();
     Levek::WindowController* windowController = engine->getWindowController();
     Levek::InputController* inputController = engine->getInputController();
+
+    windowController->setWindowTitle("Particles");
+    windowController->initImGui();
+
     Levek::ModelLoader* meshLoader = engine->getModelLoader();
     Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/sphere.obj");
     const Levek::Mesh* sphere = model->getMesh(0);
@@ -39,8 +43,8 @@ int main(void) {
 
     SkyBoxPipelineState skybox (getSkyBoxPaths());
 
-    while (!windowController->exit()) {
-        
+    while (!windowController->exit() && !inputController->isKeyPressed(Levek::LEVEK_KEY_Q)) {            
+
         renderer->clear();
 
         UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 1.f);
@@ -52,8 +56,7 @@ int main(void) {
         shaderInstances.setUniformMat4f("vp", vp);
         glm::vec4 c {1.0, 0.0, 0.5, 1.0};
         shaderInstances.setUniform4f("color", c);
-
-        windowController->setWindowTitle(std::to_string(1.0f / windowController->getDeltaTime()));
+        
         //Levek::printVec3(camera.getFront());
         //std::cout << camera.getYaw() << " " << camera.getPitch() << " " << camera.getRoll() << std::endl;
         Levek::printMat4(camera.getView());
@@ -61,7 +64,16 @@ int main(void) {
         vp = camera.getProjection() * glm::mat4(glm::mat3(camera.getView()));
         skybox.draw(renderer, vp);
         renderer->drawInstances(&particlesVA, &sphereIBO, &shaderInstances, particlesPositions.size());
-    
+
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::Begin("Stats");
+        ImGui::Text("%d fps", (int) (1.0f / windowController->getDeltaTime()));
+        ImGui::End();
+        ImGui::Render();
+        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         inputController->poll();
         windowController->swapBuffers();
     }

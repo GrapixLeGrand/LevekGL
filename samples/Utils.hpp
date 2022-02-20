@@ -75,7 +75,7 @@ void static UpdateCameraPositionWASD(Levek::InputController* inputController, Le
 	if (inputController->isKeyPressed(Levek::LEVEK_KEY_D)) {
 		positionOffset += glm::normalize(glm::cross(camera.mFront, camera.mUp)) * cameraSpeed;
     }
-	Levek::printVec3(camera.getEye());
+	//Levek::printVec3(camera.getEye());
 	camera.addEye(positionOffset);
 }
 
