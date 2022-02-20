@@ -7,6 +7,8 @@
 
 #include "layout/VertexBufferLayout.hpp"
 //#include "layout/VertexBufferLayoutInstancing.hpp"
+#include "mesh/Primitives.hpp"
+
 
 #include "texture/TextureProperties.hpp"
 #include "texture/Texture.hpp"

@@ -3,6 +3,8 @@
 #include <GL/glew.h>
 //#include "../renderer/Renderer.h"
 
+namespace Levek {
+
 enum TextureType {
 	RGB_8,
 	RGBA_8,				//32 bits each 8 bits channels
@@ -35,3 +37,5 @@ struct OpenGLTextureProperties {
 extern const OpenGLTextureProperties OPENGL_TEXTURES_PROPERTIES[OPENGL_TEXTURES_PROPERTIES_N];
 extern const int OPENGL_WRAP_MODES[OPENGL_WRAP_MODES_N];
 extern const int OPENGL_MIN_MAG_MODES[OPENGL_MIN_MAG_MODES_N];
+
+};

@@ -18,10 +18,8 @@ int main(void) {
     Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/sphere.obj");
     const Levek::Mesh* sphere = model->getMesh(0);
 
-    Levek::PerspectiveCamera camera({0, 0, 1}, {0, 0, 1}, {0, 1, 0}, 1000, 800);
+    Levek::PerspectiveCamera camera({1, 1, 1}, {0.2, 0.2, 0.2}, {0, 1, 0}, 1000, 800);
     glm::mat4 projection = camera.getProjection();
-
-    
 
     Levek::Shader shaderInstances = Levek::ShaderFactory::makeFromFile(
         SAMPLES_DIRECTORY"/particles/sphere_inst.vert",
@@ -46,6 +44,29 @@ int main(void) {
 
     SkyBoxPipelineState skybox (getSkyBoxPaths());
 
+    //plan state
+
+    Levek::Shader planeShader = Levek::ShaderFactory::makeFromFile(
+        SAMPLES_DIRECTORY"/particles/ground.vert",
+        SAMPLES_DIRECTORY"/particles/ground.frag"
+    );
+
+    Levek::Model* planeModel = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/resources/plane.obj");
+    const Levek::Mesh* planeMesh = planeModel->getMesh(0);
+    //Levek::Mesh planeMesh = Levek::makePlane(1.0f);
+    Levek::VertexBuffer planeVBO = Levek::VertexBuffer(planeMesh);
+    Levek::IndexBuffer planeIBO = Levek::IndexBuffer(planeMesh);
+    Levek::VertexBufferLayout planeLayout = Levek::VertexBufferLayout();
+    planeLayout.push<glm::vec3>(1);
+    planeLayout.push<glm::vec2>(1);
+    planeLayout.push<glm::vec3>(1);
+    Levek::VertexArray planeVA;
+    planeVA.addBuffer(planeVBO, planeLayout);
+    
+    Levek::Texture unitTexture = Levek::Texture(SAMPLES_DIRECTORY"/resources/unit.png", Levek::TextureWrapMode::REPEAT);
+
+    //glm::mat4 planeModel = glm::mat4(1.0f);
+
     while (!windowController->exit() && !inputController->isKeyPressed(Levek::LEVEK_KEY_Q)) {            
 
         renderer->clear();
@@ -55,17 +76,23 @@ int main(void) {
 
         glm::mat4 vp = camera.getProjection() * camera.getView();
 
+        //render instances
         shaderInstances.bind();
         shaderInstances.setUniformMat4f("vp", vp);
         glm::vec4 c {1.0, 0.0, 0.5, 1.0};
         shaderInstances.setUniform4f("color", c);
-        
-        //Levek::printVec3(camera.getFront());
-        //std::cout << camera.getYaw() << " " << camera.getPitch() << " " << camera.getRoll() << std::endl;
 
         vp = camera.getProjection() * glm::mat4(glm::mat3(camera.getView()));
         skybox.draw(renderer, vp);
         renderer->drawInstances(&particlesVA, &sphereIBO, &shaderInstances, particlesPositions.size());
+        
+        //render plane
+        planeShader.bind();
+        unitTexture.activateAndBind(0);
+        vp = camera.getProjection() * camera.getView();
+        planeShader.setUniformMat4f("mvp", vp);
+        planeShader.setUniform1i("tex", 0);
+        renderer->draw(&planeVA, &planeIBO, &planeShader);
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();

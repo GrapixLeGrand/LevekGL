@@ -1,6 +1,7 @@
 
 #include "TextureProperties.hpp"
 
+namespace Levek {
 //this table hold properties about Textures of opengl
 const OpenGLTextureProperties OPENGL_TEXTURES_PROPERTIES[OPENGL_TEXTURES_PROPERTIES_N] = {
 	{ GL_RGB, GL_RGB, GL_UNSIGNED_BYTE }, //simple RGB channels
@@ -19,4 +20,5 @@ const int OPENGL_WRAP_MODES[OPENGL_WRAP_MODES_N] = {
 const int OPENGL_MIN_MAG_MODES[OPENGL_MIN_MAG_MODES_N] = {
 	GL_LINEAR,
 	GL_NEAREST
+};
 };

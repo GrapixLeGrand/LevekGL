@@ -29,6 +29,8 @@ set(LEVEKGL_SOURCES
 
     "src/renderer/Renderer.cpp"
 
+    "src/mesh/Primitives.cpp"
+
     "src/shader/GlslangCompiler.cpp"
     "src/shader/Shader.cpp"
     "src/shader/ShaderFactory.cpp"

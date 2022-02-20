@@ -7,6 +7,7 @@ namespace Levek {
 Texture::Texture(const std::string& path)
 	: Texture(path, GL_CLAMP_TO_EDGE) {}
 
+
 Texture::Texture(const std::string& path, unsigned int wrapMode)
 	: filePath(path), localBuffer(nullptr), width(0), height(0), Bpp(0), rendererId(0), textureType(RGBA_8) {
 	stbi_set_flip_vertically_on_load(1); //flip texture up and down, opengl want the texture to begin on the left bottom corner
@@ -30,6 +31,8 @@ Texture::Texture(const std::string& path, unsigned int wrapMode)
 		ASSERT(false);
 	}
 }
+
+Texture::Texture(const std::string& path, TextureWrapMode wrapMode): Texture(path, OPENGL_WRAP_MODES[wrapMode]) {}
 
 Texture::Texture(int width, int height, TextureType type)
 	: Texture(width, height, type, CLAMP_TO_BORDER, LINEAR, LINEAR) {}

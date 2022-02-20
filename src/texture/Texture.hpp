@@ -18,6 +18,7 @@ private:
 public:
 	Texture(const std::string& path);
 	Texture(const std::string& path, unsigned int wrapMode);
+	Texture(const std::string& path, TextureWrapMode wrapMode);
 	Texture(int width, int height, TextureType type, TextureWrapMode wrapMode, 
 		TextureLODFunction minMode, TextureLODFunction magMode);
 	Texture(int width, int height, TextureType type);
