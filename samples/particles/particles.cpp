@@ -18,7 +18,7 @@ int main(void) {
     Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/sphere.obj");
     const Levek::Mesh* sphere = model->getMesh(0);
 
-    Levek::PerspectiveCamera camera({1, 1, 1}, {0.2, 0.2, 0.2}, {0, 1, 0}, 1000, 800);
+    Levek::PerspectiveCamera camera({3.6, 1.5, 3.6}, {0.2, 0.2, 0.2}, {0, 1, 0}, 1000, 800);
     glm::mat4 projection = camera.getProjection();
 
     Levek::Shader shaderInstances = Levek::ShaderFactory::makeFromFile(

@@ -7,5 +7,6 @@ uniform sampler2D tex;
 
 void main()
 {
-    out_color = texture(tex, v2f_tex_coord); //vec4(v2f_tex_coord, 0.0, 1.0);
+    vec2 c = v2f_tex_coord;
+    out_color = texture(tex, 30.0 * c); //vec4(v2f_tex_coord, 0.0, 1.0);
 }
