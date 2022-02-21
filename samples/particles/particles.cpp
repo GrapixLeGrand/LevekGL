@@ -32,7 +32,7 @@ int main(void) {
         SAMPLES_DIRECTORY"/particles/sphere_inst.frag"
     );
     
-    int num_particles = 10000;
+    int num_particles = 100000;
     int lim = 100; //(num_particles, {0, 0, 0});
     std::vector<glm::vec3> particlesPositions (num_particles, {0, 0, 0}); // { {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {3, 0, 0} };
     for (int i = 0; i < num_particles; i++) {
@@ -97,6 +97,8 @@ int main(void) {
         //render instances
         shaderInstances.bind();
         shaderInstances.setUniformMat4f("vp", vp);
+        shaderInstances.setUniformMat4f("v", camera.getView());
+        shaderInstances.setUniformMat4f("p", camera.getProjection());
         shaderInstances.setUniformMat3f("view_inv", view_inv);
 
         glm::vec4 c {1.0, 0.0, 0.5, 1.0};
