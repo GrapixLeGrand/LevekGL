@@ -48,7 +48,7 @@ RenderingEngine::RenderingEngine(int width, int height)
     
 		GL_CHECK(glEnable(GL_BLEND));
 		GL_CHECK(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-        //glEnable(GL_CULL_FACE);
+        GL_CHECK(glEnable(GL_CULL_FACE));
         //glDisable(GL_CULL_FACE);
 
         inputController = new GLFWInputController(window);

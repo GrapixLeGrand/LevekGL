@@ -1,4 +1,7 @@
 #include <iostream>
+#include <cstdlib>
+#include <ctime>
+
 #include "LevekGL.hpp"
 #include "../Utils.hpp"
 
@@ -18,7 +21,7 @@ int main(void) {
     windowController->initImGui();
 
     Levek::ModelLoader* meshLoader = engine->getModelLoader();
-    Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/sphere.obj");
+    Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/billboard.obj");
     const Levek::Mesh* sphere = model->getMesh(0);
 
     Levek::PerspectiveCamera camera({3.6, 1.5, 3.6}, {0.2, 0.2, 0.2}, {0, 1, 0}, resolutionX, resolutionY);
@@ -29,8 +32,16 @@ int main(void) {
         SAMPLES_DIRECTORY"/particles/sphere_inst.frag"
     );
     
-    std::vector<glm::vec3> particlesPositions { {2, 0, 2}, {0, 0, 0}, {4, 0, -1} };
-    Levek::VertexBuffer particlesPositionsVBO = Levek::VertexBuffer(sphere);
+    int num_particles = 10000;
+    int lim = 100; //(num_particles, {0, 0, 0});
+    std::vector<glm::vec3> particlesPositions (num_particles, {0, 0, 0}); // { {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {3, 0, 0} };
+    for (int i = 0; i < num_particles; i++) {
+        particlesPositions[i].x = std::rand() % lim;
+        particlesPositions[i].y = std::rand() % lim;
+        particlesPositions[i].z = std::rand() % lim;
+    }
+    
+    Levek::VertexBuffer particlesPositionsVBO = Levek::VertexBuffer(particlesPositions.data(), particlesPositions.size() * 3 * 4);
 
     Levek::VertexBuffer sphereVBO = Levek::VertexBuffer(sphere);
     Levek::IndexBuffer sphereIBO = Levek::IndexBuffer(sphere);
@@ -76,14 +87,18 @@ int main(void) {
 
         renderer->clear();
 
-        UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 1.f);
+        UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 10.f);
         UpdateCameraWithMouseOnDrag(inputController, camera, 0.2f);
 
+        glm::mat4 view = camera.getView();
         glm::mat4 vp = camera.getProjection() * camera.getView();
+        glm::mat3 view_inv = glm::inverse(glm::mat3(view)); //for billboard facing: see https://stackoverflow.com/questions/61559585/how-to-remove-rotation-from-model-view-matrix-so-that-object-always-faces-camera
 
         //render instances
         shaderInstances.bind();
         shaderInstances.setUniformMat4f("vp", vp);
+        shaderInstances.setUniformMat3f("view_inv", view_inv);
+
         glm::vec4 c {1.0, 0.0, 0.5, 1.0};
         shaderInstances.setUniform4f("color", c);
 
