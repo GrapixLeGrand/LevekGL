@@ -2,9 +2,12 @@
 #include "LevekGL.hpp"
 #include "../Utils.hpp"
 
+int resolutionX = 1280;
+int resolutionY = 720;
+
 int main(void) {
 
-    Levek::RenderingEngine* engine = new Levek::RenderingEngine(1000, 800);
+    Levek::RenderingEngine* engine = new Levek::RenderingEngine(resolutionX, resolutionY);
 
     Levek::Renderer* renderer = engine->getRenderer();
     Levek::LineRenderer* lineRenderer = engine->getLineRenderer();
@@ -18,7 +21,7 @@ int main(void) {
     Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/sphere.obj");
     const Levek::Mesh* sphere = model->getMesh(0);
 
-    Levek::PerspectiveCamera camera({3.6, 1.5, 3.6}, {0.2, 0.2, 0.2}, {0, 1, 0}, 1000, 800);
+    Levek::PerspectiveCamera camera({3.6, 1.5, 3.6}, {0.2, 0.2, 0.2}, {0, 1, 0}, resolutionX, resolutionY);
     glm::mat4 projection = camera.getProjection();
 
     Levek::Shader shaderInstances = Levek::ShaderFactory::makeFromFile(
@@ -63,8 +66,10 @@ int main(void) {
     Levek::VertexArray planeVA;
     planeVA.addBuffer(planeVBO, planeLayout);
     
-    Levek::Texture unitTexture = Levek::Texture(SAMPLES_DIRECTORY"/resources/unit.png", Levek::TextureWrapMode::REPEAT);
-
+    Levek::Texture unitTexture = Levek::Texture(SAMPLES_DIRECTORY"/resources/unit.png");
+    unitTexture.set(Levek::TextureParameters::TextureWrapMode::REPEAT);
+    unitTexture.set(Levek::TextureParameters::TextureLODFunction::LINEAR, Levek::TextureParameters::TextureLODFunction::LINEAR);
+    
     //glm::mat4 planeModel = glm::mat4(1.0f);
 
     while (!windowController->exit() && !inputController->isKeyPressed(Levek::LEVEK_KEY_Q)) {            

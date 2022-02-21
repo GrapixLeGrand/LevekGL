@@ -5,11 +5,13 @@
 
 namespace Levek {
 
+namespace TextureParameters {
+
 enum TextureType {
-	RGB_8,
-	RGBA_8,				//32 bits each 8 bits channels
-	DEPTH_24,			//24 bits single channel
-	DEPTH_24_STENCIL_8 	//24 bits for the depth and 8 bits for stencil (TODO)
+	RGB,
+	RGBA,				//32 bits each 8 bits channels
+	DEPTH,			//24 bits single channel
+	DEPTH_STENCIL 	//24 bits for the depth and 8 bits for stencil (TODO)
 };
 
 enum TextureWrapMode {
@@ -30,11 +32,13 @@ struct OpenGLTextureProperties {
 	int type;
 };
 
+};
+
 #define OPENGL_TEXTURES_PROPERTIES_N 4
 #define OPENGL_WRAP_MODES_N 4
 #define OPENGL_MIN_MAG_MODES_N 2
 
-extern const OpenGLTextureProperties OPENGL_TEXTURES_PROPERTIES[OPENGL_TEXTURES_PROPERTIES_N];
+extern const TextureParameters::OpenGLTextureProperties OPENGL_TEXTURES_PROPERTIES[OPENGL_TEXTURES_PROPERTIES_N];
 extern const int OPENGL_WRAP_MODES[OPENGL_WRAP_MODES_N];
 extern const int OPENGL_MIN_MAG_MODES[OPENGL_MIN_MAG_MODES_N];
 

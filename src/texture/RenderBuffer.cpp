@@ -7,22 +7,22 @@
 
 namespace Levek {
 
-RenderBuffer::RenderBuffer(int width, int height, TextureType type)
+RenderBuffer::RenderBuffer(int width, int height, TextureParameters::TextureType type)
  : id(0), width(width), height(height), type(type) {
     assert(width > 0 && height > 0);
-    assert(type != RGBA_8);
+    assert(type != TextureParameters::RGBA);
     GL_CHECK(glGenRenderbuffers(1, &id));
     GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, id));
 
     //warning not so sure with the types
     switch (type) {
-        case RGB_8:
+        case TextureParameters::RGB:
         GL_CHECK(glRenderbufferStorage(GL_RENDERBUFFER, GL_RGB, width, height));
         break;
-        case DEPTH_24:
+        case TextureParameters::DEPTH:
         GL_CHECK(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height));
         break;
-        case DEPTH_24_STENCIL_8:
+        case TextureParameters::DEPTH_STENCIL:
         GL_CHECK(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height));
         break;
         default:

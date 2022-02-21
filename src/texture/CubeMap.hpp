@@ -18,7 +18,7 @@ private:
 
 public:
     
-    CubeMap(int width, int height, TextureType type) {
+    CubeMap(int width, int height, TextureParameters::TextureType type) {
 
     }
 

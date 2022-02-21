@@ -136,7 +136,7 @@ void FrameBuffer::addColorAttachment(const Texture& texture) {
         "trying to add more color attachment that allowed"
     );
     LEVEK_RENDERING_ASSERT(
-        texture.getType() == RGBA_8 || texture.getType() == RGB_8,
+        texture.getType() == TextureParameters::RGBA || texture.getType() == TextureParameters::RGB,
         "Texture Color attachment must have RGBA_8 or RGB_8 type"
     );
 
@@ -157,7 +157,7 @@ void FrameBuffer::addColorAttachment(const RenderBuffer& buffer) {
         "trying to add more color attachment that expected"
     );
     LEVEK_RENDERING_ASSERT(
-        buffer.getType() == RGBA_8 || buffer.getType() == RGB_8, 
+        buffer.getType() == TextureParameters::RGBA || buffer.getType() == TextureParameters::RGB, 
         "Texture Color attachment must have RGBA_8 or RGB_8 type"
     );
 
@@ -179,7 +179,7 @@ void FrameBuffer::addColorAttachment(const Texture& texture, int index) {
         "trying to add more color attachment that expected"
     );
     LEVEK_RENDERING_ASSERT(
-        texture.getType() == RGBA_8 || texture.getType() == RGB_8, 
+        texture.getType() == TextureParameters::RGBA || texture.getType() == TextureParameters::RGB, 
         "Texture Color attachment must have RGBA_8 or RGB_8 type"
     );
     LEVEK_RENDERING_ASSERT(index > 0 && index < MAX_COLOR_ATTACHMENT_SLOTS, "index out of bounds");
@@ -198,7 +198,7 @@ void FrameBuffer::addColorAttachment(const Texture& texture, int index) {
 void FrameBuffer::addDepthAttachment(const Texture& texture) {
     ATTACHMENT_BASIC_ASSERTS(texture);
     LEVEK_RENDERING_ASSERT(
-        texture.getType() == DEPTH_24,
+        texture.getType() == TextureParameters::DEPTH,
         "Texture Depth attachment must have DEPTH_24 type"
     );
     LEVEK_RENDERING_ASSERT(
@@ -219,7 +219,7 @@ void FrameBuffer::addDepthAttachment(const Texture& texture) {
 void FrameBuffer::addDepthAttachment(const RenderBuffer& buffer) {
     ATTACHMENT_BASIC_ASSERTS(buffer);
     LEVEK_RENDERING_ASSERT(
-        buffer.getType() == DEPTH_24,
+        buffer.getType() == TextureParameters::DEPTH,
         "RenderBuffer Depth attachment must have DEPTH_24 type"
     );
     LEVEK_RENDERING_ASSERT(
@@ -240,7 +240,7 @@ void FrameBuffer::addDepthAttachment(const RenderBuffer& buffer) {
 void FrameBuffer::addDepthStencilAttachment(const Texture& texture) {
     ATTACHMENT_BASIC_ASSERTS(texture);
     LEVEK_RENDERING_ASSERT(
-        texture.getType() == DEPTH_24_STENCIL_8,
+        texture.getType() == TextureParameters::DEPTH_STENCIL,
         "Texture depth stencil attachment must have DEPTH_24 type"
     );
     LEVEK_RENDERING_ASSERT(
@@ -260,7 +260,7 @@ void FrameBuffer::addDepthStencilAttachment(const Texture& texture) {
 
 void FrameBuffer::addDepthStencilAttachment(const RenderBuffer& buffer) {
     ATTACHMENT_BASIC_ASSERTS(buffer);
-    LEVEK_RENDERING_ASSERT(buffer.getType() == DEPTH_24_STENCIL_8,
+    LEVEK_RENDERING_ASSERT(buffer.getType() == TextureParameters::DEPTH_STENCIL,
         "RenderBuffer Depth stencil attachment must have DEPTH_24 type");
     LEVEK_RENDERING_ASSERT(
         !hasDepth,

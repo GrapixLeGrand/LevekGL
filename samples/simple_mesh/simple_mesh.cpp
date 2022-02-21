@@ -104,7 +104,7 @@ int main(void) {
     Levek::OrthographicCamera lightCamera({0, 0, 0}, {0, -1, 0}, {0, 0, 1}, -50.0f, 50.0f, -50.0f, 50.0f, -100.0f, 100.0f);
 
     Levek::FrameBuffer depthMap (2048, 2048);
-    Levek::Texture depthTexture(2048, 2048, Levek::TextureType::DEPTH_24);
+    Levek::Texture depthTexture(2048, 2048, Levek::TextureParameters::TextureType::DEPTH);
 
     depthMap.addDepthAttachment(depthTexture);
     depthMap.finalize();

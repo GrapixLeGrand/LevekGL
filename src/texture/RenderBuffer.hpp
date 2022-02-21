@@ -9,9 +9,9 @@ private:
     unsigned int id;
     int width;
     int height;
-    TextureType type;
+    TextureParameters::TextureType type;
 public:
-    RenderBuffer(int width, int height, TextureType type);
+    RenderBuffer(int width, int height, TextureParameters::TextureType type);
     ~RenderBuffer();
     //void attachTexture(const Texture& texture, AttachmentType type);
     void bind() const;
@@ -20,7 +20,7 @@ public:
     unsigned int getId() const { return id; }
     int getWidth() const { return width; }
     int getHeight() const { return height; }
-    TextureType getType() const { return type; }
+    TextureParameters::TextureType getType() const { return type; }
 
 };
 };

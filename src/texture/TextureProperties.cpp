@@ -3,7 +3,7 @@
 
 namespace Levek {
 //this table hold properties about Textures of opengl
-const OpenGLTextureProperties OPENGL_TEXTURES_PROPERTIES[OPENGL_TEXTURES_PROPERTIES_N] = {
+const TextureParameters::OpenGLTextureProperties OPENGL_TEXTURES_PROPERTIES[OPENGL_TEXTURES_PROPERTIES_N] = {
 	{ GL_RGB, GL_RGB, GL_UNSIGNED_BYTE }, //simple RGB channels
 	{ GL_RGBA8, GL_RGBA, GL_UNSIGNED_BYTE }, //RGBA channels, each channel is 8 bits
 	{ GL_DEPTH_COMPONENT, GL_DEPTH_COMPONENT, GL_FLOAT }, //single depth channel 24 bits

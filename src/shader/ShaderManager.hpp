@@ -40,7 +40,7 @@ private:
             LEVEK_RENDERING_ID_FAIL("failed to compile shader", id);
         }
         else {
-            LEVEK_RENDERING_ID_INFO("shader compilation success (frag/vert)", id);
+            //LEVEK_RENDERING_ID_INFO("shader compilation success (frag/vert)", id);
         }
 
         return id;
@@ -77,7 +77,7 @@ private:
     GL_CHECK(glDeleteShader(vertexShaderId));
     GL_CHECK(glDeleteShader(fragmentShaderId));
 
-    LEVEK_RENDERING_ID_INFO("created shader program", program);
+    //LEVEK_RENDERING_ID_INFO("created shader program", program);
 
 	return program;
 }
@@ -147,7 +147,7 @@ protected:
         if (entry.referenceCount > 0) {
             entry.referenceCount -= 1;
             if (entry.referenceCount == 0) {
-                LEVEK_RENDERING_ID_INFO("Deleting shader program", entry.id);
+                //LEVEK_RENDERING_ID_INFO("Deleting shader program", entry.id);
                 GL_CHECK(glDeleteProgram(entry.id));
                 idsToHash.erase(entry.id);
                 shadersMetaData.erase(hash);

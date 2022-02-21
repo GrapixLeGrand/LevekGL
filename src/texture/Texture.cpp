@@ -9,7 +9,9 @@ Texture::Texture(const std::string& path)
 
 
 Texture::Texture(const std::string& path, unsigned int wrapMode)
-	: filePath(path), localBuffer(nullptr), width(0), height(0), Bpp(0), rendererId(0), textureType(RGBA_8) {
+	: filePath(path), width(0), height(0), Bpp(0), rendererId(0), textureType(TextureParameters::RGBA) {
+	
+	unsigned char* localBuffer = nullptr; //why conserving this ?
 	stbi_set_flip_vertically_on_load(1); //flip texture up and down, opengl want the texture to begin on the left bottom corner
 	localBuffer = stbi_load(path.c_str(), &width, &height, &Bpp, 4); // rgba = 4 channels
 	GL_CHECK(glGenTextures(1, &rendererId));
@@ -22,8 +24,9 @@ Texture::Texture(const std::string& path, unsigned int wrapMode)
 
 	//send to opengl
 	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer)); //0 for no multilevel texture, 0 for border
+	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
-
+	
 	if (localBuffer) {
 		stbi_image_free(localBuffer);
 	}
@@ -32,14 +35,14 @@ Texture::Texture(const std::string& path, unsigned int wrapMode)
 	}
 }
 
-Texture::Texture(const std::string& path, TextureWrapMode wrapMode): Texture(path, OPENGL_WRAP_MODES[wrapMode]) {}
+Texture::Texture(const std::string& path, TextureParameters::TextureWrapMode wrapMode): Texture(path, OPENGL_WRAP_MODES[wrapMode]) {}
 
-Texture::Texture(int width, int height, TextureType type)
-	: Texture(width, height, type, CLAMP_TO_BORDER, LINEAR, LINEAR) {}
+Texture::Texture(int width, int height, TextureParameters::TextureType type)
+	: Texture(width, height, type, TextureParameters::CLAMP_TO_BORDER, TextureParameters::LINEAR, TextureParameters::LINEAR) {}
 
-Texture::Texture(int width, int height, TextureType type, TextureWrapMode wrapMode, 
-			TextureLODFunction minMode, TextureLODFunction magMode)
-		: width(width), height(height), Bpp(0), localBuffer(nullptr), rendererId(0), textureType(type) {
+Texture::Texture(int width, int height, TextureParameters::TextureType type, TextureParameters::TextureWrapMode wrapMode, 
+			TextureParameters::TextureLODFunction minMode, TextureParameters::TextureLODFunction magMode)
+		: width(width), height(height), Bpp(0), rendererId(0), textureType(type) {
 	GL_CHECK(glGenTextures(1, &rendererId));
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D, rendererId));
 	
@@ -51,7 +54,7 @@ Texture::Texture(int width, int height, TextureType type, TextureWrapMode wrapMo
 	float whiteBoarder[] = {1.0f, 1.0f, 1.0f, 1.0f};
 	GL_CHECK(glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, whiteBoarder));
 
-	const OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[type];
+	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[type];
 
 	//send to opengl
 	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, properties.internalFormat, width, height, 0, properties.format, properties.type, 0)); //0 for no multilevel texture, 0 for border
@@ -76,5 +79,18 @@ void Texture::bind() const {
 void Texture::unbind() const {
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
 }
+
+void Texture::set(TextureParameters::TextureWrapMode wrapMode) {
+	bind();
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, OPENGL_WRAP_MODES[wrapMode]));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, OPENGL_WRAP_MODES[wrapMode]));
+}
+
+void Texture::set(TextureParameters::TextureLODFunction minMode, TextureParameters::TextureLODFunction magMode) {
+	bind();
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, OPENGL_MIN_MAG_MODES[minMode]));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, OPENGL_MIN_MAG_MODES[magMode]));
+}
+
 
 };
