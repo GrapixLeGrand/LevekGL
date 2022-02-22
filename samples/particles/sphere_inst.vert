@@ -14,7 +14,11 @@ uniform mat3 view_inv;
 out vec3 v2f_normal;
 out vec2 v2f_uv;
 out vec3 v2f_position_view;
+out vec3 v2f_position;
 //out vec3 v2f_position;
+
+out vec3 v0;
+out vec3 v1;
 
 void main()
 {
@@ -22,8 +26,12 @@ void main()
     v2f_normal = vertex_normal;
     vec4 temp = v * vec4(world_position, 1.0);
     v2f_position_view = temp.xyz / temp.w;
+    v2f_position = world_position;
 
-    vec3 pos = view_inv * vertex_position + world_position;
+    vec3 pos = view_inv * vertex_position + world_position; //world position of the rotated vertex of the billboard
+   
+    v0 = normalize(view_inv * vec3(0.5, 0.0, 0.0));
+    v1 = normalize(view_inv * vec3(0.0, 0.5, 0.0));
 
     gl_Position = vp * vec4(pos, 1.0);
 }

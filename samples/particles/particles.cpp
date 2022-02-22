@@ -93,13 +93,20 @@ int main(void) {
         glm::mat4 view = camera.getView();
         glm::mat4 vp = camera.getProjection() * camera.getView();
         glm::mat3 view_inv = glm::inverse(glm::mat3(view)); //for billboard facing: see https://stackoverflow.com/questions/61559585/how-to-remove-rotation-from-model-view-matrix-so-that-object-always-faces-camera
+        glm::mat3 normalView = camera.getNormalView();
+        glm::mat3 normalViewInv = glm::inverse(normalView);
+        //glm::vec3(0, -1, 0); //
+        glm::vec3 lightDirection = glm::vec3(0, -1, 0); //glm::vec3(glm::normalize(view * glm::vec4(0, -1, 0, 0)));
+        glm::mat4 view_inv_t = glm::inverse(view);
 
-        glm::vec3 lightDirection = glm::vec3(0, -1, 0);
 
         //render instances
         shaderInstances.bind();
         shaderInstances.setUniformMat4f("vp", vp);
+        shaderInstances.setUniformMat3f("normal_view", camera.getNormalView());
+        shaderInstances.setUniformMat3f("normal_view_inv", normalViewInv);
         shaderInstances.setUniformMat4f("v", camera.getView());
+        shaderInstances.setUniformMat4f("view_inv_t", view_inv_t);
         shaderInstances.setUniformMat4f("p", camera.getProjection());
         shaderInstances.setUniformMat3f("view_inv", view_inv);
         shaderInstances.setUniform3f("light_direction", lightDirection);
