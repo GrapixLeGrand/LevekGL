@@ -34,27 +34,44 @@ int main(void) {
     
     int num_particles = 100000;
     int lim = 100; //(num_particles, {0, 0, 0});
+    int num_colors = 256;
     std::vector<glm::vec3> particlesPositions (num_particles, {0, 0, 0}); // { {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {3, 0, 0} };
+    std::vector<unsigned int> particlesColors (num_particles, 0);
+    std::vector<glm::vec4> palette (num_colors, {0, 0, 0, 1.0});
     for (int i = 0; i < num_particles; i++) {
         particlesPositions[i].x = std::rand() % lim;
         particlesPositions[i].y = std::rand() % lim;
         particlesPositions[i].z = std::rand() % lim;
+        particlesColors[i] = std::rand() % 16;
+        if (i < num_colors)  {
+            palette[i].r = ((float) std::rand() / RAND_MAX);
+            palette[i].g = ((float) std::rand() / RAND_MAX);
+            palette[i].b = ((float) std::rand() / RAND_MAX);
+            palette[i].a = 1.0f;
+        }
     }
     
+    size_t p1 = particlesColors.size();
+    size_t p2 = particlesPositions.size();
+
     Levek::VertexBuffer particlesPositionsVBO = Levek::VertexBuffer(particlesPositions.data(), particlesPositions.size() * 3 * 4);
+    Levek::VertexBuffer particlesColorsVBO = Levek::VertexBuffer(particlesColors.data(), particlesColors.size() * sizeof(unsigned int));
 
     Levek::VertexBuffer sphereVBO = Levek::VertexBuffer(sphere);
     Levek::IndexBuffer sphereIBO = Levek::IndexBuffer(sphere);
     Levek::VertexBufferLayout sphereLayout = Levek::VertexBufferLayout();
     Levek::VertexBufferLayout instanceLayout = Levek::VertexBufferLayout(); 
+    Levek::VertexBufferLayout colorLayout = Levek::VertexBufferLayout(); 
     sphereLayout.push<glm::vec3>(1); //sphere position
     sphereLayout.push<glm::vec2>(1); //sphere textures
     sphereLayout.push<glm::vec3>(1); //sphere normal 
     instanceLayout.push<glm::vec3>(1, 1); //instance offset (per instance)
+    colorLayout.push<unsigned int>(1, 1);
 
     Levek::VertexArray particlesVA;
     particlesVA.addBuffer(sphereVBO, sphereLayout);
     particlesVA.addBuffer(particlesPositionsVBO, instanceLayout);
+    particlesVA.addBuffer(particlesColorsVBO, colorLayout);
 
     SkyBoxPipelineState skybox (getSkyBoxPaths());
 
@@ -93,26 +110,16 @@ int main(void) {
         glm::mat4 view = camera.getView();
         glm::mat4 vp = camera.getProjection() * camera.getView();
         glm::mat3 view_inv = glm::inverse(glm::mat3(view)); //for billboard facing: see https://stackoverflow.com/questions/61559585/how-to-remove-rotation-from-model-view-matrix-so-that-object-always-faces-camera
-        glm::mat3 normalView = camera.getNormalView();
-        glm::mat3 normalViewInv = glm::inverse(normalView);
-        //glm::vec3(0, -1, 0); //
         glm::vec3 lightDirection = glm::vec3(0, -1, 0); //glm::vec3(glm::normalize(view * glm::vec4(0, -1, 0, 0)));
-        glm::mat4 view_inv_t = glm::inverse(view);
-
 
         //render instances
         shaderInstances.bind();
         shaderInstances.setUniformMat4f("vp", vp);
-        shaderInstances.setUniformMat3f("normal_view", camera.getNormalView());
-        shaderInstances.setUniformMat3f("normal_view_inv", normalViewInv);
-        shaderInstances.setUniformMat4f("v", camera.getView());
-        shaderInstances.setUniformMat4f("view_inv_t", view_inv_t);
         shaderInstances.setUniformMat4f("p", camera.getProjection());
+        shaderInstances.setUniformMat4f("view", camera.getView());
         shaderInstances.setUniformMat3f("view_inv", view_inv);
         shaderInstances.setUniform3f("light_direction", lightDirection);
-
-        glm::vec4 c {1.0, 0.0, 0.5, 1.0};
-        shaderInstances.setUniform4f("color", c);
+        shaderInstances.setUniform4f("palette", palette.data(), 256);
 
         vp = camera.getProjection() * glm::mat4(glm::mat3(camera.getView()));
         skybox.draw(renderer, vp);

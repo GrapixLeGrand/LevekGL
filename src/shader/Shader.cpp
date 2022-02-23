@@ -101,6 +101,10 @@ void Shader::setUniform3f(const std::string& name, const glm::vec3& v) const {
 	GL_CHECK(glUniform3f(ShaderManager::getUniformLocation(renderer_id, name), v.x, v.y, v.z));
 }
 
+void Shader::setUniform4f(const std::string& name, const glm::vec4* v, size_t size) const {
+	GL_CHECK(glUniform4fv(ShaderManager::getUniformLocation(renderer_id, name), size, (const GLfloat*)&v[0]));
+}
+
 void Shader::setUniform4f(const std::string& name, const glm::vec4& v) const {
 	//bool res = glIsProgram(this->renderer_id) == GL_TRUE;
 	GLint params = -1;
