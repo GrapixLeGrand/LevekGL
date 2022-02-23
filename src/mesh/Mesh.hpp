@@ -26,23 +26,26 @@ private:
 
 public:
 
-    Mesh(
-        const std::vector<glm::vec3>& mPositions,
-        const std::vector<glm::vec2>& textureCoords,
-        const std::vector<glm::vec3>& normals,
-        const std::vector<unsigned int>& indices
-    ):
-    mPositions(mPositions),
-    mTexturesCoords(textureCoords),
-    mNormals(normals),
-    mIndices(indices) {
-        mVertices.reserve(mPositions.size());
 
+    void buildVertexBuffer() {
+        mVertices.reserve(mPositions.size());
         for (size_t i = 0; i < mPositions.size(); i++) {
             Vertex v(this->mPositions[i], this->mTexturesCoords[i], this->mNormals[i]);
             mVertices.push_back(v);
         }
+    }
 
+    Mesh(
+        const std::vector<glm::vec3>& positions,
+        const std::vector<glm::vec2>& textureCoords,
+        const std::vector<glm::vec3>& normals,
+        const std::vector<unsigned int>& indices
+    ):
+    mPositions(positions),
+    mTexturesCoords(textureCoords),
+    mNormals(normals),
+    mIndices(indices) {
+        buildVertexBuffer();
     }
     
     //getters and setters here

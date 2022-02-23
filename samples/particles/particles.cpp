@@ -4,6 +4,7 @@
 
 #include "LevekGL.hpp"
 #include "../Utils.hpp"
+#include "simulation.hpp"
 
 int resolutionX = 1280;
 int resolutionY = 720;
@@ -21,19 +22,26 @@ int main(void) {
     windowController->initImGui();
 
     Levek::ModelLoader* meshLoader = engine->getModelLoader();
-    Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/billboard.obj");
+    Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/models/billboard.obj");
     const Levek::Mesh* sphere = model->getMesh(0);
 
     Levek::PerspectiveCamera camera({3.6, 1.5, 3.6}, {0.2, 0.2, 0.2}, {0, 1, 0}, resolutionX, resolutionY);
     glm::mat4 projection = camera.getProjection();
 
     Levek::Shader shaderInstances = Levek::ShaderFactory::makeFromFile(
-        SAMPLES_DIRECTORY"/particles/sphere_inst.vert",
-        SAMPLES_DIRECTORY"/particles/sphere_inst.frag"
+        SAMPLES_DIRECTORY"/particles/shaders/sphere_inst.vert",
+        SAMPLES_DIRECTORY"/particles/shaders/sphere_inst.frag"
     );
     
-    int num_particles = 100000;
-    int lim = 100; //(num_particles, {0, 0, 0});
+    float particleScale = 1.0f;
+
+    Simulation simulation;
+    init_sim(&simulation, 10, 10, 10);
+    fill_grid(&simulation);
+
+    /*
+    int num_particles = 1000;
+    int lim = 10; //(num_particles, {0, 0, 0});
     int num_colors = 256;
     std::vector<glm::vec3> particlesPositions (num_particles, {0, 0, 0}); // { {0, 0, 0}, {1, 0, 0}, {2, 0, 0}, {3, 0, 0} };
     std::vector<unsigned int> particlesColors (num_particles, 0);
@@ -49,24 +57,21 @@ int main(void) {
             palette[i].b = ((float) std::rand() / RAND_MAX);
             palette[i].a = 1.0f;
         }
-    }
-    
-    size_t p1 = particlesColors.size();
-    size_t p2 = particlesPositions.size();
+    }*/
 
-    Levek::VertexBuffer particlesPositionsVBO = Levek::VertexBuffer(particlesPositions.data(), particlesPositions.size() * 3 * 4);
-    Levek::VertexBuffer particlesColorsVBO = Levek::VertexBuffer(particlesColors.data(), particlesColors.size() * sizeof(unsigned int));
+    Levek::VertexBuffer particlesPositionsVBO = Levek::VertexBuffer(simulation.positions.data(), simulation.positions.size() * 3 * 4);
+    Levek::VertexBuffer particlesColorsVBO = Levek::VertexBuffer(simulation.colors.data(), simulation.colors.size() * 4 * 4);
 
     Levek::VertexBuffer sphereVBO = Levek::VertexBuffer(sphere);
     Levek::IndexBuffer sphereIBO = Levek::IndexBuffer(sphere);
     Levek::VertexBufferLayout sphereLayout = Levek::VertexBufferLayout();
     Levek::VertexBufferLayout instanceLayout = Levek::VertexBufferLayout(); 
-    Levek::VertexBufferLayout colorLayout = Levek::VertexBufferLayout(); 
+    Levek::VertexBufferLayout colorLayout = Levek::VertexBufferLayout();
     sphereLayout.push<glm::vec3>(1); //sphere position
     sphereLayout.push<glm::vec2>(1); //sphere textures
     sphereLayout.push<glm::vec3>(1); //sphere normal 
     instanceLayout.push<glm::vec3>(1, 1); //instance offset (per instance)
-    colorLayout.push<unsigned int>(1, 1);
+    colorLayout.push<glm::vec4>(1, 1);
 
     Levek::VertexArray particlesVA;
     particlesVA.addBuffer(sphereVBO, sphereLayout);
@@ -78,13 +83,14 @@ int main(void) {
     //plan state
 
     Levek::Shader planeShader = Levek::ShaderFactory::makeFromFile(
-        SAMPLES_DIRECTORY"/particles/ground.vert",
-        SAMPLES_DIRECTORY"/particles/ground.frag"
+        SAMPLES_DIRECTORY"/particles/shaders/ground.vert",
+        SAMPLES_DIRECTORY"/particles/shaders/ground.frag"
     );
 
     Levek::Model* planeModel = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/resources/plane.obj");
     const Levek::Mesh* planeMesh = planeModel->getMesh(0);
     //Levek::Mesh planeMesh = Levek::makePlane(1.0f);
+
     Levek::VertexBuffer planeVBO = Levek::VertexBuffer(planeMesh);
     Levek::IndexBuffer planeIBO = Levek::IndexBuffer(planeMesh);
     Levek::VertexBufferLayout planeLayout = Levek::VertexBufferLayout();
@@ -102,6 +108,10 @@ int main(void) {
 
     while (!windowController->exit() && !inputController->isKeyPressed(Levek::LEVEK_KEY_Q)) {            
 
+        //sim here
+        simulate(&simulation);
+
+        particlesPositionsVBO.Update(simulation.positions.data(), simulation.positions.size() * 3 * 4);
         renderer->clear();
 
         UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 10.f);
@@ -119,11 +129,12 @@ int main(void) {
         shaderInstances.setUniformMat4f("view", camera.getView());
         shaderInstances.setUniformMat3f("view_inv", view_inv);
         shaderInstances.setUniform3f("light_direction", lightDirection);
-        shaderInstances.setUniform4f("palette", palette.data(), 256);
+        //shaderInstances.setUniform4f("palette", palette.data(), 256);
+        shaderInstances.setUniform1f("scale", particleScale);
 
         vp = camera.getProjection() * glm::mat4(glm::mat3(camera.getView()));
         skybox.draw(renderer, vp);
-        renderer->drawInstances(&particlesVA, &sphereIBO, &shaderInstances, particlesPositions.size());
+        renderer->drawInstances(&particlesVA, &sphereIBO, &shaderInstances, simulation.num_particles);
         
         //render plane
         planeShader.bind();
@@ -136,13 +147,23 @@ int main(void) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-        ImGui::Begin("Stats");
-        ImGui::Text("%d fps", (int) (1.0f / windowController->getDeltaTime()));
-        ImGui::End();
-
-        ImGui::Begin("Camera");
-        addImGuiVec3(camera.getEye());
-        addImGuiVec3(camera.getFront());
+        ImGuiTabBarFlags flags = ImGuiTabBarFlags_AutoSelectNewTabs | ImGuiTabBarFlags_Reorderable;
+        ImGui::Begin("Scene");
+        ImGui::BeginTabBar("Scene parameters");
+        if (ImGui::BeginTabItem("Stats")){
+            ImGui::Text("%d fps", (int) (1.0f / windowController->getDeltaTime()));
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Particles")){
+            ImGui::InputFloat("particle size", &particleScale, 0.01f, 5.0f, "%.3f");
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Camera")){
+            addImGuiVec3(camera.getEye());
+            addImGuiVec3(camera.getFront());
+            ImGui::EndTabItem();
+        }
+        ImGui::EndTabBar();
         ImGui::End();
 
         ImGui::Render();
