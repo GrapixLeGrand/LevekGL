@@ -7,7 +7,7 @@ struct Simulation {
 
     float particleDiameter = 1.0;
     float particleRadius = 0.5;
-    float kernelRadius = 2 * particleDiameter;
+    float kernelRadius = 5 * particleDiameter;
 
     int max_neighbors;
 
@@ -16,9 +16,9 @@ struct Simulation {
     int particlesZ;
     int num_particles;
 
-    float domainX = 30.0f;
-    float domainY = 30.0f;
-    float domainZ = 30.0f;
+    float domainX = 15.0f;
+    float domainY = 15.0f;
+    float domainZ = 15.0f;
 
     float rest_density = 1000.0;
     float mass = 1.0;
@@ -27,7 +27,7 @@ struct Simulation {
     float time_step = 0.01;
     float steps = 4;
 
-    float relaxation = 1.391;
+    float relaxation_epsilon = 1.391;
 
     float dt_s_corr = 0.041;
     float k_s_corr = 0.110;
@@ -39,6 +39,7 @@ struct Simulation {
     std::vector<glm::vec3> positions;
     std::vector<glm::vec3> positions_star;
     std::vector<glm::vec3> velocities;
+    std::vector<glm::vec3> pressures_forces;
 
     std::vector<float> densities;
     std::vector<float> lambdas;
@@ -60,7 +61,32 @@ extern void fill_grid(Simulation* simulation);
 extern void find_neighbors(Simulation* simulation);
 extern void clear_neighbors(Simulation* simulation);
 
+/**
+ * @brief cubic kernel. from SplishSplash repository https://github.com/InteractiveComputerGraphics/SPlisHSPlasH/blob/master/SPlisHSPlasH/SPHKernels.h 
+ * 
+ * @param simulation 
+ * @param r 
+ * @return float 
+ */
 extern float cubic_kernel(const Simulation* simulation, float r);
+
+
+/**
+ * @brief cubic kernel. from SplishSplash repository https://github.com/InteractiveComputerGraphics/SPlisHSPlasH/blob/master/SPlisHSPlasH/SPHKernels.h 
+ * 
+ * @param simulation 
+ * @param r 
+ * @return float 
+ */
+extern float cubic_kernel(const Simulation* simulation, glm::vec3& r);
+
+/**
+ * @brief gradient of cubic kernel. from SplishSplash repository https://github.com/InteractiveComputerGraphics/SPlisHSPlasH/blob/master/SPlisHSPlasH/SPHKernels.h 
+ * 
+ * @param simulation 
+ * @param r 
+ * @return float 
+ */
 extern glm::vec3 cubic_kernel_grad(const Simulation* simulation, const glm::vec3& r);
 
 extern void simulate(Simulation* simulation);
