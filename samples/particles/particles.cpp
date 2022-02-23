@@ -36,7 +36,10 @@ int main(void) {
     float particleScale = 1.0f;
 
     Simulation simulation;
-    init_sim(&simulation, 10, 10, 10);
+    int particleX = 7;
+    int particleY = 7;
+    int particleZ = 7;
+    init_sim(&simulation, particleX, particleY, particleZ);
     fill_grid(&simulation);
 
     /*
@@ -105,6 +108,7 @@ int main(void) {
     unitTexture.set(Levek::TextureParameters::TextureLODFunction::LINEAR, Levek::TextureParameters::TextureLODFunction::LINEAR);
     
     //glm::mat4 planeModel = glm::mat4(1.0f);
+    float factor = 1.0f;
 
     while (!windowController->exit() && !inputController->isKeyPressed(Levek::LEVEK_KEY_Q)) {            
 
@@ -152,7 +156,25 @@ int main(void) {
         ImGui::BeginTabBar("Scene parameters");
         if (ImGui::BeginTabItem("Stats")){
             ImGui::Text("%d fps", (int) (1.0f / windowController->getDeltaTime()));
+            ImGui::Text("particle radius %.3f", simulation.particleRadius);
+            ImGui::Text("particle diameter %.3f", simulation.particleDiameter);
+            ImGui::Text("kernel radius %.3f", simulation.kernelRadius);
+
+            ImGui::InputFloat("kernel factor", &factor, 0.001f, 100.0f, "%.3f");
+            ImGui::InputFloat("cubic k", &simulation.cubic_kernel_k, 0.01f, 100.0f, "%.3f");
+            ImGui::InputFloat("cubic l", &simulation.cubic_kernel_l, 0.01f, 100.0f, "%.3f");
+            ImGui::InputFloat("rest density", &simulation.rest_density, 0.01f, 3000.0f, "%.3f");
+            ImGui::InputFloat("mass", &simulation.mass, 0.01f, 1000.0f, "%.3f");
+            ImGui::InputFloat("relaxation", &simulation.relaxation_epsilon, 0.01f, 1000.0f, "%.3f");
+            ImGui::InputFloat("kernel radius", &simulation.kernelRadius, 0.01f, 1000.0f, "%.3f");
+            
+            if (ImGui::Button("reset")) {
+                init_sim(&simulation, particleX, particleY, particleZ);
+                fill_grid(&simulation);
+            }
             ImGui::EndTabItem();
+            simulation.cubic_kernel_k *= factor;
+            simulation.cubic_kernel_l *= factor;
         }
         if (ImGui::BeginTabItem("Particles")){
             ImGui::InputFloat("particle size", &particleScale, 0.01f, 5.0f, "%.3f");

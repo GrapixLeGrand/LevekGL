@@ -7,7 +7,7 @@ struct Simulation {
 
     float particleDiameter = 1.0;
     float particleRadius = 0.5;
-    float kernelRadius = 5 * particleDiameter;
+    float kernelRadius = 3.1 * particleDiameter;
 
     int max_neighbors;
 
@@ -16,9 +16,9 @@ struct Simulation {
     int particlesZ;
     int num_particles;
 
-    float domainX = 15.0f;
-    float domainY = 15.0f;
-    float domainZ = 15.0f;
+    float domainX = 10.0f;
+    float domainY = 10.0f;
+    float domainZ = 10.0f;
 
     float rest_density = 1000.0;
     float mass = 1.0;
@@ -27,7 +27,7 @@ struct Simulation {
     float time_step = 0.01;
     float steps = 4;
 
-    float relaxation_epsilon = 1.391;
+    float relaxation_epsilon = 1.0;
 
     float dt_s_corr = 0.041;
     float k_s_corr = 0.110;
