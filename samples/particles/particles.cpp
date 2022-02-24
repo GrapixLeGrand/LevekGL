@@ -36,9 +36,9 @@ int main(void) {
     float particleScale = 1.0f;
 
     Simulation simulation;
-    int particleX = 10;
-    int particleY = 15;
-    int particleZ = 10;
+    int particleX = 15;
+    int particleY = 20;
+    int particleZ = 15;
     init_sim(&simulation, particleX, particleY, particleZ);
     fill_grid(&simulation);
 
@@ -155,11 +155,13 @@ int main(void) {
         ImGuiTabBarFlags flags = ImGuiTabBarFlags_AutoSelectNewTabs | ImGuiTabBarFlags_Reorderable;
         ImGui::Begin("Scene");
         ImGui::BeginTabBar("Scene parameters");
-        if (ImGui::BeginTabItem("Stats")) {
+        if (ImGui::BeginTabItem("Simulation")) {
+
             ImGui::Text("%d fps", (int) (1.0f / windowController->getDeltaTime()));
             ImGui::Text("particle radius %.3f", simulation.particleRadius);
             ImGui::Text("particle diameter %.3f", simulation.particleDiameter);
             ImGui::Text("kernel radius %.3f", simulation.kernelRadius);
+            ImGui::Text("#particles: %d", simulation.num_particles);
 
             //ImGui::InputFloat("kernel factor", &factor, 0.001f, 100.0f, "%.3f");
             ImGui::InputFloat("cubic k", &simulation.cubic_kernel_k, 0.01f, 100.0f, "%.3f");
@@ -170,6 +172,11 @@ int main(void) {
             ImGui::InputFloat("kernel radius", &simulation.kernelRadius, 0.01f, 1000.0f, "%.3f");
             ImGui::InputFloat("Kernel Factor", &simulation.kernelFactor, 0.001f, 1000.0f, "%.1f");
             ImGui::SliderFloat("Kernel factor", &simulation.kernelFactor, 0.001f, 1.0f, "%.3f");
+
+            ImGui::Text("Negative pressure correction");
+            ImGui::InputFloat("s_corr dq", &simulation.s_corr_dq, 0.001f, 100.0f, "%.1f");
+            ImGui::InputFloat("s_corr k", &simulation.s_corr_k, 0.001f, 100.0f, "%.1f");
+            ImGui::InputFloat("s_corr n", &simulation.s_corr_n, 0.001f, 100.0f, "%.1f");
 
             if (ImGui::Button("reset")) {
                 init_sim(&simulation, particleX, particleY, particleZ);

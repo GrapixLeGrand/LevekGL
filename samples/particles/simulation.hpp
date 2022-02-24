@@ -3,11 +3,17 @@
 #include <vector>
 #include "glm/glm.hpp"
 
-struct Simulation;
+//https://on-demand.gputechconf.com/gtc/2014/presentations/S4117-fast-fixed-radius-nearest-neighbor-gpu.pdf
 
+struct Simulation;
 
 typedef float (*W_fun)(const Simulation*, float);
 typedef glm::vec3 (*gradW_fun)(const Simulation*, const glm::vec3&);
+
+struct ParticleInCell {
+    int cell_id; //cell index of the particle in the grid
+    int index; //index of the particle in the unsorted array
+};
 
 struct Simulation {
     
@@ -19,6 +25,10 @@ struct Simulation {
     float kernelRadius = 3.1f * particleRadius;
     float kernelFactor = 0.5f;
 
+    //stuff for the kernel
+    float cubic_kernel_k;
+    float cubic_kernel_l;
+
     int max_neighbors;
 
     int particlesX;
@@ -26,11 +36,11 @@ struct Simulation {
     int particlesZ;
     int num_particles;
 
-    float domainX = 20.0f;
+    float domainX = 40.0f;
     float domainY = 40.0f;
-    float domainZ = 20.0f;
+    float domainZ = 40.0f;
 
-    float rest_density = 10.0;
+    float rest_density = 24.0;
     float mass = 5.0;
 
     glm::vec3 gravity = glm::vec3(0, -10.0, 0.0);
@@ -39,9 +49,9 @@ struct Simulation {
 
     float relaxation_epsilon = 10.0f;
 
-    float dt_s_corr = 0.041;
-    float k_s_corr = 0.110;
-    float n_scorr = 4;
+    float s_corr_dq = 0.5f;
+    float s_corr_k = 1.0;
+    float s_corr_n = 4;
 
     float c_xsph = 0.1;
     float epsilon_vorticity = 0.1;
@@ -53,16 +63,16 @@ struct Simulation {
 
     std::vector<float> densities;
     std::vector<float> lambdas;
-
     std::vector<glm::vec3> vorticities;
-
     std::vector<std::vector<int>> neighbors;
-
     std::vector<glm::vec4> colors;
 
-    //stuff for the kernel
-    float cubic_kernel_k;
-    float cubic_kernel_l;
+    //counting sort arrays
+    int gridX, gridY, gridZ;
+    int grid_size;
+    
+    std::vector<std::pair<int, int>> cell_to_index;
+
 
 };
 
@@ -103,5 +113,8 @@ extern float poly6_kernel(const Simulation* simulation, float r);
 extern float poly6_kernel(const Simulation* simulation, glm::vec3& r);
 extern glm::vec3 spiky_kernel(const Simulation* simulation, glm::vec3& r);
 
+extern float s_coor(const Simulation* simulation, float rl);
+
+extern void find_neighbors_counting_sort(Simulation* simulation);
 
 extern void simulate(Simulation* simulation);

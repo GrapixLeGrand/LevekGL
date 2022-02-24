@@ -157,6 +157,10 @@ glm::vec3 spiky_kernel(const Simulation* simulation, glm::vec3& r) {
     return result;
 }
 
+float s_coor(const Simulation* simulation, float rl) {
+    return - simulation->s_corr_k * std::pow(simulation->W(simulation, rl) / simulation->W(simulation, simulation->s_corr_dq), simulation->s_corr_n);
+}
+
 float epsilon_collision = 0.01;
 
 float resolve_collision(float value, float min, float max) {
@@ -170,6 +174,12 @@ float resolve_collision(float value, float min, float max) {
     }
 
     return value;
+}
+
+void find_neighbors_counting_sort(Simulation* simulation) {
+
+    //assign particles to grid cells
+    
 }
 
 void simulate(Simulation* simulation) {
@@ -204,16 +214,16 @@ void simulate(Simulation* simulation) {
     //solve pressure
     for (int i = 0; i < n; i++) {
 
-        densities[i] = 0.0;
+        float densitiy = 0.0;
         for (int j = 0; j < neighbors[i].size(); j++) {
             glm::vec3 ij = positions_star[i] - positions_star[neighbors[i][j]];
             float len = glm::length(ij);
-            densities[i] += simulation->mass * simulation->W(simulation, len);
+            densitiy += simulation->mass * simulation->W(simulation, len);
         }
-        densities[i] += simulation->mass * simulation->W(simulation, 0.0);
+        densitiy += simulation->mass * simulation->W(simulation, 0.0);
 
         //equation 1
-        float constraint_i = (densities[i] / simulation->rest_density) - 1.0;
+        float constraint_i = (densitiy / simulation->rest_density) - 1.0;
         float constraint_gradient_sum = 0.0;
         glm::vec3 grad_current_p = glm::vec3(0.0);
 
@@ -240,7 +250,7 @@ void simulate(Simulation* simulation) {
         pressures_forces[i] = glm::vec3(0.0);
         for (int j = 0; j < neighbors[i].size(); j++) {
             glm::vec3 ij = positions_star[i] - positions_star[neighbors[i][j]];
-            pressures_forces[i] += (lambdas[i] + lambdas[j]) * simulation->gradW(simulation, ij);
+            pressures_forces[i] += (lambdas[i] + lambdas[j] + s_coor(simulation, glm::length(ij))) * simulation->gradW(simulation, ij);
         }
 
         pressures_forces[i] /= simulation->rest_density;
