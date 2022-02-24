@@ -7,17 +7,17 @@ struct Simulation;
 
 
 typedef float (*W_fun)(const Simulation*, float);
-typedef glm::vec3 (*gradW_fun)(const Simulation*, glm::vec3&);
+typedef glm::vec3 (*gradW_fun)(const Simulation*, const glm::vec3&);
 
 struct Simulation {
     
     W_fun W = nullptr;
     gradW_fun gradW = nullptr;
 
-    float particleDiameter = 1.0;
     float particleRadius = 0.5;
-    float kernelRadius = 3.0f * particleRadius;
-    float kernelFactor = 1.0f;
+    float particleDiameter = 2 * particleRadius;
+    float kernelRadius = 3.1f * particleRadius;
+    float kernelFactor = 0.5f;
 
     int max_neighbors;
 
@@ -26,9 +26,9 @@ struct Simulation {
     int particlesZ;
     int num_particles;
 
-    float domainX = 10.0f;
-    float domainY = 10.0f;
-    float domainZ = 10.0f;
+    float domainX = 20.0f;
+    float domainY = 40.0f;
+    float domainZ = 20.0f;
 
     float rest_density = 10.0;
     float mass = 5.0;
@@ -37,7 +37,7 @@ struct Simulation {
     float time_step = 0.01;
     float steps = 4;
 
-    float relaxation_epsilon = 1.0;
+    float relaxation_epsilon = 10.0f;
 
     float dt_s_corr = 0.041;
     float k_s_corr = 0.110;

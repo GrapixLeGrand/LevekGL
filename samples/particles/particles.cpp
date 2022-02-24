@@ -36,9 +36,9 @@ int main(void) {
     float particleScale = 1.0f;
 
     Simulation simulation;
-    int particleX = 7;
-    int particleY = 7;
-    int particleZ = 7;
+    int particleX = 10;
+    int particleY = 15;
+    int particleZ = 10;
     init_sim(&simulation, particleX, particleY, particleZ);
     fill_grid(&simulation);
 
@@ -112,6 +112,7 @@ int main(void) {
 
     while (!windowController->exit() && !inputController->isKeyPressed(Levek::LEVEK_KEY_Q)) {            
 
+        //simulation.time_step = windowController->getDeltaTime();
         //sim here
         simulate(&simulation);
 
@@ -154,7 +155,7 @@ int main(void) {
         ImGuiTabBarFlags flags = ImGuiTabBarFlags_AutoSelectNewTabs | ImGuiTabBarFlags_Reorderable;
         ImGui::Begin("Scene");
         ImGui::BeginTabBar("Scene parameters");
-        if (ImGui::BeginTabItem("Stats")){
+        if (ImGui::BeginTabItem("Stats")) {
             ImGui::Text("%d fps", (int) (1.0f / windowController->getDeltaTime()));
             ImGui::Text("particle radius %.3f", simulation.particleRadius);
             ImGui::Text("particle diameter %.3f", simulation.particleDiameter);
@@ -168,7 +169,8 @@ int main(void) {
             ImGui::InputFloat("relaxation", &simulation.relaxation_epsilon, 0.01f, 1000.0f, "%.3f");
             ImGui::InputFloat("kernel radius", &simulation.kernelRadius, 0.01f, 1000.0f, "%.3f");
             ImGui::InputFloat("Kernel Factor", &simulation.kernelFactor, 0.001f, 1000.0f, "%.1f");
-            
+            ImGui::SliderFloat("Kernel factor", &simulation.kernelFactor, 0.001f, 1.0f, "%.3f");
+
             if (ImGui::Button("reset")) {
                 init_sim(&simulation, particleX, particleY, particleZ);
                 fill_grid(&simulation);
@@ -177,11 +179,11 @@ int main(void) {
             simulation.cubic_kernel_k *= factor;
             simulation.cubic_kernel_l *= factor;
         }
-        if (ImGui::BeginTabItem("Particles")){
+        if (ImGui::BeginTabItem("Particles")) {
             ImGui::InputFloat("particle size", &particleScale, 0.01f, 5.0f, "%.3f");
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Camera")){
+        if (ImGui::BeginTabItem("Camera")) {
             addImGuiVec3(camera.getEye());
             addImGuiVec3(camera.getFront());
             ImGui::EndTabItem();

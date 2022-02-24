@@ -27,8 +27,8 @@ void init_sim(Simulation* simulation, int particlesX, int particlesY, int partic
     simulation->neighbors = std::vector<std::vector<int>>(simulation->num_particles);
     simulation->colors = std::vector<glm::vec4>(simulation->num_particles, {0, 0, 0, 0});
 
-    simulation->W = poly6_kernel;
-    simulation->gradW = spiky_kernel;
+    simulation->W = cubic_kernel;
+    simulation->gradW = cubic_kernel_grad;
 
     //for the kernel
     float h3 = std::pow(simulation->kernelRadius, 3);
@@ -45,7 +45,7 @@ void fill_grid(Simulation* simulation) {
 
     float diameter = simulation->particleDiameter;
     float radius = simulation->particleRadius;
-    glm::vec3 offset = glm::vec3(0, radius, 0);
+    glm::vec3 offset = glm::vec3(radius, radius, radius);
 
     for (int x = 0; x < X; x++) {
         for (int y = 0; y < Y; y++) {
@@ -74,29 +74,14 @@ void fill_grid(Simulation* simulation) {
 
 void find_neighbors(Simulation* simulation) {
 
-    std::vector<std::vector<int>>& neighbors = simulation->neighbors;
-    float kernelRadius = simulation->kernelRadius;
-
     for (int i = 0; i < simulation->num_particles; i++) {
         glm::vec3& self = simulation->positions_star[i];
-        for (int j = 0; j < simulation->num_particles; j++) {
-            if (i == j) continue;
-            
+        for (int j = i + 1; j < simulation->num_particles; j++) {
             glm::vec3& other = simulation->positions_star[j];
             glm::vec3 tmp = self - other;
-            //if (glm::dot(tmp, tmp) <= kernelRadius * kernelRadius) {
-            if (glm::distance(self, other) <= kernelRadius) {
-                neighbors[j].push_back(i);
-            }
-        }
-    }
-
-    for (int i = 0; i < simulation->num_particles; i++) {
-        glm::vec3& self = simulation->positions_star[i];
-        for (int j = 0; j < neighbors[i].size(); j++) {
-            glm::vec3& other = simulation->positions_star[neighbors[i][j]];
-            if (glm::distance(self, other) > kernelRadius) {
-                std::cout << "no" << std::endl;
+            if (glm::dot(tmp, tmp) <= simulation->kernelRadius * simulation->kernelRadius) {
+                simulation->neighbors[i].push_back(j);
+                simulation->neighbors[j].push_back(i);
             }
         }
     }
@@ -104,7 +89,7 @@ void find_neighbors(Simulation* simulation) {
 }
 
 void clear_neighbors(Simulation* simulation) {
-    for (int i = 0; i < simulation->neighbors.size(); i++) {
+    for (int i = 0; i < simulation->num_particles; i++) {
         simulation->neighbors[i].clear();
     }
 }
@@ -125,13 +110,13 @@ float cubic_kernel(const Simulation* simulation, float r) {
 }
 
 float cubic_kernel(const Simulation* simulation, glm::vec3& r) {
-    float tmp = r.length();
+    float tmp = glm::length(r);
     return cubic_kernel(simulation, tmp);
 }
 
 glm::vec3 cubic_kernel_grad(const Simulation* simulation, const glm::vec3& r) {
     glm::vec3 result = glm::vec3(0.0);
-    float rl = r.length() * simulation->kernelFactor;
+    float rl = glm::length(r) * simulation->kernelFactor;
     float q = rl / simulation->kernelRadius;
 
     if (rl > 1.0e-5 && q <= 1.0) {
@@ -162,7 +147,7 @@ float poly6_kernel(const Simulation* simulation, glm::vec3& r) {
 
 glm::vec3 spiky_kernel(const Simulation* simulation, glm::vec3& r) {
     glm::vec3 result = glm::vec3(0.0);
-    float rl = r.length();
+    float rl = glm::length(r);
     if (rl > 0.0 && rl <= simulation->kernelRadius) {
         float hf = simulation->kernelRadius * simulation->kernelFactor;
         float temp = ((15.0f / (3.14f * std::pow(hf, 6))) * 
@@ -172,7 +157,7 @@ glm::vec3 spiky_kernel(const Simulation* simulation, glm::vec3& r) {
     return result;
 }
 
-float epsilon_collision = 0.1;
+float epsilon_collision = 0.01;
 
 float resolve_collision(float value, float min, float max) {
     
@@ -222,7 +207,7 @@ void simulate(Simulation* simulation) {
         densities[i] = 0.0;
         for (int j = 0; j < neighbors[i].size(); j++) {
             glm::vec3 ij = positions_star[i] - positions_star[neighbors[i][j]];
-            float len = ij.length();
+            float len = glm::length(ij);
             densities[i] += simulation->mass * simulation->W(simulation, len);
         }
         densities[i] += simulation->mass * simulation->W(simulation, 0.0);
@@ -264,9 +249,9 @@ void simulate(Simulation* simulation) {
         positions_star[i] += pressures_forces[i];
 
         //update velocity
-        positions_star[i].x = resolve_collision(positions_star[i].x, 0, X);
-        positions_star[i].y = resolve_collision(positions_star[i].y, 0, Y);
-        positions_star[i].z = resolve_collision(positions_star[i].z, 0, Z);
+        positions_star[i].x = resolve_collision(positions_star[i].x, simulation->particleRadius, X - simulation->particleRadius);
+        positions_star[i].y = resolve_collision(positions_star[i].y, simulation->particleRadius, Y - simulation->particleRadius);
+        positions_star[i].z = resolve_collision(positions_star[i].z, simulation->particleRadius, Z - simulation->particleRadius);
 
         velocities[i] = (positions_star[i] - positions[i]) / simulation->time_step;
         positions[i] = positions_star[i];
