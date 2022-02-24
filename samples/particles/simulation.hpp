@@ -3,11 +3,21 @@
 #include <vector>
 #include "glm/glm.hpp"
 
+struct Simulation;
+
+
+typedef float (*W_fun)(const Simulation*, float);
+typedef glm::vec3 (*gradW_fun)(const Simulation*, glm::vec3&);
+
 struct Simulation {
+    
+    W_fun W = nullptr;
+    gradW_fun gradW = nullptr;
 
     float particleDiameter = 1.0;
     float particleRadius = 0.5;
-    float kernelRadius = 3.1 * particleDiameter;
+    float kernelRadius = 3.0f * particleRadius;
+    float kernelFactor = 1.0f;
 
     int max_neighbors;
 
@@ -20,8 +30,8 @@ struct Simulation {
     float domainY = 10.0f;
     float domainZ = 10.0f;
 
-    float rest_density = 1000.0;
-    float mass = 1.0;
+    float rest_density = 10.0;
+    float mass = 5.0;
 
     glm::vec3 gravity = glm::vec3(0, -10.0, 0.0);
     float time_step = 0.01;
@@ -88,5 +98,10 @@ extern float cubic_kernel(const Simulation* simulation, glm::vec3& r);
  * @return float 
  */
 extern glm::vec3 cubic_kernel_grad(const Simulation* simulation, const glm::vec3& r);
+
+extern float poly6_kernel(const Simulation* simulation, float r);
+extern float poly6_kernel(const Simulation* simulation, glm::vec3& r);
+extern glm::vec3 spiky_kernel(const Simulation* simulation, glm::vec3& r);
+
 
 extern void simulate(Simulation* simulation);

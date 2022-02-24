@@ -160,13 +160,14 @@ int main(void) {
             ImGui::Text("particle diameter %.3f", simulation.particleDiameter);
             ImGui::Text("kernel radius %.3f", simulation.kernelRadius);
 
-            ImGui::InputFloat("kernel factor", &factor, 0.001f, 100.0f, "%.3f");
+            //ImGui::InputFloat("kernel factor", &factor, 0.001f, 100.0f, "%.3f");
             ImGui::InputFloat("cubic k", &simulation.cubic_kernel_k, 0.01f, 100.0f, "%.3f");
             ImGui::InputFloat("cubic l", &simulation.cubic_kernel_l, 0.01f, 100.0f, "%.3f");
             ImGui::InputFloat("rest density", &simulation.rest_density, 0.01f, 3000.0f, "%.3f");
             ImGui::InputFloat("mass", &simulation.mass, 0.01f, 1000.0f, "%.3f");
             ImGui::InputFloat("relaxation", &simulation.relaxation_epsilon, 0.01f, 1000.0f, "%.3f");
             ImGui::InputFloat("kernel radius", &simulation.kernelRadius, 0.01f, 1000.0f, "%.3f");
+            ImGui::InputFloat("Kernel Factor", &simulation.kernelFactor, 0.001f, 1000.0f, "%.1f");
             
             if (ImGui::Button("reset")) {
                 init_sim(&simulation, particleX, particleY, particleZ);

@@ -27,6 +27,9 @@ void init_sim(Simulation* simulation, int particlesX, int particlesY, int partic
     simulation->neighbors = std::vector<std::vector<int>>(simulation->num_particles);
     simulation->colors = std::vector<glm::vec4>(simulation->num_particles, {0, 0, 0, 0});
 
+    simulation->W = poly6_kernel;
+    simulation->gradW = spiky_kernel;
+
     //for the kernel
     float h3 = std::pow(simulation->kernelRadius, 3);
     simulation->cubic_kernel_k = 8.0 / (pi * h3);
@@ -107,15 +110,15 @@ void clear_neighbors(Simulation* simulation) {
 }
 
 float cubic_kernel(const Simulation* simulation, float r) {
-    float q = r / simulation->kernelRadius;
+    float q = (r * simulation->kernelFactor) / simulation->kernelRadius;
     float result = 0.0;
     if (q <= 1.0) {
         if (q <= 0.5) {
             float q2 = q * q;
             float q3 = q2 * q;
-            result = simulation->cubic_kernel_k * (6.0 * q3 - 6.0 * q2 + 1.0);
+            result = simulation->cubic_kernel_k * (6.0f * q3 - 6.0f * q2 + 1.0f);
         } else {
-            result = simulation->cubic_kernel_k * (2.0 * std::pow(1.0 - q, 3.0));
+            result = simulation->cubic_kernel_k * (2.0f * std::pow(1.0f - q, 3.0f));
         }
     }
     return result;
@@ -128,7 +131,7 @@ float cubic_kernel(const Simulation* simulation, glm::vec3& r) {
 
 glm::vec3 cubic_kernel_grad(const Simulation* simulation, const glm::vec3& r) {
     glm::vec3 result = glm::vec3(0.0);
-    float rl = r.length();
+    float rl = r.length() * simulation->kernelFactor;
     float q = rl / simulation->kernelRadius;
 
     if (rl > 1.0e-5 && q <= 1.0) {
@@ -139,6 +142,32 @@ glm::vec3 cubic_kernel_grad(const Simulation* simulation, const glm::vec3& r) {
             const float f = 1.0f - q;
             result = simulation->cubic_kernel_l * (- f * f) * grad_q;
         }
+    }
+    return result;
+}
+
+float poly6_kernel(const Simulation* simulation, float r) {
+    float result = 0.0;
+    float hf = simulation->kernelRadius * simulation->kernelFactor;
+    if (r <= simulation->kernelRadius) {
+        result = (315.0f / (64.0f * 3.14f * std::pow(hf, 9))) * 
+            std::pow(std::pow(hf, 2) - std::pow(simulation->kernelFactor * r, 2), 3);
+    }
+    return result;
+}
+
+float poly6_kernel(const Simulation* simulation, glm::vec3& r) {
+    return poly6_kernel(simulation, r.length());
+}
+
+glm::vec3 spiky_kernel(const Simulation* simulation, glm::vec3& r) {
+    glm::vec3 result = glm::vec3(0.0);
+    float rl = r.length();
+    if (rl > 0.0 && rl <= simulation->kernelRadius) {
+        float hf = simulation->kernelRadius * simulation->kernelFactor;
+        float temp = ((15.0f / (3.14f * std::pow(hf, 6))) * 
+            std::pow(hf - (rl * simulation->kernelFactor), 2));
+        result = (r / (rl * simulation->kernelFactor)) * temp;
     }
     return result;
 }
@@ -194,9 +223,9 @@ void simulate(Simulation* simulation) {
         for (int j = 0; j < neighbors[i].size(); j++) {
             glm::vec3 ij = positions_star[i] - positions_star[neighbors[i][j]];
             float len = ij.length();
-            densities[i] += simulation->mass * cubic_kernel(simulation, len);
+            densities[i] += simulation->mass * simulation->W(simulation, len);
         }
-        densities[i] += simulation->mass * cubic_kernel(simulation, 0.0);
+        densities[i] += simulation->mass * simulation->W(simulation, 0.0);
 
         //equation 1
         float constraint_i = (densities[i] / simulation->rest_density) - 1.0;
@@ -205,7 +234,8 @@ void simulate(Simulation* simulation) {
 
         //equation 8
         for (int j = 0; j < neighbors[i].size(); j++) {
-            glm::vec3 neighbor_grad = - (simulation->mass / simulation->rest_density) * cubic_kernel_grad(simulation, positions_star[i] - positions_star[neighbors[i][j]]);
+            glm::vec3 temp = positions_star[i] - positions_star[neighbors[i][j]];
+            glm::vec3 neighbor_grad = - (simulation->mass / simulation->rest_density) * simulation->gradW(simulation, temp);
             constraint_gradient_sum += glm::dot(neighbor_grad, neighbor_grad);
             grad_current_p -= neighbor_grad;
         }
@@ -225,7 +255,7 @@ void simulate(Simulation* simulation) {
         pressures_forces[i] = glm::vec3(0.0);
         for (int j = 0; j < neighbors[i].size(); j++) {
             glm::vec3 ij = positions_star[i] - positions_star[neighbors[i][j]];
-            pressures_forces[i] += (lambdas[i] + lambdas[j]) * cubic_kernel_grad(simulation, ij);
+            pressures_forces[i] += (lambdas[i] + lambdas[j]) * simulation->gradW(simulation, ij);
         }
 
         pressures_forces[i] /= simulation->rest_density;
