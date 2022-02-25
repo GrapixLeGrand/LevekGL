@@ -2,6 +2,8 @@
 
 #include <cmath>
 #include <iostream>
+#include <utility>
+#include <algorithm>
 
 constexpr double pi = 3.14159265358979323846;
 
@@ -34,6 +36,17 @@ void init_sim(Simulation* simulation, int particlesX, int particlesY, int partic
     float h3 = std::pow(simulation->kernelRadius, 3);
     simulation->cubic_kernel_k = 8.0 / (pi * h3);
     simulation->cubic_kernel_l = 48.0 / (pi * h3);
+
+    //sorting neighbor strategy with grid
+    simulation->cell_size = simulation->kernelRadius;
+    simulation->gridX = (int) (simulation->domainX / simulation->cell_size);
+    simulation->gridY = (int) (simulation->domainY / simulation->cell_size);
+    simulation->gridZ = (int) (simulation->domainZ / simulation->cell_size);
+
+    simulation->num_grid_cells = (simulation->gridX + 2) * (simulation->gridY + 2) * (simulation->gridZ + 2);
+    simulation->particle_cell_index_to_index = std::vector<std::pair<int, int>>(simulation->num_particles, std::make_pair(0, 0));
+    simulation->positions_star_copy = std::vector<glm::vec3>(simulation->num_particles, {0, 0, 0});
+    simulation->cell_indices = std::vector<std::pair<int, int>>(simulation->num_grid_cells, std::make_pair(0, 0));
 
 }
 
@@ -71,8 +84,15 @@ void fill_grid(Simulation* simulation) {
 
 }
 
+void clear_neighbors(Simulation* simulation) {
+    for (int i = 0; i < simulation->num_particles; i++) {
+        simulation->neighbors[i].clear();
+    }
+}
 
 void find_neighbors(Simulation* simulation) {
+
+    clear_neighbors(simulation);
 
     for (int i = 0; i < simulation->num_particles; i++) {
         glm::vec3& self = simulation->positions_star[i];
@@ -88,11 +108,6 @@ void find_neighbors(Simulation* simulation) {
 
 }
 
-void clear_neighbors(Simulation* simulation) {
-    for (int i = 0; i < simulation->num_particles; i++) {
-        simulation->neighbors[i].clear();
-    }
-}
 
 float cubic_kernel(const Simulation* simulation, float r) {
     float q = (r * simulation->kernelFactor) / simulation->kernelRadius;
@@ -176,10 +191,102 @@ float resolve_collision(float value, float min, float max) {
     return value;
 }
 
+int get_cell_id(const Simulation* simulation, int i) {
+
+    glm::vec3 position = simulation->positions_star[i];
+    glm::clamp(position, glm::vec3(0.0), glm::vec3(simulation->domainX, simulation->domainY, simulation->domainZ));
+    position /= simulation->cell_size;
+    //position += 1;
+    int cell_id =
+            //simulation->gridY * simulation->gridZ +
+
+            ((int) position.x) * simulation->gridY * simulation->gridZ + 
+            ((int) position.y) * simulation->gridZ +
+            ((int) position.z);
+    return cell_id;
+}
+
+void assign_particles_to_cells(Simulation* simulation) {
+
+    simulation->particle_cell_index_to_index.clear();
+
+    for (int i = 0; i < simulation->num_particles; i++) {
+
+        int cell_id = get_cell_id(simulation, i);
+        simulation->particle_cell_index_to_index.push_back(std::make_pair(cell_id, i));
+
+    }
+
+}
+
 void find_neighbors_counting_sort(Simulation* simulation) {
 
-    //assign particles to grid cells
-    
+    assign_particles_to_cells(simulation);
+    std::sort(simulation->particle_cell_index_to_index.begin(), simulation->particle_cell_index_to_index.end(), 
+        [] (const auto& p1, const auto& p2)
+        {
+            return p1.first < p2.first;
+        }
+    );
+
+    simulation->positions_star_copy = simulation->positions_star;
+
+    int startPos = 0;
+    int current = 0;
+
+    //copy particles in sorted order and update cells pointers
+    for (int i = 0; i < simulation->num_particles; i++) {
+        auto& p = simulation->particle_cell_index_to_index[i];
+        simulation->positions_star[i] = simulation->positions_star_copy[p.second];
+
+        if (current != p.first || i == simulation->num_particles - 1) { //new cell id encountered or we reached the end and no change
+            if (i - startPos > 0) {
+                simulation->cell_indices[current].first = startPos;
+                simulation->cell_indices[current].second = i; //exclusive index
+                if ((i == (simulation->num_particles - 1)) && current == p.first) {  //if we reached the end and nothing changed
+                    simulation->cell_indices[current].second++;
+                }
+            } else {
+                simulation->cell_indices[current].first = startPos;
+                simulation->cell_indices[current].second = startPos; //we want the same number (nothing in the cell)
+            }
+            startPos = i;
+            current = p.first;
+        }
+    }
+
+    clear_neighbors(simulation);
+
+    for (int i = 0; i < simulation->num_particles; i++) {
+        const glm::vec3& self = simulation->positions_star[i];
+        int cell_id = get_cell_id(simulation, i);
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                for (int z = -1; z <= 1; z++) {
+                    
+                    int neighor_cell_id = 
+                        cell_id + 
+                        x * simulation->gridY * simulation->gridZ +
+                        y * simulation->gridZ +
+                        z;
+
+                    const auto& range = simulation->cell_indices[neighor_cell_id];
+                    int lower = range.first;
+                    int upper = range.second;
+                    for (int k = lower; k < upper; k++) {
+                        if (k == i) continue;
+                        const glm::vec3& other = simulation->positions_star[k];
+                        const glm::vec3 tmp = self - other;
+                        if (glm::dot(tmp, tmp) <= simulation->kernelRadius * simulation->kernelRadius) {
+                            simulation->neighbors[i].push_back(k);
+                        }
+                    }
+
+                }
+            }
+        }
+
+    }
 }
 
 void simulate(Simulation* simulation) {
@@ -201,15 +308,14 @@ void simulate(Simulation* simulation) {
     float kernelRadius = simulation->kernelRadius;
     float dt = simulation->time_step;
 
-    clear_neighbors(simulation);
-
     //integration
     for (int i = 0; i < n; i++) {
         velocities[i] += simulation->gravity * simulation->mass * dt;
         positions_star[i] = positions[i] + velocities[i] * dt; //prediction
     }
 
-    find_neighbors(simulation);
+    find_neighbors_counting_sort(simulation);
+    //find_neighbors(simulation);
 
     //solve pressure
     for (int i = 0; i < n; i++) {

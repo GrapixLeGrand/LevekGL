@@ -69,10 +69,13 @@ struct Simulation {
 
     //counting sort arrays
     int gridX, gridY, gridZ;
-    int grid_size;
+    float cell_size;
+    int num_grid_cells;
     
-    std::vector<std::pair<int, int>> cell_to_index;
+    std::vector<std::pair<int, int>> particle_cell_index_to_index;
+    std::vector<std::pair<int, int>> cell_indices;
 
+    std::vector<glm::vec3> positions_star_copy;
 
 };
 
@@ -114,6 +117,10 @@ extern float poly6_kernel(const Simulation* simulation, glm::vec3& r);
 extern glm::vec3 spiky_kernel(const Simulation* simulation, glm::vec3& r);
 
 extern float s_coor(const Simulation* simulation, float rl);
+
+//bellow is for sorting strategy
+
+extern void assign_particles_to_cells(Simulation* simulation);
 
 extern void find_neighbors_counting_sort(Simulation* simulation);
 
