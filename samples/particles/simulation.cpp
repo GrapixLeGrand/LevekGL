@@ -191,18 +191,35 @@ float resolve_collision(float value, float min, float max) {
     return value;
 }
 
+glm::vec3 get_cell_id_comp(const Simulation* simulation, int i) {
+    glm::vec3 position = simulation->positions_star[i];
+    glm::clamp(position, glm::vec3(0.0), glm::vec3(simulation->domainX, simulation->domainY, simulation->domainZ));
+    position /= simulation->cell_size;
+    position.x = (int) position.x;
+    position.y = (int) position.y;
+    position.z = (int) position.z;
+    return position;
+}
+
 int get_cell_id(const Simulation* simulation, int i) {
 
     glm::vec3 position = simulation->positions_star[i];
     glm::clamp(position, glm::vec3(0.0), glm::vec3(simulation->domainX, simulation->domainY, simulation->domainZ));
     position /= simulation->cell_size;
     //position += 1;
+    /*
     int cell_id =
-            //simulation->gridY * simulation->gridZ +
-
-            ((int) position.x) * simulation->gridY * simulation->gridZ + 
+            simulation->gridY * simulation->gridZ + 
+            ((int) position.x) * simulation->gridY * simulation->gridZ +
+            simulation->gridZ + 
+            ((int) position.y) * simulation->gridZ +
+            1 +
+            ((int) position.z);*/
+    int cell_id =
+            ((int) position.x) * simulation->gridY * simulation->gridZ +
             ((int) position.y) * simulation->gridZ +
             ((int) position.z);
+
     return cell_id;
 }
 
@@ -217,6 +234,10 @@ void assign_particles_to_cells(Simulation* simulation) {
 
     }
 
+}
+
+bool check_index(int i, int min, int max) {
+    return (i >= min && i < max);
 }
 
 void find_neighbors_counting_sort(Simulation* simulation) {
@@ -259,16 +280,27 @@ void find_neighbors_counting_sort(Simulation* simulation) {
 
     for (int i = 0; i < simulation->num_particles; i++) {
         const glm::vec3& self = simulation->positions_star[i];
-        int cell_id = get_cell_id(simulation, i);
+        glm::vec3 indices = get_cell_id_comp(simulation, i);
+        int xx = indices.x;
+        int yy = indices.y;
+        int zz = indices.z;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
                     
+                    if (
+                        check_index(xx + x, 0, simulation->gridX) == false ||
+                        check_index(yy + y, 0, simulation->gridY) == false ||
+                        check_index(zz + z, 0, simulation->gridZ) == false
+                    )
+                    {
+                        continue;
+                    }
+
                     int neighor_cell_id = 
-                        cell_id + 
-                        x * simulation->gridY * simulation->gridZ +
-                        y * simulation->gridZ +
-                        z;
+                        (x + xx) * simulation->gridY * simulation->gridZ +
+                        (y + yy) * simulation->gridZ +
+                        (z + zz);
 
                     const auto& range = simulation->cell_indices[neighor_cell_id];
                     int lower = range.first;
