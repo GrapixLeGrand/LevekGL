@@ -6,12 +6,22 @@ add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources
 set(OpenGL_GL_PREFERENCE "GLVND") #between GLVND and LEGACY
 
 find_package(OpenGL REQUIRED)
-find_package(GLUT REQUIRED)
-find_package(GLEW REQUIRED)
-find_package(glfw3 REQUIRED)
 
 add_subdirectory(thirdparty)
 add_subdirectory(src)
+
+if (UNIX)
+    message("Levek: Compiling for Unix")
+    find_package(GLUT REQUIRED)
+    find_package(GLEW REQUIRED)
+    find_package(glfw3 REQUIRED)
+endif (UNIX)
+
+if (WIN32)
+    message("Levek: Compiling for windows")
+    add_subdirectory(thirdparty/windows)
+endif (WIN32)
+
 
 link_directories(${LevekGL_SOURCE_DIR}/src)
 
@@ -83,27 +93,64 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
     PUBLIC "thirdparty/glm-0.9.9.8"
     PUBLIC "thirdparty/assimp-5.1.4"
     PUBLIC "thirdparty/glslang"
-    #PUBLIC ""
 )
 
+if (WIN32)
+    #set(
+    #    LEVEKGL_TARGET_INCLUDE_DIRS
+    #    ${LEVEKGL_TARGET_INCLUDE_DIRS}
+    #    "thirdparty/windows/windows/freeglut-3.2.2"
+    #)
+
+    #set(GLUT_INCLUDE_DIRS "thirdparty/windows/freeglut-3.2.2/include/GL")
+    set(GLEW_INCLUDE_DIRS "thirdparty/windows/glew-2.1.0/include")
+    set(GLFW3_INCLUDE_DIRS "thirdparty/windows/glfw-3.3.6/include")
+
+    set(GLEW_LIBRARIES "${CMAKE_SOURCE_DIR}/thirdparty/windows/glew-2.1.0/lib/Release/x64/glew32s.lib")
+    set(GLFW3_LIBRARIES "${CMAKE_SOURCE_DIR}/thirdparty/windows/glfw-3.3.6/lib-vc2022/glfw3.lib")
+
+endif (WIN32)
+
+#include_directories(${LEVEKGL_TARGET_INCLUDE_DIR})
 target_include_directories(LevekGL ${LEVEKGL_TARGET_INCLUDE_DIRS})
 
+#SET (-BUILD_SHARED_LIBS OFF)
 #include(LevekGL "LevekGL.hpp")
 #target_include_directories(LevekGL PRIVATE src)
 
-include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
-include_directories(${GLEW_INCLUDE_DIRS})
+message("glew include dirs: ${GLEW_INCLUDE_DIRS}")
+message("glew library: ${GLEW_LIBRARIES}")
+message("glfw3 include dirs: ${GLFW3_INCLUDE_DIRS}")
+message("glfw3 library: ${GLFW3_LIBRARIES}")
+message("OpenGL include dirs: ${OPENGL_INCLUDE_DIR}")
+message("OpenGL library: ${OPENGL_LIBRARIES}")
 
-target_link_libraries(LevekGL ${OPENGL_LIBRARIES} ${GLUT_LIBRARY}  ${GLEW_LIBRARIES})
-target_link_libraries(LevekGL glfw)
+if (UNIX)
+    message("linking opengl Unix")
+    include_directories(${OPENGL_INCLUDE_DIRS} ${GLUT_INCLUDE_DIRS})
+    include_directories(${GLEW_INCLUDE_DIRS})
+    target_link_libraries(LevekGL glfw)
+    target_link_libraries(LevekGL ${OPENGL_LIBRARIES} ${GLUT_LIBRARY}  ${GLEW_LIBRARIES})
+endif (UNIX)
+if (WIN32)
+    message("linking opengl windows")
+    include_directories(${GLFW3_INCLUDE_DIRS})
+    include_directories(${OPENGL_INCLUDE_DIR} ${GLEW_INCLUDE_DIRS})
+    add_library(glfw STATIC IMPORTED)
+    set_property(TARGET glfw PROPERTY IMPORTED_LOCATION ${GLFW3_LIBRARIES})
+    target_link_libraries(LevekGL glfw)
+    add_library(glew32s STATIC IMPORTED)
+    set_property(TARGET glew32s PROPERTY IMPORTED_LOCATION ${GLEW_LIBRARIES})
+    target_link_libraries(LevekGL ${OPENGL_LIBRARIES} glew32s)
+    target_compile_definitions(LevekGL PRIVATE GLEW_STATIC)
+    add_compile_definitions(PLATFORM_WINDOWS)
+endif(WIN32)
+
+set(BUILD_SHARED_LIBS OFF)
 target_link_libraries(LevekGL assimp)
 
 #bellow linkages are for glslang
 target_link_libraries(LevekGL glslang)
-#target_link_libraries(LevekGL OGLCompiler)
-#target_link_libraries(LevekGL OSDependent)
-#target_link_libraries(LevekGL MachineIndependent)
-#target_link_libraries(LevekGL GenericCodeGen)
 
 set(LEVEKGL_INCLUDE_DIR ${LevekGL_SOURCE_DIR})
 
