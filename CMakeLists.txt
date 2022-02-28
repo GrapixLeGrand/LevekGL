@@ -5,6 +5,9 @@ add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources
 
 set(OpenGL_GL_PREFERENCE "GLVND") #between GLVND and LEGACY
 
+#set (CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+#set (CMAKE_LINKER_FLAGS_DEBUG "${CMAKE_LINKER_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address")
+
 find_package(OpenGL REQUIRED)
 
 add_subdirectory(thirdparty)
