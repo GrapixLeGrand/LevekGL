@@ -38,7 +38,7 @@ void init_sim(Simulation* simulation, int particlesX, int particlesY, int partic
     simulation->cubic_kernel_l = 48.0 / (pi * h3);
 
     //sorting neighbor strategy with grid
-    simulation->cell_size = simulation->kernelRadius;
+    simulation->cell_size = 1.0f * simulation->kernelRadius;
     simulation->gridX = (int) (simulation->domainX / simulation->cell_size);
     simulation->gridY = (int) (simulation->domainY / simulation->cell_size);
     simulation->gridZ = (int) (simulation->domainZ / simulation->cell_size);
@@ -251,30 +251,26 @@ void find_neighbors_counting_sort(Simulation* simulation) {
     );
 
     simulation->positions_star_copy = simulation->positions_star;
-
-    int startPos = 0;
-    int expected = simulation->particle_cell_index_to_index[0].first;
-
     std::fill(simulation->cell_indices.begin(), simulation->cell_indices.end(), std::make_pair(0, 0));
+    
+    simulation->cell_indices[0].first = 0;
+    simulation->cell_indices[simulation->num_particles - 1].second = simulation->num_particles;
+    int current_cell_index = 0;
 
-    //copy particles in sorted order and update cells pointers
     for (int i = 0; i < simulation->num_particles; i++) {
-        auto& p = simulation->particle_cell_index_to_index[i];
-        simulation->positions_star_copy[i] = simulation->positions_star[p.second];
+        auto& sorted_particle = simulation->particle_cell_index_to_index[i];
+        int sorted_cell_index = sorted_particle.first;
+        int unsorted_particle_index = sorted_particle.second;
+        simulation->positions_star_copy[i] = simulation->positions_star[unsorted_particle_index];
 
-        if (expected != p.first) { //new cell id encountered or we reached the end and no change
-            if (expected >= simulation->num_grid_cells || expected < 0) {
-                std::cout << "no" << std::endl;
-            }
-            simulation->cell_indices[expected].first = startPos;
-            simulation->cell_indices[expected].second = i - startPos;
-            expected = p.first;
-            startPos = i;
+        if (current_cell_index =! sorted_cell_index) {
+            simulation->cell_indices[current_cell_index].second = i - 1;
+            simulation->cell_indices[sorted_cell_index].first = i;
         }
     }
 
     clear_neighbors(simulation);
-
+    /*
     for (int xx = 0; xx < simulation->gridX; xx++) {
         for (int yy = 0; yy < simulation->gridY; yy++) {
             for (int zz = 0; zz < simulation->gridZ; zz++) {
@@ -287,6 +283,10 @@ void find_neighbors_counting_sort(Simulation* simulation) {
                 const auto& range = simulation->cell_indices[current_cell_id];
                 int lower = range.first;
                 int upper = range.second;
+
+                if (lower == upper - 1) {
+                    continue;
+                }
 
                 for (int x = -1; x <= 1; x++) {
                     for (int y = -1; y <= 1; y++) {
@@ -307,8 +307,8 @@ void find_neighbors_counting_sort(Simulation* simulation) {
                                 (zz + z);
 
                             const auto& neighbor_range = simulation->cell_indices[neighbor_cell_id];
-                            int neighbor_lower = range.first;
-                            int neighbor_upper = range.second;
+                            int neighbor_lower = neighbor_range.first;
+                            int neighbor_upper = neighbor_range.second;
 
                             for (int i = lower; i < upper; i++) {
                                 const glm::vec3& self = simulation->positions_star_copy[i];
@@ -332,32 +332,41 @@ void find_neighbors_counting_sort(Simulation* simulation) {
                 //end grid cells
             }
         }
-    }
+    }*/
 
-    /*
+    
     for (int i = 0; i < simulation->num_particles; i++) {
         const glm::vec3& self = simulation->positions_star_copy[i];
-        glm::vec3 indices = get_cell_id_comp(simulation, self, i);
-        int xx = indices.x;
-        int yy = indices.y;
-        int zz = indices.z;
+        //glm::vec3 indices = get_cell_id_comp(simulation, self, i);
+        int sorted_cell_index = simulation->particle_cell_index_to_index[i].first;
+        int unsorted_particle_index = simulation->particle_cell_index_to_index[i].second;
+        //int slice = current_index % (simulation->gridZ * simulation->gridY);
+        //int xx = (current_index - slice) / (simulation->gridZ * simulation->gridY);
+        //int zz = slice % simulation->gridZ;
+        //int yy = (slice - zz) / simulation->gridZ;
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
                 for (int z = -1; z <= 1; z++) {
                     
+                    /*
                     if (
                         check_index(xx + x, 0, simulation->gridX) == false ||
                         check_index(yy + y, 0, simulation->gridY) == false ||
                         check_index(zz + z, 0, simulation->gridZ) == false
                     )
                     {
-                        continue;
-                    }
+                        //continue;
+                    }*/
 
                     int neighor_cell_id = 
-                        (x + xx) * simulation->gridY * simulation->gridZ +
-                        (y + yy) * simulation->gridZ +
-                        (z + zz);
+                        sorted_cell_index + 
+                        (x) * simulation->gridY * simulation->gridZ +
+                        (y) * simulation->gridZ +
+                        (z);
+
+                    if (neighor_cell_id >= simulation->num_grid_cells || neighor_cell_id < 0) {
+                        continue;
+                    }
 
                     neighor_cell_id = glm::clamp(neighor_cell_id, 0, simulation->num_grid_cells - 1);
 
@@ -366,10 +375,11 @@ void find_neighbors_counting_sort(Simulation* simulation) {
                     int upper = range.second;
                     for (int k = lower; k < upper; k++) {
                         if (k == i) continue;
+                        int unsorted_other_particle_index = simulation->particle_cell_index_to_index[k].second;
                         const glm::vec3& other = simulation->positions_star_copy[k];
                         const glm::vec3 tmp = self - other;
                         if (glm::dot(tmp, tmp) <= simulation->kernelRadius * simulation->kernelRadius) {
-                            simulation->neighbors[simulation->particle_cell_index_to_index[i].second].push_back(simulation->particle_cell_index_to_index[k].second);
+                            simulation->neighbors[unsorted_particle_index].push_back(unsorted_other_particle_index);
                         }
                     }
 
@@ -377,7 +387,7 @@ void find_neighbors_counting_sort(Simulation* simulation) {
             }
         }
 
-    }*/
+    }
 }
 
 void simulate(Simulation* simulation) {
@@ -405,8 +415,8 @@ void simulate(Simulation* simulation) {
         positions_star[i] = positions[i] + velocities[i] * dt; //prediction
     }
 
-    //find_neighbors_counting_sort(simulation);
-    find_neighbors(simulation);
+    find_neighbors_counting_sort(simulation);
+    //find_neighbors(simulation);
 
     //solve pressure
     for (int i = 0; i < n; i++) {

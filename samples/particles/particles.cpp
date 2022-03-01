@@ -25,7 +25,7 @@ int main(void) {
     Levek::Model* model = meshLoader->loadFromFile(SAMPLES_DIRECTORY"/particles/models/billboard.obj");
     const Levek::Mesh* sphere = model->getMesh(0);
 
-    Levek::PerspectiveCamera camera({3.6, 1.5, 3.6}, {0.2, 0.2, 0.2}, {0, 1, 0}, resolutionX, resolutionY);
+    Levek::PerspectiveCamera camera({20, 20, 45}, {0.2, 0.2, 0.2}, {0, 1, 0}, resolutionX, resolutionY);
     glm::mat4 projection = camera.getProjection();
 
     Levek::Shader shaderInstances = Levek::ShaderFactory::makeFromFile(
@@ -177,6 +177,14 @@ int main(void) {
             ImGui::InputFloat("s_corr dq", &simulation.s_corr_dq, 0.001f, 100.0f, "%.1f");
             ImGui::InputFloat("s_corr k", &simulation.s_corr_k, 0.001f, 100.0f, "%.1f");
             ImGui::InputFloat("s_corr n", &simulation.s_corr_n, 0.001f, 100.0f, "%.1f");
+
+            ImGui::Text("Grid");
+            //float old_cell_size = simulation.cell_size;
+            //ImGui::InputFloat("cell size", &simulation.cell_size, 0.001f, 100.0f, "%.1f");
+
+            ImGui::Text("# grid cells: %d", simulation.num_grid_cells);
+
+
 
             if (ImGui::Button("reset")) {
                 init_sim(&simulation, particleX, particleY, particleZ);
