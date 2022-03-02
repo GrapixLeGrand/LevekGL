@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0079 NEW)
 project(LevekGL VERSION 0.1.0)
 
+option(ENV{LEVEKGL_USE_INTERNAL_GLM} "Include paths to external GLM library" ON)
+option(ENV{LEVEKGL_EXTERNAL_GLM} "Include paths to external GLM library" "")
+
 add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources")
 
 set(OpenGL_GL_PREFERENCE "GLVND") #between GLVND and LEGACY
@@ -89,6 +92,8 @@ set(LEVEKGL_ALL_SOURCES ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 #target_compile_features(LevekGL PRIVATE cxx_std_17)
 
+
+if (ENV{LEVEKGL_USE_INTERNAL_GLM})
 set(LEVEKGL_TARGET_INCLUDE_DIRS 
     PUBLIC "thirdparty/imgui-1.83"
     PUBLIC "thirdparty/imgui-1.83/backends"
@@ -98,6 +103,17 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
     PUBLIC "thirdparty/assimp-5.1.4"
     PUBLIC "thirdparty/glslang"
 )
+else()
+set(LEVEKGL_TARGET_INCLUDE_DIRS 
+    PUBLIC "thirdparty/imgui-1.83"
+    PUBLIC "thirdparty/imgui-1.83/backends"
+    PUBLIC "thirdparty/stb_image-2.27"
+    PUBLIC "${LevekGL_SOURCE_DIR}/src"
+    PUBLIC "$ENV{LEVEKGL_EXTERNAL_GLM}"
+    PUBLIC "thirdparty/assimp-5.1.4"
+    PUBLIC "thirdparty/glslang"
+)
+endif()
 
 if (WIN32)
     #set(
