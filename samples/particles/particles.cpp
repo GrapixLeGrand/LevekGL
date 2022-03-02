@@ -36,9 +36,9 @@ int main(void) {
     float particleScale = 1.0f;
 
     Simulation simulation;
-    int particleX = 15;
-    int particleY = 20;
-    int particleZ = 15;
+    int particleX = 20;
+    int particleY = 30;
+    int particleZ = 20;
     init_sim(&simulation, particleX, particleY, particleZ);
     fill_grid(&simulation);
 

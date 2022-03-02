@@ -37,7 +37,7 @@ struct Simulation {
     int num_particles;
 
     float domainX = 30.0f;
-    float domainY = 30.0f;
+    float domainY = 35.0f;
     float domainZ = 30.0f;
 
     float rest_density = 24.0;
@@ -76,6 +76,9 @@ struct Simulation {
     std::vector<std::pair<int, int>> cell_indices;
 
     std::vector<glm::vec3> positions_star_copy;
+
+    //uniform grid cells array
+    std::vector<std::vector<int>> uniform_gird_cells;
 
 };
 
