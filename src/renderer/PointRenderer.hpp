@@ -19,13 +19,14 @@ private:
     VertexBufferLayout layout;
     std::vector<Point> points;
     glm::mat4 viewProjection;
-    Shader pointShader = ShaderFactory::makeFromFile(
-        RESOURCES_DIRECTORY"/shaders/Point.vert",
-        RESOURCES_DIRECTORY"/shaders/Point.frag"
-    );
+    Shader pointShader;
 public:
 
-    PointRenderer() {
+    PointRenderer(): pointShader(ShaderFactory::makeFromFile(
+            RESOURCES_DIRECTORY"/shaders/Point.vert",
+            RESOURCES_DIRECTORY"/shaders/Point.frag"
+        )) {
+        
         /*
         pointShader = std::make_shared<Shader>(
             std::string(RESOURCES_DIRECTORY) + "/shaders/Point.vert",
