@@ -49,6 +49,8 @@ set(LEVEKGL_SOURCES
     #"src/layout/VertexBufferLayoutInstancing.cpp"
 
     "src/renderer/Renderer.cpp"
+    "src/renderer/PointRenderer.cpp"
+    "src/renderer/LineRenderer.cpp"
 
     "src/mesh/Primitives.cpp"
 
