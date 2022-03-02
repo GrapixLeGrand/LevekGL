@@ -36,9 +36,9 @@ struct Simulation {
     int particlesZ;
     int num_particles;
 
-    float domainX = 40.0f;
-    float domainY = 40.0f;
-    float domainZ = 40.0f;
+    float domainX = 30.0f;
+    float domainY = 30.0f;
+    float domainZ = 30.0f;
 
     float rest_density = 24.0;
     float mass = 5.0;
