@@ -5,6 +5,9 @@ project(LevekGL VERSION 0.1.0)
 option(ENV{LEVEKGL_USE_INTERNAL_GLM} "Include paths to external GLM library" ON)
 option(ENV{LEVEKGL_EXTERNAL_GLM} "Include paths to external GLM library" "")
 
+message("Levek: use internal GLM is "$ENV{LEVEKGL_USE_INTERNAL_GLM})
+
+
 add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources")
 
 set(OpenGL_GL_PREFERENCE "GLVND") #between GLVND and LEGACY
