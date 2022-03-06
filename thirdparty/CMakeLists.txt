@@ -10,6 +10,11 @@ else ()
         message(FATAL_ERROR "LevekGL: WARNING! Using external GLM library but path is empty.")
     endif()
 endif()
+
 add_subdirectory(assimp-5.1.4)
+#if (UNIX)
+#add_subdirectory(assimp-5.1.4)
+#endif()
+
 add_subdirectory(glslang)
 #add_subdirectory(imgui-1.83)

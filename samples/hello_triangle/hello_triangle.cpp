@@ -1,7 +1,6 @@
 
 #include "LevekGL.hpp"
 
-
 #include <iostream>
 #include <vector>
 

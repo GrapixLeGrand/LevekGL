@@ -104,6 +104,14 @@ set(LEVEKGL_ALL_SOURCES ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 #target_compile_features(LevekGL PRIVATE cxx_std_17)
 
+#if (UNIX)
+#set(ASSIMP_INCLUDE_DIR "thirdparty/assimp-5.1.4")
+#endif()
+set(ASSIMP_INCLUDE_DIR "thirdparty/assimp-5.1.4")
+#if (WIN32)
+#set(ASSIMP_INCLUDE_DIR "thirdparty/windows/assimp-5.2.2/include")
+#endif()
+
 
 if ($ENV{LEVEKGL_USE_INTERNAL_GLM})
 set(LEVEKGL_TARGET_INCLUDE_DIRS 
@@ -112,7 +120,7 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
     PUBLIC "thirdparty/stb_image-2.27"
     PUBLIC "${LevekGL_SOURCE_DIR}/src"
     PUBLIC "thirdparty/glm-0.9.9.8"
-    PUBLIC "thirdparty/assimp-5.1.4"
+    PUBLIC "${ASSIMP_INCLUDE_DIR}"
     PUBLIC "thirdparty/glslang"
 )
 else()
@@ -122,7 +130,7 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
     PUBLIC "thirdparty/stb_image-2.27"
     PUBLIC "${LevekGL_SOURCE_DIR}/src"
     PUBLIC "$ENV{LEVEKGL_EXTERNAL_GLM}"
-    PUBLIC "thirdparty/assimp-5.1.4"
+    PUBLIC "${ASSIMP_INCLUDE_DIR}"
     PUBLIC "thirdparty/glslang"
 )
 endif()
@@ -180,6 +188,17 @@ endif(WIN32)
 
 set(BUILD_SHARED_LIBS OFF)
 target_link_libraries(LevekGL assimp)
+#if (UNIX OR WIN32)
+#    set(BUILD_SHARED_LIBS OFF)
+#    target_link_libraries(LevekGL assimp)
+#endif()
+#if (WIN32)
+#    add_library(assimp STATIC IMPORTED)
+#    set_property(TARGET assimp PROPERTY IMPORTED_LOCATION "${LevekGL_SOURCE_DIR}/thirdparty/windows/assimp-5.2.2/lib/assimp-vc143-mtd.lib")
+#    target_link_libraries(LevekGL assimp)
+#endif()
+
+
 
 #bellow linkages are for glslang
 target_link_libraries(LevekGL glslang)
