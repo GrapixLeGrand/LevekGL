@@ -1,7 +1,7 @@
 
  message("LevekGL::thirdparty: use of internal GLM is "$ENV{LEVEKGL_USE_INTERNAL_GLM})
 
-if ($ENV{LEVEKGL_USE_INTERNAL_GLM})
+if (ENV{LEVEKGL_USE_INTERNAL_GLM})
     message("LevekGL: Using internal glm library")
     add_subdirectory(glm-0.9.9.8)
 else ()
