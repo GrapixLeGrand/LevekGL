@@ -1,5 +1,6 @@
 
 #include "TextureProperties.hpp"
+#include <GL/glew.h>
 
 namespace Levek {
 //this table hold properties about Textures of opengl

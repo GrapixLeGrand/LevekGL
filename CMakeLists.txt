@@ -2,8 +2,11 @@ cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0079 NEW)
 project(LevekGL VERSION 0.1.0)
 
+set(ENV{LEVEKGL_USE_INTERNAL_GLM} ON) #by default
+
 if (DEFINED ENV{LEVEKGL_USE_INTERNAL_GLM_REQUESTED})
-    set(ENV{LEVEKGL_USE_INTERNAL_GLM} ON)
+    message("Levek: Request to use external project GLM library")
+    set(ENV{LEVEKGL_USE_INTERNAL_GLM} OFF)
 endif()
 #option(ENV{LEVEKGL_EXTERNAL_GLM} "Include paths to external GLM library" "")
 
@@ -100,7 +103,7 @@ add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 #target_compile_features(LevekGL PRIVATE cxx_std_17)
 
 
-if (ENV{LEVEKGL_USE_INTERNAL_GLM})
+if ($ENV{LEVEKGL_USE_INTERNAL_GLM})
 set(LEVEKGL_TARGET_INCLUDE_DIRS 
     PUBLIC "thirdparty/imgui-1.83"
     PUBLIC "thirdparty/imgui-1.83/backends"

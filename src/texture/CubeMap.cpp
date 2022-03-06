@@ -1,5 +1,7 @@
 #include "CubeMap.hpp"
 
+#include <GL/glew.h>
+
 namespace Levek {
     CubeMap::CubeMap(int width, int height, TextureParameters::TextureType type) {
 
@@ -37,7 +39,7 @@ namespace Levek {
 
     }
 
-    ~CubeMap::CubeMap() {
+    CubeMap::~CubeMap() {
         GL_CHECK(glDeleteTextures(1, &mId));
     }
 

@@ -1,9 +1,9 @@
 #include <vector>
 #include <string>
 
-#include <GL/glew.h>
 #include "stb_image.h"
 #include "../OpenGLError.hpp"
+#include "TextureProperties.hpp"
 
 namespace Levek {
 
@@ -21,9 +21,9 @@ public:
     CubeMap(int width, int height, TextureParameters::TextureType type);
     CubeMap(const std::vector<std::string>& texturesPaths, size_t width, size_t heigth);
     ~CubeMap();
-    void bind();
-    void unbind();
-    unsigned int getId();
+    void bind() const;
+    void unbind() const;
+    unsigned int getId() const;
 
 };
 }
