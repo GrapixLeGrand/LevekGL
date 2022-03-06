@@ -1,6 +1,8 @@
+#include <GL/glew.h>
+#include "../OpenGLError.hpp"
 #include "LineRenderer.hpp"
 #include "shader/ShaderFactory.hpp"
-#include <GL/glew.h>
+
 namespace Levek {
 
     LineRenderer::LineRenderer(): lineShader(ShaderFactory::makeFromFile(

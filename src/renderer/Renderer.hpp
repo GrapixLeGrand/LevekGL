@@ -12,20 +12,22 @@
 #include "glm/glm.hpp"
 
 namespace Levek {
-
-enum ClearBits {
-    DEPTH = GL_DEPTH_BUFFER_BIT,
-    COLOR = GL_COLOR_BUFFER_BIT
-};
+    //TODO FIX with arrays!!!!
+    enum ClearBits {
+        DEPTH = 0x00000100, //GL_DEPTH_BUFFER_BIT,
+        COLOR = 0x00004000 //GL_COLOR_BUFFER_BIT
+    };
 
 /*
 Back for back faces and front for front faces
 */
-enum CullFaceMode {
-    DEFAULT = GL_BACK,
-    BACK = GL_BACK,
-    FRONT = GL_FRONT
-};
+    enum CullFaceMode {
+        DEFAULT = 0x0405,// GL_BACK,
+        BACK = 0x0405, // GL_BACK,
+        FRONT = 0x0404 // GL_FRONT
+    };
+
+
 
 #define C_STR_CONC(A, B) (std::string(A) + std::string(B))
 

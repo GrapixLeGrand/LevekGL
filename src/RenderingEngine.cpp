@@ -1,4 +1,5 @@
 #include "RenderingEngine.hpp"
+#include <GL/glew.h>
 #include "input/GLFWInputController.hpp"
 #include "window/GLFWWindowController.hpp"
 #include "OpenGLError.hpp"

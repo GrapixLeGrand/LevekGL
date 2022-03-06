@@ -1,6 +1,8 @@
+#include <GL/glew.h>
+#include "../OpenGLError.hpp"
 #include "PointRenderer.hpp"
 #include "shader/ShaderFactory.hpp"
-#include <GL/glew.h>
+
 namespace Levek {
 
 PointRenderer::PointRenderer(): pointShader(ShaderFactory::makeFromFile(

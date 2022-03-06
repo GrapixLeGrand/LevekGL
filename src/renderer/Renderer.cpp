@@ -1,7 +1,9 @@
+
+#include <GL/glew.h>
+#include "../OpenGLError.hpp"
 #include <iostream>
 #include "Renderer.hpp"
-#include "../OpenGLError.hpp"
-#include <GL/glew.h>
+
 
 namespace Levek {
 
