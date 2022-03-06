@@ -1,0 +1,13 @@
+prefix=C:/Users/miste/Desktop/assimp-5.2.2/out/install/x64-Release
+exec_prefix=C:/Users/miste/Desktop/assimp-5.2.2/out/install/x64-Release
+libdir=
+sharedlibdir=
+includedir=
+
+Name: zlib
+Description: zlib compression library
+Version: 
+
+Requires:
+Libs: -L${libdir} -L${sharedlibdir} -lz
+Cflags: -I${includedir}
