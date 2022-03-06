@@ -1,6 +1,7 @@
 #include "Texture.hpp"
 #include "../OpenGLError.hpp"
 #include "stb_image.h"
+#include <GL/glew.h>
 
 namespace Levek {
 

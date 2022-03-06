@@ -12,14 +12,14 @@ int main(void) {
     Levek::RenderingEngine engine = Levek::RenderingEngine(800, 600);
     Levek::WindowController* windowController = engine.getWindowController();
     Levek::InputController* inputController = engine.getInputController();
-
+    
     const float points[15] = {
         -0.5f, -0.5f, 0.0f, 0.5f, 1.0f,//top
         0.5f, -0.5f, 0.0f, 1.0f, 0.0f, //right
         0.0f, 0.5f, 0.0f, 0.0f, 0.0f//left
     };
-
-
+    unsigned int a;
+    
     Levek::VertexArray vertexArray = Levek::VertexArray();
     Levek::VertexBuffer vertexBuffer = Levek::VertexBuffer(points, sizeof(points));
 

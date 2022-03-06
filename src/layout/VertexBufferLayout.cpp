@@ -1,6 +1,6 @@
 
 #include "VertexBufferLayout.hpp"
-
+#include "../OpenGLError.hpp"
 /**
  * Implementation of the VertexBufferLayout
  */

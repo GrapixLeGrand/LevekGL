@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <string>
 #include <iostream>
 #include <stdio.h>
@@ -70,71 +69,15 @@ private:
 
 public:
 
-    Renderer(int width, int height)
-        : clearFlags(0), clearColor({0, 0, 0, 0}), width(width), height(height) {
-
-        //creating rendering objects for the quad that can be rendered on the screen
-        VertexBuffer quadVertexBuffer = VertexBuffer(points, 16 * sizeof(float));
-        VertexBufferLayout layout = VertexBufferLayout();
-        layout.push<glm::vec2>(2);
-        quadVertexArray.addBuffer(quadVertexBuffer, layout);
-        quadIndexes.unbind();
-        quadVertexArray.unbind();
-        quadVertexArray.unbind();
-    }
-
+    Renderer(int width, int height);
     void setClearColor(glm::vec4 color);
     void setClearFlags(unsigned int flags);
     void setClearFlags(ClearBits flags);
     void clear() const;
 
-    void setDepthMask(bool mask) const {
-        if (mask) {
-            GL_CHECK(glDepthMask(GL_TRUE));
-        } else {
-            GL_CHECK(glDepthMask(GL_FALSE));
-        } 
-    }
-
-    void setCullFaceMode(CullFaceMode mode) const {
-        GL_CHECK(glCullFace(mode));
-    }
-
-    void clear(const FrameBuffer& frameBuffer) const {
-
-        //for clearing framebuffers but cannot be const :(
-        glm::vec4 defaultFrameBufferClearColor = glm::vec4(0.0f);
-        float defaultFrameBufferDepth = 1.0f;
-        float defaultFrameBufferDepthStencil = 0; //TODO WARNING I'm not sure
-        
-        if (frameBuffer.hasColorAttachment() > 0) {
-           glClearNamedFramebufferfv(
-               frameBuffer.getId(),
-               GL_COLOR,
-               0,
-               &defaultFrameBufferClearColor[0]
-            ); 
-        }
-
-        if (frameBuffer.hasDepthAttachment()) {
-            glClearNamedFramebufferfv(
-                frameBuffer.getId(),
- 	            GL_DEPTH,
- 	            0,
- 	            &defaultFrameBufferDepth
-            );
-        }
-
-        if (frameBuffer.hasDepthStencilAttachment()) {
-            glClearNamedFramebufferfv(
-                frameBuffer.getId(),
- 	            GL_DEPTH_STENCIL,
- 	            0,
- 	            &defaultFrameBufferDepthStencil
-            );
-        }
-
-    }
+    void setDepthMask(bool mask) const;
+    void setCullFaceMode(CullFaceMode mode) const;
+    void clear(const FrameBuffer& frameBuffer) const;
 
     /**
      * Draw the content of the buffers with the given shader on the default framebuffer.

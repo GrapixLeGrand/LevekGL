@@ -1,7 +1,8 @@
 #include "RenderingEngine.hpp"
 #include "input/GLFWInputController.hpp"
 #include "window/GLFWWindowController.hpp"
-
+#include "OpenGLError.hpp"
+#include "mesh/loader/AssimpModelLoader.hpp"
 #include <GLFW/glfw3.h>
 
 namespace Levek {
@@ -25,7 +26,7 @@ RenderingEngine::RenderingEngine(int width, int height)
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
         //Create a windowed mode window and its OpenGL context
-        window = glfwCreateWindow(windowWidth, windowHeight, "Levek Engine", NULL, NULL);
+        GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Levek Engine", NULL, NULL);
         if (!window) {
             glfwTerminate();
             LEVEK_RENDERING_FAIL("Failed to initialize the window");   

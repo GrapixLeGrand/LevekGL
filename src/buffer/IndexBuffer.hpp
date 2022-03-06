@@ -1,7 +1,7 @@
 #pragma once
 
 #include "mesh/Mesh.hpp"
-#include "../OpenGLError.hpp"
+
 
 namespace Levek {
 class IndexBuffer {

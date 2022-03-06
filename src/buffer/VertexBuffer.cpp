@@ -2,6 +2,7 @@
 #include "VertexBuffer.hpp"
 #include "../OpenGLError.hpp"
 #include "../renderer/Renderer.hpp"
+#include <GL/glew.h>
 
 namespace Levek {
 

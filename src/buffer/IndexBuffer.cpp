@@ -1,5 +1,7 @@
 
 #include "IndexBuffer.hpp"
+#include "../OpenGLError.hpp"
+#include <GL/glew.h>
 #include "../renderer/Renderer.hpp"
 
 namespace Levek {

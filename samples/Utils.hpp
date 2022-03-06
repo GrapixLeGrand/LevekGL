@@ -2,6 +2,7 @@
 #include "LevekGL.hpp"
 #include <vector>
 #include <string>
+#include "imgui.h"
 
 //from https://learnopengl.com/code_viewer.php?code=advanced/cubemaps_skybox_data
 extern float skyboxVertices[108];

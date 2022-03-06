@@ -2,7 +2,6 @@
 #include <string>
 
 #include "stb_image.h"
-#include "../OpenGLError.hpp"
 #include "TextureProperties.hpp"
 
 namespace Levek {

@@ -3,7 +3,6 @@
 #include <vector>
 #include <memory>
 #include <string>
-#include <GL/glew.h>
 #include "glm/glm.hpp"
 #include "../buffer/VertexArray.hpp"
 #include "../buffer/VertexBuffer.hpp"
@@ -11,58 +10,28 @@
 #include "../shader/Shader.hpp"
 
 namespace Levek {
-class PointRenderer {
-private:
-    int pointWidth = 5;
-    std::shared_ptr<VertexBuffer> vbo;
-    std::shared_ptr<VertexArray> vao;
-    VertexBufferLayout layout;
-    std::vector<Point> points;
-    glm::mat4 viewProjection;
-    Shader pointShader;
-public:
+    class PointRenderer {
+    private:
+        int pointWidth = 5;
+        std::shared_ptr<VertexBuffer> vbo;
+        std::shared_ptr<VertexArray> vao;
+        VertexBufferLayout layout;
+        std::vector<Point> points;
+        glm::mat4 viewProjection;
+        Shader pointShader;
+    public:
 
-    PointRenderer();
-    
-    void AddPoint(glm::vec3 point, glm::vec4 color) {
-        points.push_back({point, color});
-    }
+        PointRenderer();
 
-    void AddPoint(glm::vec3 point) {
-        points.push_back({ point, glm::vec4{1.0f} });
-    }
+        void AddPoint(glm::vec3 point, glm::vec4 color);
 
-    void AddAllPoints(std::vector<glm::vec3> data, glm::vec4 color) {
-        for (size_t i = 0; i < data.size(); i++) {
-            AddPoint(data[i], color);
-        }
-    }
+        void AddPoint(glm::vec3 point);
 
-    void SetViewProjection(glm::mat4 viewProjection) {
-        this->viewProjection = viewProjection;
-    }
+        void AddAllPoints(std::vector<glm::vec3> data, glm::vec4 color);
 
-    void Draw() {
-        
-        if (points.size() == 0) {
-            return;
-        }
+        void SetViewProjection(glm::mat4 viewProjection);
 
-        if (vbo == nullptr) {
-            vbo = std::make_shared<VertexBuffer>(points.data(), points.size() * sizeof(Point), GL_DYNAMIC_DRAW);
-            vao->addBuffer(*vbo.get(), layout);
-        } else {
-            vbo->Update(points.data(), points.size() * sizeof(Point));
-        }
-        pointShader.bind();
-        pointShader.setUniformMat4f("viewProjection", viewProjection);
-        vao->bind();
+        void Draw();
 
-        GL_CHECK(glPointSize(pointWidth));
-        GL_CHECK(glDrawArrays(GL_POINTS, 0, points.size()));
-        
-        //draw...
-        points.clear();
-    }
-};
+    };
 };

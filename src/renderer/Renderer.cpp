@@ -1,6 +1,7 @@
 #include <iostream>
 #include "Renderer.hpp"
 #include "../OpenGLError.hpp"
+#include <GL/glew.h>
 
 namespace Levek {
 
@@ -34,6 +35,71 @@ const std::string Renderer::quadFragmentShader =
     "{"
         "FragColor = vec4(texture(screenTexture, TexCoords));"
     "}";
+
+
+Renderer::Renderer(int width, int height)
+    : clearFlags(0), clearColor({ 0, 0, 0, 0 }), width(width), height(height) {
+
+    //creating rendering objects for the quad that can be rendered on the screen
+    VertexBuffer quadVertexBuffer = VertexBuffer(points, 16 * sizeof(float));
+    VertexBufferLayout layout = VertexBufferLayout();
+    layout.push<glm::vec2>(2);
+    quadVertexArray.addBuffer(quadVertexBuffer, layout);
+    quadIndexes.unbind();
+    quadVertexArray.unbind();
+    quadVertexArray.unbind();
+}
+
+
+void Renderer::setDepthMask(bool mask) const {
+    if (mask) {
+        GL_CHECK(glDepthMask(GL_TRUE));
+    }
+    else {
+        GL_CHECK(glDepthMask(GL_FALSE));
+    }
+}
+
+
+void Renderer::setCullFaceMode(CullFaceMode mode) const {
+    GL_CHECK(glCullFace(mode));
+}
+
+void Renderer::clear(const FrameBuffer& frameBuffer) const {
+
+    //for clearing framebuffers but cannot be const :(
+    glm::vec4 defaultFrameBufferClearColor = glm::vec4(0.0f);
+    float defaultFrameBufferDepth = 1.0f;
+    float defaultFrameBufferDepthStencil = 0; //TODO WARNING I'm not sure
+
+    if (frameBuffer.hasColorAttachment() > 0) {
+        glClearNamedFramebufferfv(
+            frameBuffer.getId(),
+            GL_COLOR,
+            0,
+            &defaultFrameBufferClearColor[0]
+        );
+    }
+
+    if (frameBuffer.hasDepthAttachment()) {
+        glClearNamedFramebufferfv(
+            frameBuffer.getId(),
+            GL_DEPTH,
+            0,
+            &defaultFrameBufferDepth
+        );
+    }
+
+    if (frameBuffer.hasDepthStencilAttachment()) {
+        glClearNamedFramebufferfv(
+            frameBuffer.getId(),
+            GL_DEPTH_STENCIL,
+            0,
+            &defaultFrameBufferDepthStencil
+        );
+    }
+
+}
 
 void Renderer::setClearFlags(unsigned int flags) {
     this->clearFlags = flags;
@@ -117,17 +183,6 @@ void Renderer::draw(const VertexArray* va, const Shader* shader) const {
     GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, (unsigned int) va->getVerticesNum())); /* WARNING just for now !!! (I think its okay now before was 3?) */
 }
 
-/*
-void Renderer::draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const {
-
-    glViewport(0, 0, width, height);
-    shader->bind();
-    va->bind();
-    ib->bind();
-    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));   
-    GL_CHECK(glDrawElements(GL_TRIANGLES, ib->GetCount(), GL_UNSIGNED_INT, nullptr));
-    //GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, 36));
-}*/
 
 void Renderer::draw(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const {
     glViewport(0, 0, frameBuffer->getWidth(), frameBuffer->getHeight());
@@ -159,5 +214,7 @@ void Renderer::drawInstances(const VertexArray* va, const IndexBuffer* ib, const
     ));
 
 }
+
+
 
 };

@@ -2,6 +2,9 @@
 #include <cstdlib>
 #include <ctime>
 
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 #include "LevekGL.hpp"
 #include "../Utils.hpp"
 #include "simulation.hpp"

@@ -1,6 +1,7 @@
 #include "CubeMap.hpp"
 
 #include <GL/glew.h>
+#include "../OpenGLError.hpp"
 
 namespace Levek {
     CubeMap::CubeMap(int width, int height, TextureParameters::TextureType type) {

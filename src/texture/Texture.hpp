@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <GL/glew.h>
 //#include "../renderer/Renderer.h"
 #include "TextureProperties.hpp"
 
