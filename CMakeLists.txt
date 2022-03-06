@@ -50,6 +50,7 @@ set(LEVEKGL_SOURCES
     "src/shader/ShaderManager.cpp"
 
     "src/texture/Texture.cpp"
+    "src/texture/CubeMap.cpp"
     "src/texture/RenderBuffer.cpp"
     "src/texture/TextureProperties.cpp"
 

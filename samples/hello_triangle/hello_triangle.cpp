@@ -19,6 +19,7 @@ int main(void) {
         0.0f, 0.5f, 0.0f, 0.0f, 0.0f//left
     };
 
+
     Levek::VertexArray vertexArray = Levek::VertexArray();
     Levek::VertexBuffer vertexBuffer = Levek::VertexBuffer(points, sizeof(points));
 
@@ -28,7 +29,7 @@ int main(void) {
 
     vertexArray.addBuffer(vertexBuffer, layout);
     vertexArray.unbind();
-
+    
     Levek::Shader shader = Levek::ShaderFactory::makeFromFile(
         SAMPLES_DIRECTORY"/hello_triangle/triangle.vert",
         SAMPLES_DIRECTORY"/hello_triangle/triangle.frag"
