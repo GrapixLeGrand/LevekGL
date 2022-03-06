@@ -63,12 +63,6 @@ private:
     const glm::vec2 defaultQuadToScreenOffset = glm::vec2(0.0f);
     const glm::vec2 defaultQuadToScreenScale = glm::vec2(1.0f);
 
-    /*
-    Shader(
-        RESOURCES_DIRECTORY"/shaders/Quad.vert",
-        RESOURCES_DIRECTORY"/shaders/Quad.frag"
-    );*/
-
     unsigned int clearFlags;
     glm::vec4 clearColor;
     int width;

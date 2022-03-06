@@ -1,5 +1,13 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.13)
+cmake_policy(SET CMP0079 NEW)
 project(LevekGL VERSION 0.1.0)
+
+if (DEFINED ENV{LEVEKGL_USE_INTERNAL_GLM_REQUESTED})
+    set(ENV{LEVEKGL_USE_INTERNAL_GLM} ON)
+endif()
+#option(ENV{LEVEKGL_EXTERNAL_GLM} "Include paths to external GLM library" "")
+
+message("Levek: use internal GLM is "$ENV{LEVEKGL_USE_INTERNAL_GLM})
 
 add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources")
 
@@ -41,6 +49,8 @@ set(LEVEKGL_SOURCES
     #"src/layout/VertexBufferLayoutInstancing.cpp"
 
     "src/renderer/Renderer.cpp"
+    "src/renderer/PointRenderer.cpp"
+    "src/renderer/LineRenderer.cpp"
 
     "src/mesh/Primitives.cpp"
 
@@ -89,6 +99,8 @@ set(LEVEKGL_ALL_SOURCES ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 #target_compile_features(LevekGL PRIVATE cxx_std_17)
 
+
+if (ENV{LEVEKGL_USE_INTERNAL_GLM})
 set(LEVEKGL_TARGET_INCLUDE_DIRS 
     PUBLIC "thirdparty/imgui-1.83"
     PUBLIC "thirdparty/imgui-1.83/backends"
@@ -98,6 +110,17 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
     PUBLIC "thirdparty/assimp-5.1.4"
     PUBLIC "thirdparty/glslang"
 )
+else()
+set(LEVEKGL_TARGET_INCLUDE_DIRS 
+    PUBLIC "thirdparty/imgui-1.83"
+    PUBLIC "thirdparty/imgui-1.83/backends"
+    PUBLIC "thirdparty/stb_image-2.27"
+    PUBLIC "${LevekGL_SOURCE_DIR}/src"
+    PUBLIC "$ENV{LEVEKGL_EXTERNAL_GLM}"
+    PUBLIC "thirdparty/assimp-5.1.4"
+    PUBLIC "thirdparty/glslang"
+)
+endif()
 
 if (WIN32)
     #set(
@@ -110,8 +133,8 @@ if (WIN32)
     set(GLEW_INCLUDE_DIRS "thirdparty/windows/glew-2.1.0/include")
     set(GLFW3_INCLUDE_DIRS "thirdparty/windows/glfw-3.3.6/include")
 
-    set(GLEW_LIBRARIES "${CMAKE_SOURCE_DIR}/thirdparty/windows/glew-2.1.0/lib/Release/x64/glew32s.lib")
-    set(GLFW3_LIBRARIES "${CMAKE_SOURCE_DIR}/thirdparty/windows/glfw-3.3.6/lib-vc2022/glfw3.lib")
+    set(GLEW_LIBRARIES "${LevekGL_SOURCE_DIR}/thirdparty/windows/glew-2.1.0/lib/Release/x64/glew32s.lib")
+    set(GLFW3_LIBRARIES "${LevekGL_SOURCE_DIR}/thirdparty/windows/glfw-3.3.6/lib-vc2022/glfw3.lib")
 
 endif (WIN32)
 

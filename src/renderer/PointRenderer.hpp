@@ -19,23 +19,11 @@ private:
     VertexBufferLayout layout;
     std::vector<Point> points;
     glm::mat4 viewProjection;
-    Shader pointShader = ShaderFactory::makeFromFile(
-        RESOURCES_DIRECTORY"/shaders/Point.vert",
-        RESOURCES_DIRECTORY"/shaders/Point.frag"
-    );
+    Shader pointShader;
 public:
 
-    PointRenderer() {
-        /*
-        pointShader = std::make_shared<Shader>(
-            std::string(RESOURCES_DIRECTORY) + "/shaders/Point.vert",
-            std::string(RESOURCES_DIRECTORY) + "/shaders/Point.frag"
-        );*/
-        vao = std::make_shared<VertexArray>();
-        layout.push<glm::vec3>(1);
-        layout.push<glm::vec4>(1);
-    }
-
+    PointRenderer();
+    
     void AddPoint(glm::vec3 point, glm::vec4 color) {
         points.push_back({point, color});
     }

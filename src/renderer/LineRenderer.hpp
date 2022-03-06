@@ -8,9 +8,7 @@
 #include "../buffer/VertexArray.hpp"
 #include "../buffer/VertexBuffer.hpp"
 #include "Point.hpp"
-
-#ifndef LEVEK_LINE_RENDERER
-#define LEVEK_LINE_RENDERER
+#include "shader/Shader.hpp"
 
 
 namespace Levek {
@@ -23,23 +21,11 @@ private:
     VertexBufferLayout layout;
     std::vector<Point> points;
     glm::mat4 viewProjection;
-    Shader lineShader = ShaderFactory::makeFromFile(
-        RESOURCES_DIRECTORY"/shaders/Line.vert",
-        RESOURCES_DIRECTORY"/shaders/Line.frag"
-    );
+    Shader lineShader;
 
 public:
 
-    LineRenderer() {
-        /*
-        lineShader = std::make_shared<Shader>(
-            std::string(RESOURCES_DIRECTORY) + "/shaders/Line.vert",
-            std::string(RESOURCES_DIRECTORY) + "/shaders/Line.frag"
-        );*/
-        vao = std::make_shared<VertexArray>();
-        layout.push<glm::vec3>(1);
-        layout.push<glm::vec4>(1);
-    }
+    LineRenderer();
 
     void AddLine(glm::vec3 start, glm::vec3 end, glm::vec4 color) {
         points.push_back({start, color});
@@ -80,5 +66,3 @@ public:
 
 };
 };
-
-#endif
