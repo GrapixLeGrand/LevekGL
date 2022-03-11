@@ -64,7 +64,7 @@ if(BUILD_SHARED_LIBS)
     set(LIB_TYPE SHARED)    
 endif()
 
-message("##### lib type = "${LIB_TYPE})
+message("##### lib type = ${LIB_TYPE}")
 
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "")
     # This logic inside SPIRV-Tools, which can upset build target dependencies

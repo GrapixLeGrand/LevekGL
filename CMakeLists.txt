@@ -3,7 +3,7 @@ cmake_policy(SET CMP0079 NEW)
 project(LevekGL VERSION 0.1.0)
 
 unset(ENV{LEVEKGL_USE_INTERNAL_GLM} CACHE)
-set(ENV{LEVEKGL_USE_INTERNAL_GLM} ON) #by default
+set(ENV{LEVEKGL_USE_INTERNAL_GLM} OFF) #by default
 
 if (DEFINED ENV{LEVEKGL_USE_INTERNAL_GLM_REQUESTED})
     message("Levek: Request to use external project GLM library")
@@ -11,7 +11,7 @@ if (DEFINED ENV{LEVEKGL_USE_INTERNAL_GLM_REQUESTED})
 endif()
 #option(ENV{LEVEKGL_EXTERNAL_GLM} "Include paths to external GLM library" "")
 
-message("Levek: use internal GLM is "$ENV{LEVEKGL_USE_INTERNAL_GLM})
+message("Levek: use internal GLM is $ENV{LEVEKGL_USE_INTERNAL_GLM}")
 
 add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources")
 

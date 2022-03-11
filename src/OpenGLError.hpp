@@ -11,19 +11,19 @@
 
 
 #define LEVEK_RENDERING_ASSERT_(EXPR) \
-    LEVEK_RENDERING_ASSERT(EXPR, "")
+    LEVEK_RENDERING_ASSERT((EXPR), "")
 
 #define LEVEK_RENDERING_ASSERT(EXPR, MESSAGE) \
-    if (!EXPR) { \
-        Levek::LevekRenderingAssert(__LINE__, __FILE__, MESSAGE); \
+    if (!(EXPR)) { \
+        Levek::LevekRenderingAssert(__LINE__, __FILE__, (MESSAGE)); \
     }
 
-#define LEVEK_RENDERING_FAIL(MESSAGE)    Levek::LevekRenderingAssert(__LINE__, __FILE__, MESSAGE);
-#define LEVEK_RENDERING_INFO(MESSAGE)    Levek::LevekRenderingInfo(MESSAGE);
+#define LEVEK_RENDERING_FAIL(MESSAGE)    Levek::LevekRenderingAssert(__LINE__, __FILE__, (MESSAGE));
+#define LEVEK_RENDERING_INFO(MESSAGE)    Levek::LevekRenderingInfo((MESSAGE));
 
 #define LEVEK_STRING_INT(STR, N) ((std::string(STR) + ": " + std::to_string(N)).c_str())
-#define LEVEK_RENDERING_ID_INFO(MESSAGE_1, ID) LEVEK_RENDERING_INFO(LEVEK_STRING_INT(MESSAGE_1, ID))
-#define LEVEK_RENDERING_ID_FAIL(MESSAGE_1, ID) LEVEK_RENDERING_FAIL(LEVEK_STRING_INT(MESSAGE_1, ID))
+#define LEVEK_RENDERING_ID_FAIL(MESSAGE_1, ID) LEVEK_RENDERING_FAIL(LEVEK_STRING_INT((MESSAGE_1), (ID)))
+#define LEVEK_RENDERING_ID_INFO(MESSAGE_1, ID) LEVEK_RENDERING_INFO(LEVEK_STRING_INT((MESSAGE_1), (ID)))
 
 namespace Levek {
 
