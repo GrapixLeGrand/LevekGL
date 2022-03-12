@@ -49,7 +49,7 @@ set(LEVEKGL_SOURCES
     "src/buffer/VertexBuffer.cpp"
     "src/buffer/VertexArray.cpp"
     
-    "src/layout/Bufferlayout.cpp"
+    "src/layout/BufferLayout.cpp"
     "src/layout/VertexBufferLayout.cpp"
     
     #"src/layout/VertexBufferLayoutInstancing.cpp"
