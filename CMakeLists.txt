@@ -2,16 +2,21 @@ cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0079 NEW)
 project(LevekGL VERSION 0.1.0)
 
-unset(ENV{LEVEKGL_USE_INTERNAL_GLM} CACHE)
-set(ENV{LEVEKGL_USE_INTERNAL_GLM} OFF) #by default
+#need to do this otherwise the CMake cache could hount us down
+unset(LEVEKGL_USE_INTERNAL_GLM CACHE)
+unset(LEVEKGL_BUILD_SAMPLES CACHE)
 
-if (DEFINED ENV{LEVEKGL_USE_INTERNAL_GLM_REQUESTED})
-    message("Levek: Request to use external project GLM library")
-    set(ENV{LEVEKGL_USE_INTERNAL_GLM} OFF)
-endif()
-#option(ENV{LEVEKGL_EXTERNAL_GLM} "Include paths to external GLM library" "")
+OPTION(LEVEKGL_BUILD_SAMPLES
+  "Build samples with the library."
+  ON
+)
 
-message("Levek: use internal GLM is $ENV{LEVEKGL_USE_INTERNAL_GLM}")
+OPTION(LEVEKGL_USE_INTERNAL_GLM
+  "ON/OFF and if ON nothing is required. If OFF, must specify ENV{LEVEKGL_USE_INTERNAL_GLM}"
+  ON
+)
+
+message("LevekGL: use internal GLM state: $ENV{LEVEKGL_USE_INTERNAL_GLM}")
 
 add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources")
 
@@ -103,47 +108,32 @@ set(LEVEKGL_ALL_SOURCES ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 
 #compile the project as a library
 add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
-#target_compile_features(LevekGL PRIVATE cxx_std_17)
 
-#if (UNIX)
-#set(ASSIMP_INCLUDE_DIR "thirdparty/assimp-5.1.4")
-#endif()
 set(ASSIMP_INCLUDE_DIR "thirdparty/assimp-5.1.4")
-#if (WIN32)
-#set(ASSIMP_INCLUDE_DIR "thirdparty/windows/assimp-5.2.2/include")
-#endif()
 
+set(GLM_INCLUDE_DIR "thirdparty/glm-0.9.9.8")
 
-if ($ENV{LEVEKGL_USE_INTERNAL_GLM})
-set(LEVEKGL_TARGET_INCLUDE_DIRS 
-    PUBLIC "thirdparty/imgui-1.83"
-    PUBLIC "thirdparty/imgui-1.83/backends"
-    PUBLIC "thirdparty/stb_image-2.27"
-    PUBLIC "${LevekGL_SOURCE_DIR}/src"
-    PUBLIC "thirdparty/glm-0.9.9.8"
-    PUBLIC "${ASSIMP_INCLUDE_DIR}"
-    PUBLIC "thirdparty/glslang"
-)
+if (NOT LEVEKGL_USE_INTERNAL_GLM)
+    message("LevekGL: setting external glm path to $ENV{LEVEKGL_EXTERNAL_GLM}")
+    set(GLM_INCLUDE_DIR $ENV{LEVEKGL_EXTERNAL_GLM})
 else()
-set(LEVEKGL_TARGET_INCLUDE_DIRS 
-    PUBLIC "thirdparty/imgui-1.83"
-    PUBLIC "thirdparty/imgui-1.83/backends"
-    PUBLIC "thirdparty/stb_image-2.27"
-    PUBLIC "${LevekGL_SOURCE_DIR}/src"
-    PUBLIC "$ENV{LEVEKGL_EXTERNAL_GLM}"
-    PUBLIC "${ASSIMP_INCLUDE_DIR}"
-    PUBLIC "thirdparty/glslang"
-)
+    message("LevekGL: using normal glm path")
 endif()
 
-if (WIN32)
-    #set(
-    #    LEVEKGL_TARGET_INCLUDE_DIRS
-    #    ${LEVEKGL_TARGET_INCLUDE_DIRS}
-    #    "thirdparty/windows/windows/freeglut-3.2.2"
-    #)
+set(LEVEKGL_TARGET_INCLUDE_DIRS 
+    PUBLIC "thirdparty/imgui-1.83"
+    PUBLIC "thirdparty/imgui-1.83/backends"
+    PUBLIC "thirdparty/stb_image-2.27"
+    PUBLIC "${LevekGL_SOURCE_DIR}/src"
+    PUBLIC "${GLM_INCLUDE_DIR}"
+    PUBLIC "${ASSIMP_INCLUDE_DIR}"
+    PUBLIC "thirdparty/glslang"
+)
 
-    #set(GLUT_INCLUDE_DIRS "thirdparty/windows/freeglut-3.2.2/include/GL")
+
+
+if (WIN32)
+
     set(GLEW_INCLUDE_DIRS "thirdparty/windows/glew-2.1.0/include")
     set(GLFW3_INCLUDE_DIRS "thirdparty/windows/glfw-3.3.6/include")
 
@@ -154,10 +144,6 @@ endif (WIN32)
 
 #include_directories(${LEVEKGL_TARGET_INCLUDE_DIR})
 target_include_directories(LevekGL ${LEVEKGL_TARGET_INCLUDE_DIRS})
-
-#SET (-BUILD_SHARED_LIBS OFF)
-#include(LevekGL "LevekGL.hpp")
-#target_include_directories(LevekGL PRIVATE src)
 
 message("glew include dirs: ${GLEW_INCLUDE_DIRS}")
 message("glew library: ${GLEW_LIBRARIES}")
@@ -207,4 +193,10 @@ target_link_libraries(LevekGL glslang)
 set(LEVEKGL_INCLUDE_DIR ${LevekGL_SOURCE_DIR})
 
 add_compile_definitions(SAMPLES_DIRECTORY="${LevekGL_SOURCE_DIR}/samples")
-add_subdirectory(samples)
+
+if(${LEVEKGL_BUILD_SAMPLES})
+    message("LevekGL: building samples")
+    add_subdirectory(samples)
+else()
+    message("LevekGL: not building samples")
+endif()

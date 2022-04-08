@@ -5,7 +5,7 @@
 #include <vector>
 
 int main(void) {
-
+    
     std::cout << "hello triangle !" << std::endl;
 
     Levek::RenderingEngine engine = Levek::RenderingEngine(800, 600);
