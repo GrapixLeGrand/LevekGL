@@ -2,6 +2,16 @@ cmake_minimum_required(VERSION 3.13)
 cmake_policy(SET CMP0079 NEW)
 project(LevekGL VERSION 0.1.0)
 
+message("LevekGL: build type is ${CMAKE_BUILD_TYPE}")
+
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    message("LevekGL: building in debug mode")
+elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
+    message("LevekGL: building in release mode")
+else()
+    message("LevekGL: building in other mode")
+endif()
+
 #need to do this otherwise the CMake cache could hount us down
 unset(LEVEKGL_USE_INTERNAL_GLM CACHE)
 unset(LEVEKGL_BUILD_SAMPLES CACHE)
@@ -109,7 +119,12 @@ set(LEVEKGL_ALL_SOURCES ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 #compile the project as a library
 add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
 
-set(ASSIMP_INCLUDE_DIR "thirdparty/assimp-5.1.4")
+if (UNIX)
+    set(ASSIMP_INCLUDE_DIR "thirdparty/assimp-5.1.4")
+elseif(WIN32)
+    set(ASSIMP_INCLUDE_DIR "thirdparty/windows/assimp/assimp-5.2.3/include")
+endif()
+message("LevekGL: assimp include dir: ${ASSIMP_INCLUDE_DIR}")
 
 set(GLM_INCLUDE_DIR "thirdparty/glm-0.9.9.8")
 
@@ -133,13 +148,11 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
 
 
 if (WIN32)
-
     set(GLEW_INCLUDE_DIRS "thirdparty/windows/glew-2.1.0/include")
     set(GLFW3_INCLUDE_DIRS "thirdparty/windows/glfw-3.3.6/include")
 
     set(GLEW_LIBRARIES "${LevekGL_SOURCE_DIR}/thirdparty/windows/glew-2.1.0/lib/Release/x64/glew32s.lib")
     set(GLFW3_LIBRARIES "${LevekGL_SOURCE_DIR}/thirdparty/windows/glfw-3.3.6/lib-vc2022/glfw3.lib")
-
 endif (WIN32)
 
 #include_directories(${LEVEKGL_TARGET_INCLUDE_DIR})
@@ -174,16 +187,20 @@ if (WIN32)
 endif(WIN32)
 
 set(BUILD_SHARED_LIBS OFF)
-target_link_libraries(LevekGL assimp)
-#if (UNIX OR WIN32)
-#    set(BUILD_SHARED_LIBS OFF)
-#    target_link_libraries(LevekGL assimp)
-#endif()
-#if (WIN32)
-#    add_library(assimp STATIC IMPORTED)
-#    set_property(TARGET assimp PROPERTY IMPORTED_LOCATION "${LevekGL_SOURCE_DIR}/thirdparty/windows/assimp-5.2.2/lib/assimp-vc143-mtd.lib")
-#    target_link_libraries(LevekGL assimp)
-#endif()
+
+if (UNIX)
+    target_link_libraries(LevekGL assimp)
+elseif(WIN32)
+    message("LevekGL: using assimp for windows")
+    add_library(assimp STATIC IMPORTED)
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set_property(TARGET assimp PROPERTY IMPORTED_LOCATION "${LevekGL_SOURCE_DIR}/thirdparty/windows/assimp/MDd/lib/assimpd.lib")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set_property(TARGET assimp PROPERTY IMPORTED_LOCATION "${LevekGL_SOURCE_DIR}/thirdparty/windows/assimp/MD/lib/assimp.lib")
+    endif()
+    #SET_PROPERTY(TARGET assimpd PROPERTY IMPORTED_IMPLIB "${LevekGL_SOURCE_DIR}/thirdparty/windows/assimp/MDd/lib/assimpd.lib")
+    target_link_libraries(LevekGL assimp)
+endif()
 
 
 
