@@ -153,7 +153,11 @@ if (WIN32)
     set(GLEW_INCLUDE_DIRS "thirdparty/windows/glew-2.1.0/include")
     set(GLFW3_INCLUDE_DIRS "thirdparty/windows/glfw-3.3.6/include")
 
-    set(GLEW_LIBRARIES "${LevekGL_SOURCE_DIR}/thirdparty/windows/glew-2.1.0/lib/Release/x64/glew32s.lib")
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(GLEW_LIBRARIES "${LevekGL_SOURCE_DIR}/thirdparty/windows/glew-2.1.0/lib/MD/glew.lib")
+    elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+        set(GLEW_LIBRARIES "${LevekGL_SOURCE_DIR}/thirdparty/windows/glew-2.1.0/lib/MDd/glewd.lib")   
+    endif()
     set(GLFW3_LIBRARIES "${LevekGL_SOURCE_DIR}/thirdparty/windows/glfw-3.3.6/lib-vc2022/glfw3.lib")
 endif (WIN32)
 
