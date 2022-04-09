@@ -1,3 +1,4 @@
 add_subdirectory(hello_triangle)
 add_subdirectory(simple_mesh)
 add_subdirectory(particles)
+add_subdirectory(assimp_test)
