@@ -9,12 +9,12 @@ if (CMAKE_BUILD_TYPE STREQUAL "Debug")
 elseif (CMAKE_BUILD_TYPE STREQUAL "Release")
     message("LevekGL: building in release mode")
 else()
-    message("LevekGL: building in other mode")
+    message(FATAL_ERROR "LevekGL: building in other mode")
 endif()
 
 #need to do this otherwise the CMake cache could hount us down
-unset(LEVEKGL_USE_INTERNAL_GLM CACHE)
-unset(LEVEKGL_BUILD_SAMPLES CACHE)
+#unset(LEVEKGL_USE_INTERNAL_GLM CACHE)
+#unset(LEVEKGL_BUILD_SAMPLES CACHE)
 
 OPTION(LEVEKGL_BUILD_SAMPLES
   "Build samples with the library."
@@ -198,7 +198,6 @@ elseif(WIN32)
     elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
         set_property(TARGET assimp PROPERTY IMPORTED_LOCATION "${LevekGL_SOURCE_DIR}/thirdparty/windows/assimp/MD/lib/assimp.lib")
     endif()
-    #SET_PROPERTY(TARGET assimpd PROPERTY IMPORTED_IMPLIB "${LevekGL_SOURCE_DIR}/thirdparty/windows/assimp/MDd/lib/assimpd.lib")
     target_link_libraries(LevekGL assimp)
 endif()
 
