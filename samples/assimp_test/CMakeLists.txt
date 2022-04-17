@@ -1,7 +1,7 @@
 
 project(assimp_test)
 
-add_executable(assimp_test main.cpp)
+add_executable(assimp_test main.cpp ../Utils.cpp)
 
 target_link_libraries(assimp_test LevekGL)
 

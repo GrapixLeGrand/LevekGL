@@ -44,7 +44,7 @@ add_subdirectory(src)
 
 if (UNIX)
     message("Levek: Compiling for Unix")
-    find_package(GLUT REQUIRED)
+    #find_package(GLUT REQUIRED)
     find_package(GLEW REQUIRED)
     find_package(glfw3 REQUIRED)
 endif (UNIX)
@@ -209,6 +209,7 @@ target_link_libraries(LevekGL glslang)
 set(LEVEKGL_INCLUDE_DIR ${LevekGL_SOURCE_DIR})
 
 add_compile_definitions(SAMPLES_DIRECTORY="${LevekGL_SOURCE_DIR}/samples")
+add_compile_definitions(LEVEKGL_RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources")
 
 if(${LEVEKGL_BUILD_SAMPLES})
     message("LevekGL: building samples")

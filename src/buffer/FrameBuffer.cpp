@@ -279,8 +279,8 @@ void FrameBuffer::addDepthStencilAttachment(const RenderBuffer& buffer) {
 void FrameBuffer::finalize() {
     LEVEK_RENDERING_ASSERT(!finalized, "framebuffer already finalized");
     LEVEK_RENDERING_ASSERT(
-        hasDepth && hasDepthStencil,
-        "cannot attach single depth and depth stencil attachment"
+        (hasDepth && !hasDepthStencil) || (!hasDepth && hasDepthStencil),
+        "cannot attach depth and depth stencil attachment"
     );
     finalized = true;
 
