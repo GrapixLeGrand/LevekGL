@@ -59,10 +59,13 @@ int main(void) {
     Levek::WindowController* windowController = engine->getWindowController();
     Levek::InputController* inputController = engine->getInputController();
     
-    Levek::ModelLoader* meshLoader = engine->getModelLoader();
-    Levek::Model* billboardModel = meshLoader->loadFromFile(LEVEKGL_RESOURCES_DIRECTORY"/models/Billboard.obj");
-    const Levek::Mesh* billboardMesh = billboardModel->getMesh(0);
-
+    ///////
+    Levek::MeshPipelineState meshPipelineState(
+        engine->getModelLoader(),
+        LEVEKGL_RESOURCES_DIRECTORY"/models/voxel_cat.obj", 
+        LEVEKGL_RESOURCES_DIRECTORY"/textures/voxel_cat.png"
+    ); 
+    
     Levek::Renderer* renderer = engine->getRenderer();
     Levek::LineRenderer* lineRenderer = engine->getLineRenderer();
 
@@ -75,21 +78,7 @@ int main(void) {
         SAMPLES_DIRECTORY"/simple_mesh/shaders/phong.frag"
     );
 
-    std::vector<std::string> skyBoxImagesPaths { "right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg" };
-
-    for (auto it = skyBoxImagesPaths.begin(); it != skyBoxImagesPaths.end(); it++) {
-        (*it) = SAMPLES_DIRECTORY"/resources/skybox/" + (*it);
-    }
-
-    Levek::CubeMap cubeMap = Levek::CubeMap(skyBoxImagesPaths, 2048, 2048);
-    Levek::VertexBuffer cubeMapVbo = Levek::VertexBuffer(skyboxVertices, sizeof(skyboxVertices));
-    Levek::VertexBufferLayout cubeMapLayout = Levek::VertexBufferLayout(); cubeMapLayout.push<glm::vec3>(1);
-    Levek::VertexArray cubeMapVa; cubeMapVa.addBuffer(&cubeMapVbo, &cubeMapLayout);
-
-    Levek::Shader cubeMapShader = Levek::ShaderFactory::makeFromFile(
-        SAMPLES_DIRECTORY"/simple_mesh/shaders/skybox.vert",
-        SAMPLES_DIRECTORY"/simple_mesh/shaders/skybox.frag"
-    );
+    Levek::SkyBoxPipelineState skyboxState;
 
     glm::vec3 lightDirection = glm::vec3(0.1, -1, 0.1);
     glm::vec3 lightDirectionView;
@@ -112,7 +101,7 @@ int main(void) {
 
     while (!windowController->exit()) {
 
-        std::cout << windowController->getDeltaTime() << std::endl;
+        //std::cout << windowController->getDeltaTime() << std::endl;
         renderer->clear();
         renderer->clear(depthMap);
         
@@ -141,16 +130,7 @@ int main(void) {
         */
 
         glm::mat4 vp = camera.getProjection() * glm::mat4(glm::mat3(camera.getView()));
-
-        renderer->setDepthMask(false);
-        cubeMapShader.bind();
-        cubeMap.bind();
-        cubeMapShader.setUniform1i("skybox", 0);
-        cubeMapShader.setUniformMat4f("vp", vp);
-        cubeMapShader.unbind();
-
-        renderer->draw(cubeMapVa, cubeMapShader);
-        renderer->setDepthMask(true);
+        skyboxState.draw(renderer, vp);
 
         lineRenderer->AddLine({0, 0, 0}, {1, 0, 0}, {1.0, 0, 0, 1.0});
         lineRenderer->AddLine({0, 0, 0}, {0, 1, 0}, {0.0, 1.0, 0, 1.0});

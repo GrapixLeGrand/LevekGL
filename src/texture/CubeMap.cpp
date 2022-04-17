@@ -20,7 +20,8 @@ namespace Levek {
         for (size_t i = 0; i < texturesPaths.size(); i++) {
 
             data = stbi_load(texturesPaths[i].c_str(), &w, &h, &c, 0);
-            LEVEK_RENDERING_ASSERT(w == (int)mWidth && h == (int)mHeight, "cubemap width or height not same as initialized");
+            LEVEK_RENDERING_ASSERT(w == (int)mWidth && h == (int)mHeight, 
+            "cubemap width or height not same as initialized, or the path to the image is wrong...");
             GL_CHECK(glTexImage2D(
                 GL_TEXTURE_CUBE_MAP_POSITIVE_X + (unsigned int)i,
                 0, GL_RGB, w, h, 0, GL_RGB, GL_UNSIGNED_BYTE, data
