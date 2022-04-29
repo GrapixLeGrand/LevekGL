@@ -21,11 +21,8 @@ struct SkyBoxPipelineState {
     Levek::VertexBuffer* cubeMapVbo = nullptr;
     Levek::VertexBufferLayout* cubeMapLayout = nullptr;
     Levek::VertexArray* cubeMapVa = nullptr;
-
-    Levek::Shader cubeMapShader = Levek::ShaderFactory::makeFromFile(
-		LEVEKGL_RESOURCES_DIRECTORY"/shaders/skybox.vert",
-		LEVEKGL_RESOURCES_DIRECTORY"/shaders/skybox.frag"
-	);
+    
+    Levek::Shader cubeMapShader;
 
 	SkyBoxPipelineState(const std::vector<std::string>& imagePaths);
     SkyBoxPipelineState(): SkyBoxPipelineState(getSkyBoxPaths()) {}

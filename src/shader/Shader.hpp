@@ -20,7 +20,7 @@ class Shader {
 private:
 	unsigned int renderer_id;
 
-protected:
+public://protected:
 	Shader(): renderer_id(0) {}
 
 	/**

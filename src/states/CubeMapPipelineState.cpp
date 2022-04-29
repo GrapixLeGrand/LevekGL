@@ -2,6 +2,8 @@
 
 namespace Levek {
 
+
+    
         float skyboxVertices[] = {
         // positions          
         -1.0f,  1.0f, -1.0f,
@@ -53,6 +55,10 @@ namespace Levek {
     	cubeMapLayout = new Levek::VertexBufferLayout(); cubeMapLayout->push<glm::vec3>(1);
 		cubeMapVa = new Levek::VertexArray();
 		cubeMapVa->addBuffer(cubeMapVbo, cubeMapLayout);
+    cubeMapShader = Levek::ShaderFactory::makeFromFile(
+		  LEVEKGL_RESOURCES_DIRECTORY"/shaders/skybox.vert",
+		  LEVEKGL_RESOURCES_DIRECTORY"/shaders/skybox.frag"
+    );
 	}
 
     void SkyBoxPipelineState::draw(Levek::Renderer *renderer, glm::mat4& vp) {
