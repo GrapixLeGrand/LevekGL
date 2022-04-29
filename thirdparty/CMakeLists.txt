@@ -12,7 +12,7 @@ else ()
 endif()
 
 if (UNIX)
-    add_subdirectory(assimp-5.1.4)
+    #add_subdirectory(assimp-5.1.4)
 endif()
 
 #if (UNIX)
