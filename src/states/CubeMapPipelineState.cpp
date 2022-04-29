@@ -3,6 +3,15 @@
 namespace Levek {
 
 
+const std::vector<std::string> getSkyBoxPaths() {
+
+        std::vector<std::string> skyBoxImagesPaths { "right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg" };
+        for (auto it = skyBoxImagesPaths.begin(); it != skyBoxImagesPaths.end(); it++) {
+            (*it) = LEVEKGL_RESOURCES_DIRECTORY"/textures/skybox/default/" + (*it);
+        }
+
+        return skyBoxImagesPaths;
+    }
     
         float skyboxVertices[] = {
         // positions          
@@ -49,6 +58,8 @@ namespace Levek {
         1.0f, -1.0f,  1.0f
     };
 
+SkyBoxPipelineState::SkyBoxPipelineState(): SkyBoxPipelineState(getSkyBoxPaths()) {}
+
     SkyBoxPipelineState::SkyBoxPipelineState(const std::vector<std::string>& imagePaths) {
 		cubeMap = new Levek::CubeMap(imagePaths, 2048, 2048);
 		cubeMapVbo = new Levek::VertexBuffer(skyboxVertices, sizeof(skyboxVertices));
@@ -76,10 +87,12 @@ namespace Levek {
 	}
 
     SkyBoxPipelineState::~SkyBoxPipelineState() {
-		delete cubeMap;
-		delete cubeMapVbo;
-		delete cubeMapLayout;
-		delete cubeMapVa;
-	}
+      delete cubeMap;
+      delete cubeMapVbo;
+      delete cubeMapLayout;
+      delete cubeMapVa;
+	  }
+
+
     
 }

@@ -25,7 +25,7 @@ struct SkyBoxPipelineState {
     Levek::Shader cubeMapShader;
 
 	SkyBoxPipelineState(const std::vector<std::string>& imagePaths);
-    SkyBoxPipelineState(): SkyBoxPipelineState(getSkyBoxPaths()) {}
+    SkyBoxPipelineState(); //: SkyBoxPipelineState(getSkyBoxPaths()) {}
     ~SkyBoxPipelineState();
 
     /**
@@ -36,16 +36,6 @@ struct SkyBoxPipelineState {
      */
 	void draw(Levek::Renderer *renderer, glm::mat4& vp);
     
-private:
-    const std::vector<std::string> static getSkyBoxPaths() {
-
-        std::vector<std::string> skyBoxImagesPaths { "right.jpg", "left.jpg", "top.jpg", "bottom.jpg", "front.jpg", "back.jpg" };
-        for (auto it = skyBoxImagesPaths.begin(); it != skyBoxImagesPaths.end(); it++) {
-            (*it) = LEVEKGL_RESOURCES_DIRECTORY"/textures/skybox/default/" + (*it);
-        }
-
-        return skyBoxImagesPaths;
-    }
 };
 
 
