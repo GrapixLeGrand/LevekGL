@@ -74,6 +74,13 @@
         "forward_list": "cpp",
         "regex": "cpp",
         "shared_mutex": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "compare": "cpp",
+        "concepts": "cpp",
+        "buffer": "cpp",
+        "netfwd": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp",
+        "stop_token": "cpp"
     }
 }

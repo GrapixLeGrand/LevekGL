@@ -5,6 +5,8 @@
     "version": "0.2.0",
     "configurations": [
 
+
+
         {
             "name": "hello triangle",
             "type": "cppdbg",
@@ -50,6 +52,25 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/samples/particles/particles",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+        {
+            "name": "voxel_sample",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/samples/voxel/voxel_sample",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
