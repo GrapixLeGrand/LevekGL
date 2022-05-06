@@ -32,10 +32,10 @@ VertexBuffer::~VertexBuffer() {
 
 void VertexBuffer::Update(const void* data, unsigned int size) {
     GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, rendererID));
-    if (this->size == size) {
+    if (this->size >= size) {
         GL_CHECK(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
     } else {
-        GL_CHECK(glBufferData(GL_ARRAY_BUFFER, size, data, usage));
+        GL_CHECK(glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW));
     }
 }
 
