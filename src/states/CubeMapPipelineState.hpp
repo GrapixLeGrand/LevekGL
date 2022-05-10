@@ -17,12 +17,12 @@ extern float skyboxVertices[108];
 
 struct SkyBoxPipelineState {
 
-	Levek::CubeMap* cubeMap = nullptr;
-    Levek::VertexBuffer* cubeMapVbo = nullptr;
-    Levek::VertexBufferLayout* cubeMapLayout = nullptr;
-    Levek::VertexArray* cubeMapVa = nullptr;
+	CubeMap* cubeMap = nullptr;
+    VertexBuffer* cubeMapVbo = nullptr;
+    VertexBufferLayout* cubeMapLayout = nullptr;
+    VertexArray* cubeMapVa = nullptr;
     
-    Levek::Shader cubeMapShader;
+    Shader cubeMapShader;
 
 	SkyBoxPipelineState(const std::vector<std::string>& imagePaths);
     SkyBoxPipelineState(); //: SkyBoxPipelineState(getSkyBoxPaths()) {}
@@ -34,7 +34,7 @@ struct SkyBoxPipelineState {
      * @param renderer
      * @param vp view projection matrix
      */
-	void draw(Levek::Renderer *renderer, glm::mat4& vp);
+	void draw(Renderer *renderer, glm::mat4& vp);
     
 };
 

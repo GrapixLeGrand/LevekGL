@@ -18,17 +18,17 @@ public:
     glm::vec3 scale {0.0f, 0.0f, 0.0f};
     glm::quat rotation {glm::vec3{0.0f, 0.0f, 0.0f}};
     
-    Levek::VertexBuffer* vb = nullptr;
-    Levek::IndexBuffer* ib = nullptr;
-    Levek::VertexArray* va = nullptr;
-    Levek::VertexBufferLayout layout;
+    VertexBuffer* vb = nullptr;
+    IndexBuffer* ib = nullptr;
+    VertexArray* va = nullptr;
+    VertexBufferLayout layout;
     bool castShadow = true;//by default any body casts shadows
 
-    Levek::Texture* texture;//single texture for now
+    Texture* texture;//single texture for now
 
     MeshPipelineState(ModelLoader* loader, const std::string& mesh, const std::string& texture);
     ~MeshPipelineState();
-    void draw(Levek::Renderer* renderer);
+    void draw(Renderer* renderer);
 
 };
 
