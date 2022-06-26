@@ -28,6 +28,7 @@ public:
 
 
     void buildVertexBuffer() {
+        mVertices.clear();
         mVertices.reserve(mPositions.size());
         for (size_t i = 0; i < mPositions.size(); i++) {
             Vertex v(this->mPositions[i], this->mTexturesCoords[i], this->mNormals[i]);
@@ -86,6 +87,18 @@ public:
 
     bool hasNormals() const {
         return mNormals.size() != 0;
+    }
+
+    void transform(const glm::mat3& m) {
+        for (int i = 0; i < mPositions.size(); i++) {
+            mPositions[i] = mPositions[i] * m;
+        }
+        buildVertexBuffer();
+    }
+
+    Mesh* copy() {
+        Mesh* newMesh = new Mesh(mPositions, mTexturesCoords, mNormals, mIndices);
+        return newMesh;
     }
 
 };

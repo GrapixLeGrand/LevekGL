@@ -95,6 +95,7 @@ set(LEVEKGL_SOURCES
     "src/scene/PerspectiveCamera.cpp"
     "src/scene/OrthographicCamera.cpp"
 
+    "src/states/GroundPipelineState.cpp"
     "src/states/CubeMapPipelineState.cpp"
     "src/states/MeshPipelineState.cpp"
     "src/utils/Utils.cpp"

@@ -14,7 +14,6 @@ namespace Levek {
 extern float skyboxVertices[108];
 
 
-
 struct SkyBoxPipelineState {
 
 	CubeMap* cubeMap = nullptr;

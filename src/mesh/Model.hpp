@@ -27,11 +27,11 @@ public:
         mTransforms.push_back(transform);
     }
 
-    const Mesh* getMesh(std::size_t i) {
+    Mesh* getMesh(std::size_t i) {
         return mMeshes[i];
     }
 
-    const Transform* getTransform(std::size_t i) {
+    Transform* getTransform(std::size_t i) {
         return mTransforms[i];
     }
 
