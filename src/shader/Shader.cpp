@@ -128,6 +128,11 @@ void Shader::setUniformMat3f(const std::string& name, const glm::mat3& m) const 
 	GL_CHECK(glUniformMatrix3fv(ShaderManager::getUniformLocation(renderer_id, name), 1, GL_FALSE, &m[0][0])); //1 matrix and do we need to transpose it, we also give a pointer to the first element
 }
 
+/*void Shader::setUniformMat3f(const std::string& name, const std::vector<glm::mat3>& arr) const {
+	GL_CHECK(glUniformMatrix3fv(ShaderManager::getUniformLocation(renderer_id, name), arr.size(), GL_FALSE, arr[0][0] )); //1 matrix and do we need to transpose it, we also give a pointer to the first element
+}*/
+
+
 void Shader::bind() const {
 	//LEVEK_RENDERING_ID_INFO("binding shader", renderer_id);
 	GL_CHECK(glUseProgram(renderer_id));

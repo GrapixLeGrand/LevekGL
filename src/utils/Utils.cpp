@@ -48,7 +48,6 @@ extern void printMat3(const glm::mat3& m) {
 } 
 
 extern void printVec3(const glm::vec3& v) {
-    std::cout << 
-        v[0] << "\t" << v[1] << "\t" << v[2] << "\n" << std::endl;
+    printf("[%f, %f, %f]\n", v[0], v[1], v[2]);
 } 
 };

@@ -20,6 +20,9 @@ private:
 	TextureParameters::TextureType textureType;
 public:
 
+	//TODO
+	//Texture();
+
 	/**
 	 * @brief Construct a new Texture object of type RGBA
 	 * The dimensions are determined by the image at path

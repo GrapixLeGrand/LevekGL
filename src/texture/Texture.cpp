@@ -27,6 +27,7 @@ Texture::Texture(const std::string& path, unsigned int wrapMode)
 	//send to opengl
 	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer)); //0 for no multilevel texture, 0 for border
 	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
+
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
 	stbi_set_flip_vertically_on_load(0); //unsetting this for later loads (cube maps need no inversion)
 	
@@ -93,7 +94,10 @@ void Texture::set(TextureParameters::TextureLODFunction minMode, TextureParamete
 	bind();
 	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, OPENGL_MIN_MAG_MODES[minMode]));
 	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, OPENGL_MIN_MAG_MODES[magMode]));
+	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
+	//GL_CHECK(glGenerateTextureMipmap(rendererId));
 }
+
 
 
 };

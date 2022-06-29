@@ -4,6 +4,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <iostream>
+#include <vector>
 
 #include "glm/glm.hpp"
 #include "ShaderManager.hpp"
@@ -72,7 +73,9 @@ public:
 	void setUniform1i(const std::string& name, int v) const;
 	void setUniform1f(const std::string& name, float v) const;
 	void setUniformMat3f(const std::string& name, const glm::mat3& m) const;
+	//void setUniformMat3f(const std::string& name, const std::vector<glm::mat3>& arr) const;
 	void setUniformMat4f(const std::string& name, const glm::mat4& m) const;
+	//void setUniformMat4f(const std::string& name, const std::vector<glm::mat4>& arr) const;
 	friend class ShaderFactory;
 
 private:

@@ -35,6 +35,7 @@ void VertexBuffer::Update(const void* data, unsigned int size) {
     if (this->size >= size) {
         GL_CHECK(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));
     } else {
+        this->size = size; //NOT SURE
         GL_CHECK(glBufferData(GL_ARRAY_BUFFER, size, data, GL_DYNAMIC_DRAW));
     }
 }
