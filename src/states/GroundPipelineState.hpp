@@ -26,6 +26,7 @@ struct GroundPipelineState {
     Levek::VertexBufferLayout planeLayout;
     Levek::VertexArray* planeVA;
     Levek::Texture* unitTexture;
+    Levek::Texture* emptyDepth;
 
 	GroundPipelineState(ModelLoader* modelLoader, float scale);
 
@@ -34,11 +35,19 @@ struct GroundPipelineState {
 		unitTexture->activateAndBind(0);
 		planeShader.setUniformMat4f("mvp", mvp);
         planeShader.setUniform1i("tex", 0);
+        planeShader.setUniform1i("shadowMap", 1);
         planeShader.setUniform1f("scale", scale);
 	}
 
 	void draw(Levek::Renderer* renderer, const glm::mat4& vp) {
         setUniforms(vp * model);
+		renderer->draw(planeVA, planeIBO, &planeShader);
+	}
+
+    void draw(Levek::Renderer* renderer, const Texture* depthTexture, const glm::mat4& vp, const glm::mat4& light_vp) {
+        setUniforms(vp * model);
+        depthTexture->activateAndBind(1);
+        planeShader.setUniformMat4f("light_mvp", light_vp * model);
 		renderer->draw(planeVA, planeIBO, &planeShader);
 	}
 

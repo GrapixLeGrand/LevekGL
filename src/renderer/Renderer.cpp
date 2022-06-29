@@ -67,34 +67,39 @@ void Renderer::setCullFaceMode(CullFaceMode mode) const {
     GL_CHECK(glCullFace(mode));
 }
 
+
 void Renderer::clear(const FrameBuffer& frameBuffer) const {
+    clear(&frameBuffer);
+}
+
+void Renderer::clear(const FrameBuffer* frameBuffer) const {
 
     //for clearing framebuffers but cannot be const :(
     glm::vec4 defaultFrameBufferClearColor = glm::vec4(0.0f);
     float defaultFrameBufferDepth = 1.0f;
     float defaultFrameBufferDepthStencil = 0; //TODO WARNING I'm not sure
 
-    if (frameBuffer.hasColorAttachment() > 0) {
+    if (frameBuffer->hasColorAttachment() > 0) {
         glClearNamedFramebufferfv(
-            frameBuffer.getId(),
+            frameBuffer->getId(),
             GL_COLOR,
             0,
             &defaultFrameBufferClearColor[0]
         );
     }
 
-    if (frameBuffer.hasDepthAttachment()) {
+    if (frameBuffer->hasDepthAttachment()) {
         glClearNamedFramebufferfv(
-            frameBuffer.getId(),
+            frameBuffer->getId(),
             GL_DEPTH,
             0,
             &defaultFrameBufferDepth
         );
     }
 
-    if (frameBuffer.hasDepthStencilAttachment()) {
+    if (frameBuffer->hasDepthStencilAttachment()) {
         glClearNamedFramebufferfv(
-            frameBuffer.getId(),
+            frameBuffer->getId(),
             GL_DEPTH_STENCIL,
             0,
             &defaultFrameBufferDepthStencil
@@ -137,7 +142,7 @@ void Renderer::draw(const Texture& texture, const glm::vec2& position) const {
 
 }
 
-void Renderer::draw(const Texture& texture, const glm::vec2& position, const glm::vec2& scale) const {
+void Renderer::draw(const Texture& texture, const glm::vec2 position, const glm::vec2 scale) const {
     glViewport(0, 0, width, height);
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
     quadToScreenShader.bind();
@@ -207,6 +212,21 @@ void Renderer::draw(const FrameBuffer& frameBuffer, const VertexArray& va, const
 
 void Renderer::drawInstances(const VertexArray* va, const IndexBuffer* ib, const Shader* shader, unsigned int instances) const {
     
+    shader->bind();
+    va->bind();
+    ib->bind();
+
+    GL_CHECK(glDrawElementsInstanced(
+        GL_TRIANGLES, ib->GetCount(), GL_UNSIGNED_INT, 0, instances
+    ));
+
+}
+
+void Renderer::drawInstances(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader, unsigned int instances) const {
+    
+    glViewport(0, 0, frameBuffer->getWidth(), frameBuffer->getHeight());
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->getId()));
+
     shader->bind();
     va->bind();
     ib->bind();

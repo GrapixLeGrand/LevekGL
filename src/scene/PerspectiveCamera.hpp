@@ -19,7 +19,7 @@ public:
     
     PerspectiveCamera(glm::vec3 eye, glm::vec3 front, glm::vec3 up, int width, int height, float fov, float near, float far);
     PerspectiveCamera(glm::vec3 eye, glm::vec3 front, glm::vec3 up, int width, int height):
-        PerspectiveCamera(eye, front, up, width, height, 90.0f, 0.01f, 1000.0f) {}
+        PerspectiveCamera(eye, front, up, width, height, 45.0f, 0.01f, 1000.0f) {}
 
     virtual ~PerspectiveCamera() {};
 

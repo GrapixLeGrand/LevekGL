@@ -7,11 +7,17 @@ layout (location = 2) in vec3 vertex_normal;
 uniform mat4 mvp;
 uniform float scale;
 
-out vec2 v2f_tex_coord;
+uniform mat4 light_mvp;
+
+out VERTEX_OUT {
+    vec4 positionLightSpace;
+    vec2 uv;
+} vertex_out;
 
 void main()
 {
-    v2f_tex_coord = vertex_uv * scale;
     vec3 position = vertex_position;
-    gl_Position = mvp * vec4(position, 1.0); 
+    vertex_out.uv = vertex_uv * scale;
+    vertex_out.positionLightSpace = light_mvp * vec4(position, 1);
+    gl_Position = mvp * vec4(position, 1.0);
 }

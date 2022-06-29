@@ -80,7 +80,7 @@ public:
     void setDepthMask(bool mask) const;
     void setCullFaceMode(CullFaceMode mode) const;
     void clear(const FrameBuffer& frameBuffer) const;
-
+    void clear(const FrameBuffer* frameBuffer) const;
     /**
      * Draw the content of the buffers with the given shader on the default framebuffer.
      * @param va : vertex array
@@ -116,7 +116,7 @@ public:
      * @param scale 
      * @param position 
      */
-    void draw(const Texture& texture, const glm::vec2& position, const glm::vec2& scale) const;
+    void draw(const Texture& texture, const glm::vec2 position, const glm::vec2 scale) const;
 
     /**
      * Draw the content of the buffers with the given shader on the given framebuffer.
@@ -133,6 +133,7 @@ public:
     //void draw(const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const;
     void draw(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const;
     void drawInstances(const VertexArray* va, const IndexBuffer* ib, const Shader* shader, unsigned int instances) const;
+    void drawInstances(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader, unsigned int instances) const;
 
 };
 };
