@@ -9,7 +9,6 @@ class GLFWInputController : public InputController {
 private:
     static const int LEVEK_GLFW_KEYBINDINGS[26];
     GLFWwindow* window = nullptr;
-
 public:
 
     GLFWInputController(GLFWwindow* window);
@@ -25,6 +24,8 @@ public:
     virtual bool isLeftMouseButtonPressed();
     virtual float getMouseX();
     virtual float getMouseY();
+    virtual float getMouseScrollX();
+    virtual float getMouseScrollY();
 
 };
 }

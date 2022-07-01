@@ -59,4 +59,12 @@ namespace Levek {
         ImGui::StyleColorsDark();
         ImGuiWasInitialized = true;
     };
+
+    int GLFWWindowController::getScreenX() {
+        return width;
+    }
+
+    int GLFWWindowController::getScreenY() {
+        return height;
+    }
 }

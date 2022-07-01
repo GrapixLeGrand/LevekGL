@@ -31,8 +31,19 @@ namespace Levek {
         GLFW_KEY_Y,
         GLFW_KEY_Z
     };
+    #include <stdio.h>
+    static float scrollCounterX = 0.0f;
+    static float scrollCounterY = 0.0f;
+    void scroll_callback(GLFWwindow* window, double xoffset, double yoffset) {
+        scrollCounterX += (float) xoffset;
+        scrollCounterY += (float) yoffset;
+    }
 
-    GLFWInputController::GLFWInputController(GLFWwindow* window): window(window) {};
+    GLFWInputController::GLFWInputController(GLFWwindow* window): window(window) {
+        scrollCounterX = 0.0f;
+        scrollCounterY = 0.0f;
+        glfwSetScrollCallback(window, scroll_callback);
+    };
 
     bool GLFWInputController::isKeyPressed(LevekKey key) {
         int state = glfwGetKey(this->window, LEVEK_GLFW_KEYBINDINGS[key]);
@@ -64,5 +75,12 @@ namespace Levek {
         return (float) ypos;
     }
 
+    float GLFWInputController::getMouseScrollX() {
+        return scrollCounterX;
+    }
+    
+    float GLFWInputController::getMouseScrollY() {
+        return scrollCounterY;
+    }
 
 }

@@ -13,7 +13,6 @@ class WindowController {
 protected:
     int width = 0;
     int height = 0;
-
 public:
 
     virtual ~WindowController() {};
@@ -26,6 +25,8 @@ public:
     virtual float getDeltaTime() = 0;
     virtual void setWindowTitle(const std::string& name) = 0;
     virtual void initImGui() = 0;
+    virtual int getScreenX() = 0;
+    virtual int getScreenY() = 0;
 };   
 
 }

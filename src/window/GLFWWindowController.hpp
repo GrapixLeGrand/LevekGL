@@ -25,5 +25,7 @@ public:
     virtual float getDeltaTime();
     virtual void setWindowTitle(const std::string& name);
     virtual void initImGui();
+    virtual int getScreenX();
+    virtual int getScreenY();
 };
 }

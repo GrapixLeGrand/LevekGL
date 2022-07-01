@@ -93,6 +93,10 @@ public:
      */
     virtual float getMouseY() = 0;
 
+    virtual float getMouseScrollX() = 0;
+
+    virtual float getMouseScrollY() = 0;
+
 };
 
 }
