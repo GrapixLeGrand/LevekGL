@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "glm/glm.hpp"
 
 namespace Levek {
 
@@ -9,10 +10,15 @@ namespace Levek {
  */
 class WindowController {
 
+protected:
+    int width = 0;
+    int height = 0;
+
 public:
 
     virtual ~WindowController() {};
 
+    virtual bool containsPoint(glm::vec2 point) = 0;
     virtual bool exit() = 0;
     virtual void swapBuffers() = 0;
     virtual void resize(int width, int height) = 0;

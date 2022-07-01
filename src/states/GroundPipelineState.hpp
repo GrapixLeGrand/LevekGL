@@ -26,7 +26,6 @@ struct GroundPipelineState {
     Levek::VertexBufferLayout planeLayout;
     Levek::VertexArray* planeVA;
     Levek::Texture* unitTexture;
-    Levek::Texture* emptyDepth;
 
 	GroundPipelineState(ModelLoader* modelLoader, float scale);
 

@@ -17,7 +17,7 @@ void main()
     float otherDepth = texture(shadowMap, coordinatesNormalized.xy).r;
     float thisDepth = coordinatesNormalized.z;
 
-    float factor = otherDepth > (thisDepth - 0.0001) ? 1.0 : 0.5;
+    float factor = otherDepth > thisDepth ? 1.0 : 0.5;
 
     /*
     float shadow = 0.0;

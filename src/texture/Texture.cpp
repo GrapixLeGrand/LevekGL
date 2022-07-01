@@ -72,7 +72,7 @@ Texture::~Texture() {
 
 void Texture::activateAndBind(unsigned int slot) const {
 	ASSERT(slot >= 0 && slot < 32);
-	GL_CHECK(glActiveTexture(GL_TEXTURE0 + slot))
+	GL_CHECK(glActiveTexture(GL_TEXTURE0 + slot));
 	bind();
 }
 

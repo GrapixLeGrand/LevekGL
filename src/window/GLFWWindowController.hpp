@@ -17,6 +17,7 @@ public:
     GLFWWindowController(GLFWwindow* window);
     virtual ~GLFWWindowController();
 
+    virtual bool containsPoint(glm::vec2 point);
     virtual bool exit();
     virtual void swapBuffers();
     virtual void resize(int width, int height);

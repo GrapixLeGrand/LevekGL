@@ -8,7 +8,9 @@
 
 namespace Levek {
 
-    GLFWWindowController::GLFWWindowController(GLFWwindow* window) : window(window) {}
+    GLFWWindowController::GLFWWindowController(GLFWwindow* window) : window(window) {
+        glfwGetWindowSize(window, &width, &height);
+    }
 
     GLFWWindowController::~GLFWWindowController() {
         if (ImGuiWasInitialized == true) {
@@ -16,6 +18,11 @@ namespace Levek {
             ImGui_ImplGlfw_Shutdown();
             ImGui::DestroyContext();
         }
+    }
+
+
+    bool GLFWWindowController::containsPoint(glm::vec2 point) {
+        return (point.x >= 0 && point.x < width) && (point.y >= 0 && point.y < height);
     }
 
     bool GLFWWindowController::exit() {
