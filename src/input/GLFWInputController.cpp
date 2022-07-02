@@ -83,4 +83,15 @@ namespace Levek {
         return scrollCounterY;
     }
 
+    void GLFWInputController::setMousePosition(glm::vec2 position) {
+        glfwSetCursorPos(window, (double) position.x, (double) position.y);
+    }
+
+    void GLFWInputController::setMouseVisible(bool isVisible) {
+        if (isVisible) {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+        } else {
+            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+        }
+    }
 }

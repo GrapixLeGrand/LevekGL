@@ -35,11 +35,13 @@ class ArcballCamera { // : public Camera
     glm::mat4 vp; //precomputed view * projection
 
 
-    bool moveMode = true;
-    float saveMouseX = 0.0f;
-    float saveMouseY = 0.0f;
+    bool moveMode = false;
+    bool mouseReleasedLastFrame = false;
     float saveScroll = 0.0f;
     float targetMoveSpeed = 10.0f;
+
+    glm::vec2 saveMouseLastFramePosition = glm::vec2(0.0);
+    glm::vec2 saveMouseInitialPosition = glm::vec2(0.0);
 
 public:
 
@@ -102,42 +104,60 @@ public:
 
         if (moveMode) {
 
-            setRotation(
+            //setRotation(
+                rotation +=
                 glm::radians(
-                    -(inputController->getMouseX() - windowController->getScreenX() * 0.5f) / 2.0f
-                )
-            );
+                    -(currentMouseX - windowController->getScreenX() * 0.5f) / 2.0f
+                );
+                rotation = glm::wrapAngle(rotation);
+            //);
 
-            setElevation(
+            //setElevation(
+                
+                elevation += 
                 glm::radians(
-                    (inputController->getMouseY() - windowController->getScreenY() * 0.5f) / 2.0f
-                )
-            );
+                    (currentMouseY - windowController->getScreenY() * 0.5f) / 2.0f
+                );
+                elevation = glm::clamp(elevation, glm::radians(-70.0f), glm::radians(-10.0f));
+            //);
 
             float scroll = inputController->getMouseScrollY();
-            printf("scrolling %f %f\n", scroll, scroll - saveScroll);
-            setViewDistance(viewDistance + scroll - saveScroll);
+            //setViewDistance(viewDistance + scroll - saveScroll);
             
             if (printDebug) {
+                printf("mouseY %f\n", inputController->getMouseY());
                 printf("rotation:%f, elevation:%f, viewDistance:%f\n", rotation, elevation, viewDistance);
                 printf("target: [%f, %f, %f]\n", targetPosition[0], targetPosition[1], targetPosition[2]);
+                printf("scrolling %f %f\n", scroll, scroll - saveScroll);
             }
+
+            inputController->setMousePosition({ windowController->getScreenX() * 0.5f, windowController->getScreenY() * 0.5f });
+
             saveScroll = scroll;
             needViewResync = true;
         }
 
         if (inputController->isRightMouseButtonPressed()) {
 
-            if (windowController->containsPoint({currentMouseX, currentMouseY})) {
-                moveMode = true;
-                saveMouseX = currentMouseX;
-                saveMouseY = currentMouseY;
+            if (!moveMode && mouseReleasedLastFrame) {
+                if (windowController->containsPoint({currentMouseX, currentMouseY})) {
+                    moveMode = true;
+                    saveMouseInitialPosition = {currentMouseX, currentMouseY};
+                    inputController->setMousePosition({ windowController->getScreenX() * 0.5f, windowController->getScreenY() * 0.5f });
+                    inputController->setMouseVisible(false);
+                }
             }
 
         } else {
-            moveMode = false;
+            if (moveMode) {
+                moveMode = false;
+                inputController->setMousePosition(saveMouseInitialPosition);
+                inputController->setMouseVisible(true);
+            }
+            
         }
 
+        mouseReleasedLastFrame = !inputController->isRightMouseButtonPressed();
     }
 
     void setProjection(glm::mat4 newProjection) {
@@ -186,7 +206,7 @@ public:
     }
 
     void setViewDistance(float newViewDistance) {
-        viewDistance = glm::clamp(viewDistance, minDistance, maxDistance);
+        viewDistance = glm::clamp(newViewDistance, minDistance, maxDistance);
         needViewResync = true;
     }
 

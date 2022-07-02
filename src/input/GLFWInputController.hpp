@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 #include "InputController.hpp"
+#include "glm/glm.hpp"
 
 namespace Levek {
 
@@ -26,6 +27,7 @@ public:
     virtual float getMouseY();
     virtual float getMouseScrollX();
     virtual float getMouseScrollY();
-
+    virtual void setMousePosition(glm::vec2 position);
+    virtual void setMouseVisible(bool isVisible);
 };
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "glm/glm.hpp"
+
 namespace Levek {
 
 /**
@@ -92,10 +94,10 @@ public:
      * @return the position of the mouse in pixels
      */
     virtual float getMouseY() = 0;
-
     virtual float getMouseScrollX() = 0;
-
     virtual float getMouseScrollY() = 0;
+    virtual void setMousePosition(glm::vec2 position) = 0;
+    virtual void setMouseVisible(bool isVisible) = 0;
 
 };
 
