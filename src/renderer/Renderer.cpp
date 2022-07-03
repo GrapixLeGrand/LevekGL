@@ -38,6 +38,43 @@ const std::string Renderer::quadFragmentShader =
         "FragColor = vec4(texture(screenTexture, TexCoords));"
     "}";
 
+const std::string Renderer::blurVertexShader = 
+"#version 430\n"
+"\n"
+"layout (location = 0) in vec2 aPos;\n"
+"layout (location = 1) in vec2 aTexCoords;\n"
+"\n"
+"out vec2 TexCoords;\n"
+"\n"
+"void main()\n"
+"{\n"
+"    gl_Position = vec4(aPos.x, aPos.y, 0.0, 1.0);\n"
+"    TexCoords = aTexCoords;\n"
+"}";
+
+const std::string Renderer::blurFragmentShader = 
+"#version 430 core\n"
+"\n"
+"out vec4 color;\n"
+"in vec2 TexCoords;\n"
+"\n"
+"uniform sampler2D screenTexture;\n"
+"\n"
+"#define RADIUS 2\n"
+"\n"
+"void main()\n"
+"{\n"
+"    vec2 texelSize = 1.0 / textureSize(screenTexture, 0);\n"
+"    vec4 average = vec4(0.0);\n"
+"    for (int i = -RADIUS; i <= RADIUS; i++) {\n"
+"        for (int j = -RADIUS; j <= RADIUS; j++) {\n"
+"            vec2 offset = texelSize * vec2(i, j);\n"
+"            average += texture(screenTexture, TexCoords + offset);\n"
+"        }\n"
+"    }\n"
+"    average /= RADIUS * RADIUS;\n"
+"    color = average;\n"
+"}";
 
 Renderer::Renderer(int width, int height)
     : clearFlags(0), clearColor({ 0, 0, 0, 0 }), width(width), height(height) {
@@ -50,6 +87,7 @@ Renderer::Renderer(int width, int height)
     quadIndexes.unbind();
     quadVertexArray.unbind();
     quadVertexArray.unbind();
+
 }
 
 
@@ -139,14 +177,18 @@ void Renderer::draw(const Texture& texture) const {
 }
 
 void Renderer::draw(const Texture& texture, const glm::vec2& position) const {
-
+    assert(false);
 }
 
 void Renderer::draw(const Texture& texture, const glm::vec2 position, const glm::vec2 scale) const {
+    draw(&texture, position, scale);
+}
+
+void Renderer::draw(const Texture* texture, glm::vec2 position, glm::vec2 scale) const {
     glViewport(0, 0, width, height);
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0)); //set the default framebuffer 
     quadToScreenShader.bind();
-    texture.activateAndBind(0);
+    texture->activateAndBind(0);
     quadToScreenShader.setUniform2f("position", position / scale);
     quadToScreenShader.setUniform2f("scale", scale);
     quadToScreenShader.setUniform1i("screenTexture", 0);
@@ -237,6 +279,17 @@ void Renderer::drawInstances(const FrameBuffer* frameBuffer, const VertexArray* 
 
 }
 
+
+void Renderer::blur(const FrameBuffer* frameBuffer, const Texture* texture, int radius) const {
+    glViewport(0, 0, frameBuffer->getWidth(), frameBuffer->getHeight());
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer->getId()));
+    blurShader.bind();
+    texture->activateAndBind(0);
+    quadToScreenShader.setUniform1i("screenTexture", 0);
+    quadVertexArray.bind();
+    quadIndexes.bind();
+    GL_CHECK(glDrawElements(GL_TRIANGLES, quadIndexes.GetCount(), GL_UNSIGNED_INT, nullptr));
+}
 
 
 };

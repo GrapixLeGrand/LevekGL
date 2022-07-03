@@ -37,7 +37,8 @@ class ArcballCamera { // : public Camera
 
     bool moveMode = false;
     bool mouseReleasedLastFrame = false;
-    float saveScroll = 0.0f;
+    float saveWheelLastFrame = 0.0f;
+    float wheelSpeed = 10.0f;
     float targetMoveSpeed = 10.0f;
 
     glm::vec2 saveMouseLastFramePosition = glm::vec2(0.0);
@@ -107,7 +108,7 @@ public:
             //setRotation(
                 rotation +=
                 glm::radians(
-                    -(currentMouseX - windowController->getScreenX() * 0.5f) / 2.0f
+                    -(currentMouseX - ((float) windowController->getScreenX()) * 0.5f) / 2.0f
                 );
                 rotation = glm::wrapAngle(rotation);
             //);
@@ -116,24 +117,20 @@ public:
                 
                 elevation += 
                 glm::radians(
-                    (currentMouseY - windowController->getScreenY() * 0.5f) / 2.0f
+                    (currentMouseY - ((float) windowController->getScreenY()) * 0.5f) / 2.0f
                 );
                 elevation = glm::clamp(elevation, glm::radians(-70.0f), glm::radians(-10.0f));
             //);
 
-            float scroll = inputController->getMouseScrollY();
-            //setViewDistance(viewDistance + scroll - saveScroll);
             
             if (printDebug) {
                 printf("mouseY %f\n", inputController->getMouseY());
                 printf("rotation:%f, elevation:%f, viewDistance:%f\n", rotation, elevation, viewDistance);
                 printf("target: [%f, %f, %f]\n", targetPosition[0], targetPosition[1], targetPosition[2]);
-                printf("scrolling %f %f\n", scroll, scroll - saveScroll);
+                printf("view distance: %f\n", viewDistance);
             }
 
             inputController->setMousePosition({ windowController->getScreenX() * 0.5f, windowController->getScreenY() * 0.5f });
-
-            saveScroll = scroll;
             needViewResync = true;
         }
 
@@ -154,9 +151,14 @@ public:
                 inputController->setMousePosition(saveMouseInitialPosition);
                 inputController->setMouseVisible(true);
             }
-            
         }
 
+        float wheelchange = saveWheelLastFrame - inputController->getMouseScrollY();
+        if (wheelchange != 0.0) {
+            viewDistance = glm::clamp(viewDistance + wheelchange * wheelSpeed, minDistance, maxDistance);
+            needViewResync = true;
+        }
+        saveWheelLastFrame = inputController->getMouseScrollY();
         mouseReleasedLastFrame = !inputController->isRightMouseButtonPressed();
     }
 
@@ -208,6 +210,18 @@ public:
     void setViewDistance(float newViewDistance) {
         viewDistance = glm::clamp(newViewDistance, minDistance, maxDistance);
         needViewResync = true;
+    }
+
+    glm::vec3 getDirection() {
+        return targetPosition - cameraPosition;
+    }
+
+    glm::vec3 getPosition() {
+        return cameraPosition;
+    }
+
+    glm::vec3 getTarget() {
+        return targetPosition;
     }
 
     glm::mat4& getView() {

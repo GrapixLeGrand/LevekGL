@@ -37,6 +37,9 @@ private:
     const static std::string quadVertexShader;
     const static std::string quadFragmentShader;
 
+    const static std::string blurVertexShader;
+    const static std::string blurFragmentShader;
+
     //points (vertex + tex) of a quad with indices
     const float points[16] = {
         -1.0f,  -1.0f,   0.0f,   0.0f,
@@ -64,6 +67,7 @@ private:
     const glm::vec2 defaultQuadToScreenOffset = glm::vec2(0.0f);
     const glm::vec2 defaultQuadToScreenScale = glm::vec2(1.0f);
 
+    Shader blurShader = ShaderFactory::makeFromSource(blurVertexShader, blurFragmentShader);
     unsigned int clearFlags;
     glm::vec4 clearColor;
     int width;
@@ -118,6 +122,8 @@ public:
      */
     void draw(const Texture& texture, const glm::vec2 position, const glm::vec2 scale) const;
 
+    void draw(const Texture* texture, glm::vec2 position, glm::vec2 scale) const;
+
     /**
      * Draw the content of the buffers with the given shader on the given framebuffer.
      * @param frameBuffer : framebuffer on which the result will be drawn.
@@ -135,5 +141,6 @@ public:
     void drawInstances(const VertexArray* va, const IndexBuffer* ib, const Shader* shader, unsigned int instances) const;
     void drawInstances(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader, unsigned int instances) const;
 
+    void blur(const FrameBuffer* frameBuffer, const Texture* texture, int radius) const;
 };
 };
