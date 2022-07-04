@@ -10,27 +10,30 @@ in VERTEX_OUT {
 uniform sampler2D tex;
 uniform sampler2D shadowMap;
 
+#define RADIUS 2
+#define TOTAL (2 * RADIUS) + 1
+
+#define TOTAL_2 (TOTAL) * (TOTAL)
+
 void main()
 {   
     vec3 coordinatesNormalized = fragment_in.positionLightSpace.xyz / fragment_in.positionLightSpace.w;
     coordinatesNormalized = coordinatesNormalized * 0.5 + 0.5;
-    float otherDepth = texture(shadowMap, coordinatesNormalized.xy).r;
+    //float otherDepth = texture(shadowMap, coordinatesNormalized.xy).r;
     float thisDepth = coordinatesNormalized.z;
 
-    float factor = otherDepth > thisDepth ? 1.0 : 0.5;
-
-    /*
-    float shadow = 0.0;
+    float factor = 0.0; //otherDepth > thisDepth ? 1.0 : 0.5;
     vec2 texelSize = 1.0 / textureSize(shadowMap, 0);
-    for(int x = -1; x <= 1; ++x) {
-        for(int y = -1; y <= 1; ++y) {
+    for(int x = -RADIUS; x <= RADIUS; ++x) {
+        for(int y = -RADIUS; y <= RADIUS; ++y) {
             float pcfDepth = texture(shadowMap, coordinatesNormalized.xy + vec2(x, y) * texelSize).r; 
-            shadow += thisDepth - 0.0001 < pcfDepth ? 1.0 : 0.0;        
+            factor += thisDepth < pcfDepth ? 1.0 : 0.0;        
         }
     }
-    shadow /= 9.0;
-    */
-    vec2 c = fragment_in.uv;
-    out_color = texture(tex, 30.0 * c);
+    factor /= TOTAL_2;
+    factor *= 0.5;
+    factor += 0.5;
+    
+    out_color = texture(tex, fragment_in.uv);
     out_color.rgb *= factor;
 }

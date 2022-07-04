@@ -40,6 +40,7 @@ class ArcballCamera { // : public Camera
     float saveWheelLastFrame = 0.0f;
     float wheelSpeed = 10.0f;
     float targetMoveSpeed = 10.0f;
+    float rotationSpeed = 40.0f;
 
     glm::vec2 saveMouseLastFramePosition = glm::vec2(0.0);
     glm::vec2 saveMouseInitialPosition = glm::vec2(0.0);
@@ -104,19 +105,17 @@ public:
         float currentMouseY = inputController->getMouseY();
 
         if (moveMode) {
-
-            //setRotation(
+            
+            float dt = windowController->getDeltaTime();
+    
                 rotation +=
-                glm::radians(
+                    rotationSpeed * dt * glm::radians(
                     -(currentMouseX - ((float) windowController->getScreenX()) * 0.5f) / 2.0f
-                );
+                    );
                 rotation = glm::wrapAngle(rotation);
-            //);
-
-            //setElevation(
                 
                 elevation += 
-                glm::radians(
+                rotationSpeed * dt * glm::radians(
                     (currentMouseY - ((float) windowController->getScreenY()) * 0.5f) / 2.0f
                 );
                 elevation = glm::clamp(elevation, glm::radians(-70.0f), glm::radians(-10.0f));
