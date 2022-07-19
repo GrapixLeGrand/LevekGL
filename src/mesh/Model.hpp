@@ -19,7 +19,7 @@ public:
     //should be only instanciated by the loader I think
     Model(const std::string& path): mPath(path) {
         //here use ModelLoade 
-        std::cout << "I do nothing for now" << std::endl;
+        //std::cout << "I do nothing for now" << std::endl;
     }
 
     void addMesh(Mesh* mesh, Transform* transform) {

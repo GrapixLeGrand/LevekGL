@@ -113,7 +113,7 @@ namespace Levek {
 
     void ShaderManager::releaseShader(unsigned int id) {
 
-        if (idsToHash.find(id) == idsToHash.end()) {
+        if (idsToHash.empty() || idsToHash.find(id) == idsToHash.end()) {
             return;
         }
         std::size_t hash = idsToHash[id];

@@ -86,6 +86,22 @@ SkyBoxPipelineState::SkyBoxPipelineState(): SkyBoxPipelineState(getSkyBoxPaths()
         renderer->setDepthMask(true);
 	}
 
+    void SkyBoxPipelineState::draw(Levek::Renderer *renderer, glm::mat4 view, glm::mat4& projection) {
+		
+        view = glm::mat4(glm::mat3(view));
+
+		renderer->setDepthMask(false);
+        cubeMapShader.bind();
+        cubeMap->bind();
+        cubeMapShader.setUniform1i("skybox", 0);
+        cubeMapShader.setUniformMat4f("vp", projection * view);
+        cubeMapShader.unbind();
+
+        renderer->draw(cubeMapVa, &cubeMapShader);
+
+        renderer->setDepthMask(true);
+	}
+
     SkyBoxPipelineState::~SkyBoxPipelineState() {
       delete cubeMap;
       delete cubeMapVbo;
