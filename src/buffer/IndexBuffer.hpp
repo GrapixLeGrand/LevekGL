@@ -11,6 +11,7 @@ class IndexBuffer {
 		unsigned int count;
 	public:
 
+		IndexBuffer();
 		/**
 		 * @brief Construct a new Index Buffer object
 		 * 
@@ -18,8 +19,13 @@ class IndexBuffer {
 		 * @param count the number of indices (not the size in bytes!)
 		 */
 		IndexBuffer(const unsigned int* data, unsigned int count); // count == how many indices do we supply
-		IndexBuffer(const Mesh*);
+		IndexBuffer(const Mesh* mesh);
+
 		~IndexBuffer();
+
+		void update(const Mesh* mesh);
+		void update(const unsigned int* data, unsigned int count);
+
 		void bind() const;
 		void unbind() const;
 		inline unsigned int GetCount() const { return count; }

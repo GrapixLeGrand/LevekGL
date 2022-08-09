@@ -53,7 +53,7 @@ void VertexArray::addBuffer(const VertexBuffer* vb, const VertexBufferLayout* la
 		const auto& element = elements[i];
 		GL_CHECK(glEnableVertexAttribArray(attrib_id)); //index of the attribute array
 		
-		if (element.type == GL_UNSIGNED_INT) { //for integral type we must use another attrib pointer
+		if (element.type == GL_UNSIGNED_INT || element.type == GL_UNSIGNED_SHORT) { //for integral type we must use another attrib pointer
 			GL_CHECK(glVertexAttribIPointer(attrib_id, element.count, element.type, layout->getStride(), (const void *) offset));
 		} else {
 			GL_CHECK(glVertexAttribPointer(attrib_id, element.count, element.type, element.normalized, layout->getStride(), (const void *) offset));

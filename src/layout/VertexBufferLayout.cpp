@@ -19,6 +19,12 @@ namespace Levek {
 	}
 
 	template<>
+	void VertexBufferLayout::push<uint16_t>(unsigned int count, unsigned int instances) {
+		elements.push_back({ GL_UNSIGNED_SHORT, count, GL_FALSE, instances});
+		stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_SHORT) * count;
+	}
+
+	template<>
 	void VertexBufferLayout::push<glm::vec2>(unsigned int count, unsigned int instances) {
 		for (unsigned int i = 0; i < count; i++) {
 			push<float>(2, instances);
@@ -106,6 +112,11 @@ namespace Levek {
 		stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_BYTE) * count;
 	}
 
+	template<>
+	void VertexBufferLayout::push<uint16_t>(unsigned int count) {
+		elements.push_back({ GL_UNSIGNED_SHORT, count, GL_FALSE });
+		stride += VertexBufferElement::getSizeOfType(GL_UNSIGNED_SHORT) * count;
+	}
 	/*
 	template<> void VertexBufferLayout::p<glm::vec3>(glm::vec3 a) {
 		LEVEK_RENDERING_INFO("Succeed !!!!");

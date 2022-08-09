@@ -16,12 +16,23 @@ class VertexBuffer {
 		unsigned int size;
 		unsigned int usage;
 	public:
+		VertexBuffer();
 		VertexBuffer(const Mesh* mesh);
 		VertexBuffer(const void* data, unsigned int size);
 		VertexBuffer(const void* data, size_t size);
 		VertexBuffer(const void* data, unsigned int size, unsigned int usage);
+
+		template<typename T>
+		VertexBuffer(const std::vector<T>& data) : VertexBuffer(data.data(), data.size() * sizeof(T)) {};
+
 		~VertexBuffer();
 		void Update(const void* data, unsigned int size);
+
+		template<typename T>
+		void Update(const std::vector<T>* data) {
+			Update(data->data(), data->size() * sizeof(T));
+		}
+
 		void bind() const;
 		void unbind() const;
 

@@ -3,26 +3,9 @@
 
 namespace Levek {
 
-/***
-void init_rendering_payload(Block* block) {
-    assert(!block->payload);
-    block->payload = new BlockRenderingPayload();
-    block->payload->meshVertices = new Levek::VertexBuffer(block->mesh);
-    block->payload->meshIndices = new Levek::IndexBuffer(block->mesh);
-    block->payload->meshLayout.push<glm::vec3>(1);
-    block->payload->meshLayout.push<glm::vec2>(1);
-    block->payload->meshLayout.push<glm::vec3>(1);
 
-    block->payload->transforms = new Levek::VertexBuffer(block->models.data(), block->models.size());
-    block->payload->transformsLayout.push<glm::mat4>(1, 1);
-
-    block->payload->vertexArray = new Levek::VertexArray();
-    block->payload->vertexArray->addBuffer(block->payload->meshVertices, &block->payload->meshLayout);
-    block->payload->vertexArray->addBuffer(block->payload->transforms, &block->payload->transformsLayout);
-}
- */
-
-VoxelPipelineState::VoxelPipelineState(std::vector<uint16_t>& grid, std::vector<glm::vec4>& palette_arg, int X, int Y, int Z, glm::vec3 position, float scale) {
+VoxelPipelineState::VoxelPipelineState(Levek::ModelLoader* modelLoader, std::vector<uint16_t>& grid, std::vector<glm::vec4>& palette_arg, int X, int Y, int Z, glm::vec3 position, float scale) 
+: voxelShader(ShaderFactory::makeFromFile(LEVEKGL_RESOURCES_DIRECTORY"/shaders/voxel.vert", LEVEKGL_RESOURCES_DIRECTORY"/shaders/voxel.frag")) {
 
     LEVEK_RENDERING_ASSERT(palette_arg.size() < PALETTE_MAX_SIZE, "palette size must be smaller or equal to 1024\n");
 
@@ -50,10 +33,35 @@ VoxelPipelineState::VoxelPipelineState(std::vector<uint16_t>& grid, std::vector<
         }
     }
 
+    Model* model = modelLoader->loadFromFile(LEVEKGL_RESOURCES_DIRECTORY"/models/cube.obj");
+    this->cubeVb = new VertexBuffer(model->getMesh(0));
+    this->cubeIb = new IndexBuffer(model->getMesh(0));
+    this->cubeLayout.push<glm::vec3>(1);
+    this->cubeLayout.push<glm::vec2>(1);
+    this->cubeLayout.push<glm::vec3>(1);
+
+    this->instancesPositionsVb = new VertexBuffer(this->positions);
+    this->instancesPositionLayout.push<glm::vec3>(1, 1);
+    this->instancesColorsIndicesVb = new VertexBuffer(this->colors);
+    this->instancesColorLayout.push<uint16_t>(1, 1);
+
+    this->va = new VertexArray();
+    this->va->addBuffer(this->cubeVb, &this->cubeLayout);
+    this->va->addBuffer(this->instancesPositionsVb, &this->instancesPositionLayout);
+    this->va->addBuffer(this->instancesColorsIndicesVb, &this->instancesColorLayout);
+
 }
 
-void VoxelPipelineState::Update(std::vector<uint16_t>& grid) {
+void VoxelPipelineState::update(std::vector<uint16_t>& grid) {
 
+}
+
+void VoxelPipelineState::draw(Levek::Renderer* renderer, const glm::mat4& vp) {
+    voxelShader.bind();
+    voxelShader.setUniformMat4f("vp", vp);
+    voxelShader.setUniform1f("scale", this->scale);
+    voxelShader.setUniform4f("palette", this->palette.data(), this->palette.size());
+    renderer->drawInstances(this->va, this->cubeIb, &this->voxelShader, this->num_voxels);
 }
 
 }

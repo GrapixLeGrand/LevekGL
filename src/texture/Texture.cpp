@@ -5,17 +5,30 @@
 
 namespace Levek {
 
+Texture::Texture() {
+	GL_CHECK(glGenTextures(1, &rendererId));
+}
+
 Texture::Texture(const std::string& path)
 	: Texture(path, GL_CLAMP_TO_EDGE) {}
 
 
-Texture::Texture(const std::string& path, unsigned int wrapMode)
-	: filePath(path), width(0), height(0), Bpp(0), rendererId(0), textureType(TextureParameters::RGBA) {
-	
-	unsigned char* localBuffer = nullptr; //why conserving this ?
+void get_stbi_image(const std::string& path, uint8_t** ptr, int& w, int& h, int& bpp) {
 	stbi_set_flip_vertically_on_load(1); //flip texture up and down, opengl want the texture to begin on the left bottom corner
-	localBuffer = stbi_load(path.c_str(), &width, &height, &Bpp, 4); // rgba = 4 channels
-	LEVEK_RENDERING_ASSERT(localBuffer, "local buffer is NULL. Maybe the path to the image is wrong.");
+	*ptr = stbi_load(path.c_str(), &w, &h, &bpp, 4);
+	LEVEK_RENDERING_ASSERT(*ptr, "What?");
+}
+
+Texture::Texture(const std::string& path, unsigned int wrapMode)
+	: filePath(path), width(0), height(0), bpp(0), rendererId(0), textureType(TextureParameters::RGBA) {
+	
+	//unsigned char* localBuffer = nullptr; //why conserving this ?
+	//stbi_set_flip_vertically_on_load(1); //flip texture up and down, opengl want the texture to begin on the left bottom corner
+	//localBuffer = stbi_load(path.c_str(), &width, &height, &Bpp, 4); // rgba = 4 channels
+	//LEVEK_RENDERING_ASSERT(localBuffer, "local buffer is NULL. Maybe the path to the image is wrong.");
+	initFromStbi = true;
+	get_stbi_image(path, &data, this->width, this->height, this->bpp);
+
 	GL_CHECK(glGenTextures(1, &rendererId));
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D, rendererId));
 	//maybe google theses terms later
@@ -25,18 +38,12 @@ Texture::Texture(const std::string& path, unsigned int wrapMode)
 	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrapMode));
 
 	//send to opengl
-	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer)); //0 for no multilevel texture, 0 for border
+	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->data)); //0 for no multilevel texture, 0 for border
 	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
 
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D, 0));
 	stbi_set_flip_vertically_on_load(0); //unsetting this for later loads (cube maps need no inversion)
 	
-	if (localBuffer) {
-		stbi_image_free(localBuffer);
-	}
-	else {
-		ASSERT(false);
-	}
 }
 
 Texture::Texture(const std::string& path, TextureParameters::TextureWrapMode wrapMode): Texture(path, OPENGL_WRAP_MODES[wrapMode]) {}
@@ -46,7 +53,7 @@ Texture::Texture(int width, int height, TextureParameters::TextureType type)
 
 Texture::Texture(int width, int height, TextureParameters::TextureType type, TextureParameters::TextureWrapMode wrapMode, 
 			TextureParameters::TextureLODFunction minMode, TextureParameters::TextureLODFunction magMode)
-		: width(width), height(height), Bpp(0), rendererId(0), textureType(type) {
+		: width(width), height(height), bpp(0), rendererId(0), textureType(type) {
 	GL_CHECK(glGenTextures(1, &rendererId));
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D, rendererId));
 	
@@ -67,6 +74,9 @@ Texture::Texture(int width, int height, TextureParameters::TextureType type, Tex
 
 
 Texture::~Texture() {
+	if (initFromStbi && data != nullptr) {
+		stbi_image_free(data);
+	}
 	GL_CHECK(glDeleteTextures(1, &rendererId))
 }
 
@@ -98,6 +108,34 @@ void Texture::set(TextureParameters::TextureLODFunction minMode, TextureParamete
 	//GL_CHECK(glGenerateTextureMipmap(rendererId));
 }
 
+
+void Texture::update(const std::string& path) {
+	if (initFromStbi && this->data) {
+		stbi_image_free(this->data);
+	}
+	initFromStbi = true;
+	get_stbi_image(path, &data, this->width, this->height, this->bpp);
+
+	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[TextureParameters::TextureType::RGBA];
+	bind();
+	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, properties.internalFormat, width, height, 0, properties.format, properties.type, 0));
+}
+
+void Texture::update(uint8_t* data, int w, int h, TextureParameters::TextureType type) {
+	if (initFromStbi && this->data) {
+		stbi_image_free(this->data);
+	}
+	initFromStbi = false;
+	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[type];
+	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, properties.internalFormat, width, height, 0, properties.format, properties.type, 0));
+}
+
+const uint8_t* Texture::getData() {
+	bind();
+	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[textureType];
+	GL_CHECK(glGetTexImage(GL_TEXTURE_2D, 0, properties.internalFormat, properties.type, this->data));
+	return this->data;
+}
 
 
 };

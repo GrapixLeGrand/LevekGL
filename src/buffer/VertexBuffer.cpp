@@ -6,6 +6,11 @@
 
 namespace Levek {
 
+
+VertexBuffer::VertexBuffer() {
+    GL_CHECK(glGenBuffers(1, &rendererID));
+}
+
 /**
  * @brief Construct a new Vertex Buffer:: Vertex Buffer object
  * 

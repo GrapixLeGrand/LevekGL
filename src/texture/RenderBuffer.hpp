@@ -7,8 +7,8 @@ namespace Levek {
 class RenderBuffer {
 private:
     unsigned int id;
-    int width;
-    int height;
+    int width = 0;
+    int height = 0;
     TextureParameters::TextureType type;
 public:
     RenderBuffer(int width, int height, TextureParameters::TextureType type);

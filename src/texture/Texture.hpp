@@ -16,12 +16,13 @@ class Texture
 private:
 	unsigned int rendererId;
 	std::string filePath;
-	int width, height, Bpp;
+	int width = 0, height = 0, bpp = 0;
 	TextureParameters::TextureType textureType;
+	uint8_t* data = nullptr;
+	bool initFromStbi = false;
 public:
 
-	//TODO
-	//Texture();
+	Texture();
 
 	/**
 	 * @brief Construct a new Texture object of type RGBA
@@ -43,6 +44,9 @@ public:
 	Texture(int width, int height, TextureParameters::TextureType type);
 	~Texture();
 
+	void update(const std::string& filename);
+	void update(uint8_t* data, int w, int h, TextureParameters::TextureType type);
+
 	void activateAndBind(unsigned int slot = 0) const; //various slots because you want to bind multiple textures at the same time
 	void bind() const;
 	void unbind() const;
@@ -52,8 +56,10 @@ public:
 
 	inline int getWidth()  const { return width; }
 	inline int getHeight() const { return height; }
-	
+	const uint8_t* getData();
+
 	unsigned int getId() const { return rendererId; }
 	TextureParameters::TextureType getType() const { return textureType; }
+	
 };
 };

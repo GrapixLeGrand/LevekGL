@@ -7,7 +7,7 @@ namespace Levek {
 class VoxelPipelineState {
     
     const static int PALETTE_MAX_SIZE = 1024;
-    const static int PALETTE_EMPTY_INDEX = std::numeric_limits<uint16_t>::max();
+    const static int PALETTE_EMPTY_INDEX = 1024;
 
     VertexBuffer* cubeVb = nullptr;
     IndexBuffer* cubeIb = nullptr;
@@ -15,8 +15,12 @@ class VoxelPipelineState {
 
     VertexArray* va = nullptr;
     
-    VertexBuffer* instancesVb;
-    VertexBufferLayout instancesLayout;
+    VertexBuffer* instancesPositionsVb = nullptr;
+    VertexBufferLayout instancesPositionLayout;
+    VertexBuffer* instancesColorsIndicesVb = nullptr;
+    VertexBufferLayout instancesColorLayout;
+
+    Shader voxelShader;
 
     int num_voxels = 0;
     float scale = static_cast<float>(1.0);
@@ -40,8 +44,19 @@ public:
      * @param position min position of the AABB (or vec3(0) in object referential)
      * @param scale length side of each voxel
      */
-    VoxelPipelineState(std::vector<uint16_t>& grid, std::vector<glm::vec4>& palette_arg, int X, int Y, int Z, glm::vec3 position, float scale);
-    void Update(std::vector<uint16_t>& grid);
+    VoxelPipelineState(
+        Levek::ModelLoader* modelLoader, 
+        std::vector<uint16_t>& grid, 
+        std::vector<glm::vec4>& palette_arg, 
+        int X, 
+        int Y, 
+        int Z, 
+        glm::vec3 position, 
+        float scale
+    );
+
+    void update(std::vector<uint16_t>& grid);
+    void draw(Levek::Renderer* renderer, const glm::mat4& vp);
 
 };
 
