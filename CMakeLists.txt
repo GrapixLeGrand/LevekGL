@@ -98,6 +98,7 @@ set(LEVEKGL_SOURCES
     "src/states/GroundPipelineState.cpp"
     "src/states/CubeMapPipelineState.cpp"
     "src/states/MeshPipelineState.cpp"
+    "src/states/VoxelPipelineState.cpp"
     "src/utils/Utils.cpp"
 )
 

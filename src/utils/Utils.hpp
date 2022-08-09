@@ -9,6 +9,18 @@ extern void printMat4(const glm::mat4& m);
 extern void printMat3(const glm::mat3& m);
 extern void printVec3(const glm::vec3& v);
 
+static void drawUnitReferential(LineRenderer* lineRenderer) {
+    lineRenderer->AddLine(glm::vec3(0), glm::vec3(1, 0, 0), glm::vec4(1, 0, 0, 1)); // X axis
+    lineRenderer->AddLine(glm::vec3(0), glm::vec3(0, 1, 0), glm::vec4(0, 1, 0, 1)); // Y axis
+    lineRenderer->AddLine(glm::vec3(0), glm::vec3(0, 0, 1), glm::vec4(0, 0, 1, 1)); // Z axis
+}
+
+static void drawUnitReferential(LineRenderer* lineRenderer, glm::vec3 offset) {
+    lineRenderer->AddLine(glm::vec3(0) + offset, glm::vec3(1, 0, 0) + offset, glm::vec4(1, 0, 0, 1)); // X axis
+    lineRenderer->AddLine(glm::vec3(0) + offset, glm::vec3(0, 1, 0) + offset, glm::vec4(0, 1, 0, 1)); // Y axis
+    lineRenderer->AddLine(glm::vec3(0) + offset, glm::vec3(0, 0, 1) + offset, glm::vec4(0, 0, 1, 1)); // Z axis
+}
+
 static void drawOrthographicBoundingBox(LineRenderer* lineRenderer, const OrthographicCamera* camera) {
 
     /**

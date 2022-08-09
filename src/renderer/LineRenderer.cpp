@@ -2,6 +2,7 @@
 #include "../OpenGLError.hpp"
 #include "LineRenderer.hpp"
 #include "shader/ShaderFactory.hpp"
+#include <cassert>
 
 namespace Levek {
 
@@ -19,6 +20,10 @@ namespace Levek {
         layout.push<glm::vec4>(1);
     }
 
+    void LineRenderer::SetLineWidth(int newWidth) {
+        assert(newWidth > 0);
+        lineWidth = newWidth;
+    }
 
     void LineRenderer::AddLine(glm::vec3 start, glm::vec3 end, glm::vec4 color) {
         points.push_back({ start, color });

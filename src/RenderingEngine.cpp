@@ -26,7 +26,7 @@ RenderingEngine::RenderingEngine(int width, int height)
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-        glfwWindowHint(GLFW_SAMPLES, 4); //For antialiasing
+        glfwWindowHint(GLFW_SAMPLES, 1); //For antialiasing
 
         //Create a windowed mode window and its OpenGL context
         GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Levek Engine", NULL, NULL);
@@ -55,7 +55,6 @@ RenderingEngine::RenderingEngine(int width, int height)
         GL_CHECK(glEnable(GL_CULL_FACE));
 
         glEnable(GL_MULTISAMPLE); //For antialiasing
-
         //glDisable(GL_CULL_FACE);
 
         inputController = new GLFWInputController(window);

@@ -223,6 +223,14 @@ public:
         return targetPosition;
     }
 
+    float getRotation() {
+        return rotation;
+    }
+
+    float getElevation() {
+        return elevation;
+    }
+
     glm::mat4& getView() {
         updateViewMatrix();
         return view;

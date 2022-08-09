@@ -40,6 +40,11 @@ namespace Levek {
 
     }
 
+    /**
+     * @brief returns the time in seconds
+     * 
+     * @return float 
+     */
     float GLFWWindowController::getTime() {
         return (float) glfwGetTime();
     }

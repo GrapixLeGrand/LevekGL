@@ -40,5 +40,10 @@
 #include "states/GroundPipelineState.hpp"
 #include "states/CubeMapPipelineState.hpp"
 #include "states/MeshPipelineState.hpp"
+#include "states/VoxelPipelineState.hpp"
 
-
+#ifdef LEVEK_INCLUDE_IMGUI
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
+#endif 

@@ -26,6 +26,7 @@ private:
 public:
 
     LineRenderer();
+    void SetLineWidth(int newWidth);
     void AddLine(glm::vec3 start, glm::vec3 end, glm::vec4 color);
     void AddLine(glm::vec3 start, glm::vec3 end);
     void SetViewProjection(glm::mat4 viewProjection);
