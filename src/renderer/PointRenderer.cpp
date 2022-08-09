@@ -49,7 +49,7 @@ void PointRenderer::Draw() {
         vao->addBuffer(*vbo.get(), layout);
     }
     else {
-        vbo->Update(points.data(), points.size() * sizeof(Point));
+        vbo->update(points.data(), points.size() * sizeof(Point));
     }
     pointShader.bind();
     pointShader.setUniformMat4f("viewProjection", viewProjection);

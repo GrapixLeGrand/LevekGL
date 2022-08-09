@@ -7,13 +7,25 @@
 
 namespace Levek {
 
+RenderBuffer::RenderBuffer() {
+    GL_CHECK(glGenRenderbuffers(1, &id));
+}
+
+
 RenderBuffer::RenderBuffer(int width, int height, TextureParameters::TextureType type)
  : id(0), width(width), height(height), type(type) {
     assert(width > 0 && height > 0);
     assert(type != TextureParameters::RGBA);
     GL_CHECK(glGenRenderbuffers(1, &id));
-    GL_CHECK(glBindRenderbuffer(GL_RENDERBUFFER, id));
+    bind();
+    update(width, height, type);
+}
 
+void RenderBuffer::update(int w, int h, TextureParameters::TextureType type) {
+    bind();
+    this->width = width;
+    this->height = height;
+    this->type = type;
     //warning not so sure with the types
     switch (type) {
         case TextureParameters::RGB:
@@ -29,7 +41,6 @@ RenderBuffer::RenderBuffer(int width, int height, TextureParameters::TextureType
             assert(false);
         break;
     }
-    
 }
 
 RenderBuffer::~RenderBuffer() {

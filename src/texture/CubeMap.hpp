@@ -17,9 +17,14 @@ private:
     size_t mHeight = 0;
 
 public:
-    
+    //TODO
+    CubeMap();
     CubeMap(int width, int height, TextureParameters::TextureType type);
     CubeMap(const std::vector<std::string>& texturesPaths, size_t width, size_t heigth);
+
+    //TODO
+    void update(const std::vector<std::string>& texturesPaths, size_t width, size_t heigth);
+
     ~CubeMap();
     void bind() const;
     void unbind() const;

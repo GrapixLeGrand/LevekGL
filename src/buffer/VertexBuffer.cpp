@@ -35,7 +35,7 @@ VertexBuffer::~VertexBuffer() {
     GL_CHECK(glDeleteBuffers(1, &rendererID)); //1 for 1 buffer
 }
 
-void VertexBuffer::Update(const void* data, unsigned int size) {
+void VertexBuffer::update(const void* data, unsigned int size) {
     GL_CHECK(glBindBuffer(GL_ARRAY_BUFFER, rendererID));
     if (this->size >= size) {
         GL_CHECK(glBufferSubData(GL_ARRAY_BUFFER, 0, size, data));

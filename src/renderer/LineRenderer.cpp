@@ -47,10 +47,10 @@ namespace Levek {
 
         if (vbo == nullptr) {
             vbo = std::make_shared<VertexBuffer>(points.data(), points.size() * sizeof(Point), GL_DYNAMIC_DRAW);
-            vao->addBuffer(*vbo.get(), layout);
+            vao->addBuffer(vbo.get(), &layout);
         }
         else {
-            vbo->Update(points.data(), points.size() * sizeof(Point));
+            vbo->update(points.data(), points.size() * sizeof(Point));
         }
         lineShader.bind();
         lineShader.setUniformMat4f("viewProjection", viewProjection);

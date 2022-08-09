@@ -26,11 +26,11 @@ class VertexBuffer {
 		VertexBuffer(const std::vector<T>& data) : VertexBuffer(data.data(), data.size() * sizeof(T)) {};
 
 		~VertexBuffer();
-		void Update(const void* data, unsigned int size);
+		void update(const void* data, unsigned int size);
 
 		template<typename T>
-		void Update(const std::vector<T>* data) {
-			Update(data->data(), data->size() * sizeof(T));
+		void update(const std::vector<T>* data) {
+			update(data->data(), data->size() * sizeof(T));
 		}
 
 		void bind() const;
