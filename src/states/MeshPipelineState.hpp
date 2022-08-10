@@ -10,9 +10,11 @@
 #include "../mesh/loader/ModelLoader.hpp"
 #include "../mesh/Mesh.hpp"
 
+#include "../pipeline/ForwardRenderingState.hpp"
+
 namespace Levek {
 
-class MeshPipelineState {
+class MeshPipelineState : ForwardRenderingState {
 public:
     glm::vec3 position {0.0f, 0.0f, 0.0f};
     glm::vec3 scale {0.0f, 0.0f, 0.0f};
@@ -30,6 +32,7 @@ public:
     ~MeshPipelineState();
     void draw(Renderer* renderer);
 
+    virtual void render(const ForwardRenderingPassData* data) {}
 };
 
 };

@@ -26,8 +26,8 @@ RenderBuffer::RenderBuffer(int width, int height, TextureParameters::TextureType
 
 void RenderBuffer::update(int w, int h, TextureParameters::TextureType type) {
     bind();
-    this->width = width;
-    this->height = height;
+    this->width = w;
+    this->height = h;
     this->type = type;
     //warning not so sure with the types
     switch (type) {

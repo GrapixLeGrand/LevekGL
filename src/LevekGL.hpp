@@ -42,6 +42,8 @@
 #include "states/MeshPipelineState.hpp"
 #include "states/VoxelPipelineState.hpp"
 
+#include "pipeline/Pipeline.hpp"
+
 #ifdef LEVEK_INCLUDE_IMGUI
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
