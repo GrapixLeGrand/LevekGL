@@ -4,6 +4,8 @@
 #include "../texture/Texture.hpp"
 #include "../texture/RenderBuffer.hpp"
 #include "glm/glm.hpp"
+#include "../buffer/FrameBufferProperties.hpp"
+
 
 namespace Levek {
 
@@ -20,8 +22,8 @@ enum ColorAttachmentSlot {
     SLOT_3 = GL_COLOR_ATTACHMENT3
 };*/
 
-#define MAX_COLOR_ATTACHMENT_SLOTS 4
-extern const int COLOR_ATTACHMENT_SLOTS[MAX_COLOR_ATTACHMENT_SLOTS];
+//#define LEVEKGL_MAX_COLOR_ATTACHMENT_SLOTS 16
+//extern const int COLOR_ATTACHMENT_SLOTS[MAX_COLOR_ATTACHMENT_SLOTS];
 
 /**
  * We can attach textures or/and renderbuffers to a framebuffer.
@@ -30,11 +32,17 @@ extern const int COLOR_ATTACHMENT_SLOTS[MAX_COLOR_ATTACHMENT_SLOTS];
  */
 class FrameBuffer {
 private:
+
+    const static int MAX_COLOR_ATTACHMENT_SLOTS = 16;
+    const static int COLOR_ATTACHMENT_SLOTS[MAX_COLOR_ATTACHMENT_SLOTS];
+    
     unsigned int id;
-    bool finalized;
     int width = 0;
     int height = 0;
+    bool complete = false;
 
+
+    bool finalized;
     //how many color attachments are expected, default is 1
     int expectedColorAttachments    = 1;
     int currentColorAttachments     = 0;
@@ -49,7 +57,10 @@ private:
     unsigned int clearStencil = 0;
     unsigned int clearBits = 0;
 
+    void checkIfComplete();
 public:
+
+    FrameBuffer();
 
     /**
      * Instanciate a framebuffer with 1 color attachment (default)
@@ -70,6 +81,13 @@ public:
 
     ~FrameBuffer();
     
+    void addColorAttachment(const PixelBuffer* buffer, int index);
+
+    void addAttachment(const PixelBuffer* buffer, FrameBufferProperties::AttachementType type);
+
+    //TODO
+    void removeAttachment(const PixelBuffer* buffer);
+
     /**
      * Add a color attachment. If more than 1 color attchment is
      * expected, this attachment will allways refer to channel 1.

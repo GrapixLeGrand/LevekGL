@@ -10,6 +10,17 @@
 #include <vector>
 
 
+/*namespace Levek {
+static void message(const std::string& m, ...) {
+    printf("\033[1;32mLevek::message: %s\033[0m");
+}
+}*/
+
+#define LEVEK_MESSAGE(FMT, ...) {printf("\033[1;32m""Levek::message: ""\033[0m");printf(FMT, ##__VA_ARGS__);};
+#define LEVEK_WARNING(FMT, ...) {printf("\033[1;33m""Levek::message: ""\033[0m");printf(FMT, ##__VA_ARGS__);};
+#define LEVEK_ASSERT(EXPR, FMT, ...) if(!(EXPR)) { printf("\033[1;32m""Levek::assert: ""\033[0m");printf(FMT, ##__VA_ARGS__); assert(false); };
+#define LEVEK_ERROR(FMT, ...) { printf("\033[1;30m""Levek::assert: ""\033[0m");printf(FMT, ##__VA_ARGS__); };
+
 #define LEVEK_RENDERING_ASSERT_(EXPR) \
     LEVEK_RENDERING_ASSERT((EXPR), "")
 

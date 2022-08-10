@@ -59,6 +59,7 @@ set(LEVEKGL_SOURCES
     "src/OpenGLError.cpp"
 
     "src/buffer/FrameBuffer.cpp"
+    "src/buffer/FrameBufferProperties.cpp"
     "src/buffer/IndexBuffer.cpp"
     "src/buffer/VertexBuffer.cpp"
     "src/buffer/VertexArray.cpp"

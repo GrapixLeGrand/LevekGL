@@ -3,6 +3,7 @@
 #include <string>
 //#include "../renderer/Renderer.h"
 #include "TextureProperties.hpp"
+#include "PixelBuffer.hpp"
 
 namespace Levek {
 
@@ -11,7 +12,7 @@ namespace Levek {
  * @brief Texture wrapper class.
  * 
  */
-class Texture
+class Texture : public PixelBuffer
 {
 private:
 	unsigned int rendererId;
@@ -48,8 +49,8 @@ public:
 	void update(uint8_t* data, int w, int h, TextureParameters::TextureType type);
 
 	void activateAndBind(unsigned int slot = 0) const; //various slots because you want to bind multiple textures at the same time
-	void bind() const;
-	void unbind() const;
+	virtual void bind() const;
+	virtual void unbind() const;
 
 	void set(TextureParameters::TextureWrapMode wrapMode);
 	void set(TextureParameters::TextureLODFunction minMode, TextureParameters::TextureLODFunction magMode);
@@ -61,5 +62,6 @@ public:
 	unsigned int getId() const { return rendererId; }
 	TextureParameters::TextureType getType() const { return textureType; }
 	
+	virtual void attachToFrameBuffer(FrameBufferProperties::AttachementType type, int index = 0) const;
 };
 };

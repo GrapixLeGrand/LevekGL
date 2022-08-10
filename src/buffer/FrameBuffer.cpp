@@ -7,13 +7,30 @@
 
 namespace Levek {
 
-const int COLOR_ATTACHMENT_SLOTS[MAX_COLOR_ATTACHMENT_SLOTS] = {
-    GL_COLOR_ATTACHMENT0,
-    GL_COLOR_ATTACHMENT1,
-    GL_COLOR_ATTACHMENT2,
-    GL_COLOR_ATTACHMENT3
+const int FrameBuffer::COLOR_ATTACHMENT_SLOTS[FrameBuffer::MAX_COLOR_ATTACHMENT_SLOTS]  = {
+        GL_COLOR_ATTACHMENT0,
+        GL_COLOR_ATTACHMENT1,
+        GL_COLOR_ATTACHMENT2,
+        GL_COLOR_ATTACHMENT3,
+        GL_COLOR_ATTACHMENT4,
+        GL_COLOR_ATTACHMENT5,
+        GL_COLOR_ATTACHMENT6,
+        GL_COLOR_ATTACHMENT7,
+        GL_COLOR_ATTACHMENT8,
+        GL_COLOR_ATTACHMENT9,
+        GL_COLOR_ATTACHMENT10,
+        GL_COLOR_ATTACHMENT11,
+        GL_COLOR_ATTACHMENT12,
+        GL_COLOR_ATTACHMENT13,
+        GL_COLOR_ATTACHMENT14,
+        GL_COLOR_ATTACHMENT15
 };
 
+FrameBuffer::FrameBuffer(): id(0), width(0), height(0) {
+    GL_CHECK(glGenFramebuffers(1, &id));
+}
+
+//TODO remove
 FrameBuffer::FrameBuffer(int width, int height):
     id(0),
     width(width), height(height),
@@ -25,6 +42,7 @@ FrameBuffer::FrameBuffer(int width, int height):
     GL_CHECK(glGenFramebuffers(1, &id));
 }
 
+//TODO remove
 FrameBuffer::FrameBuffer(int width, int height, int colorAttachments):
     id(0),
     width(width), height(height),
@@ -44,81 +62,39 @@ FrameBuffer::~FrameBuffer() {
 }
 
 void FrameBuffer::bind() const {
-    LEVEK_RENDERING_ASSERT(finalized, "forbidden to use bind() non-finalized FrameBuffer");
+    //LEVEK_RENDERING_ASSERT(finalized, "forbidden to use bind() non-finalized FrameBuffer");
+    if (!complete) { LEVEK_WARNING("framebuffer with id %d is being bounded but is incomplete\n", id); }
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
 }
 
 void FrameBuffer::unbind() const {
-    LEVEK_RENDERING_ASSERT(finalized, "forbidden to use unbind() on non-finalized FrameBuffer");
+    //LEVEK_RENDERING_ASSERT(finalized, "forbidden to use unbind() on non-finalized FrameBuffer");
+    if (!complete) { LEVEK_WARNING("framebuffer with id %d is being bounded but is incomplete\n", id); }
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }
 
-/*
-void FrameBuffer::attachTexture(const Texture& texture, AttachmentType type) {
-    assert(!finalized);
-    assert(texture.getWidth() == width && texture.getHeight() == height);
-    bind();
-    texture.bind();
+//void addColorAttachment(const PixelBuffer* buffer);
 
-    switch (type) {
-        case COLOR_ATTACHMENT:
-        assert(texture.getType() == RGBA_8 || texture.getType() == RGB_8);
-        hasColorBuffer = true;
-        //by default use the attachment 0
-        GL_CHECK(
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture.getId(), 0);
-        ) 
+
+void FrameBuffer::checkIfComplete() {
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER); // == GL_FRAMEBUFFER_COMPLETE;
+    switch (status) {
+        case GL_FRAMEBUFFER_COMPLETE:
+            complete = true;
+            LEVEK_MESSAGE("framebuffer with id %d is completed and usable\n", id);
         break;
-        case DEPTH_ATTACHMENT:
-        assert(texture.getType() == DEPTH_24);
-        GL_CHECK(
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture.getId(), 0);
-        ) 
+        case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+        case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+        case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
+        case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
+            LEVEK_MESSAGE("framebuffer with id %d is incomplete or missing attachments (code %d)\n", id, status);
         break;
-        case DEPTH_STENCIL_ATTACHMENT:
-        assert(texture.getType() == DEPTH_24_STENCIL_8);
-        GL_CHECK(
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, texture.getId(), 0);
-        ) 
-        break;
+        case GL_FRAMEBUFFER_UNSUPPORTED:
+            LEVEK_ERROR("framebuffer with id %d has uncompatible attachments\n", id);
         default:
-        break;
+            LEVEK_WARNING("framebuffer with id %d was checked but the result is unknown %d\n", id, status);
     }
-    
 }
-
-void FrameBuffer::attachRenderBuffer(const RenderBuffer& buffer, AttachmentType type) {
-    assert(!finalized);
-    assert(buffer.getWidth() == width && buffer.getHeight() == height);
-    bind();
-    buffer.bind();
-
-    switch (type) {
-        case COLOR_ATTACHMENT:
-        assert(buffer.getType() == RGBA_8 || buffer.getType() == RGB_8);
-        hasColorBuffer = true;
-        //by default use the attachment 0
-        GL_CHECK(
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, buffer.getId());
-        ) 
-        break;
-        case DEPTH_ATTACHMENT:
-        assert(buffer.getType() == DEPTH_24);
-        GL_CHECK(
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, buffer.getId());
-        ) 
-        break;
-        case DEPTH_STENCIL_ATTACHMENT:
-        assert(buffer.getType() == DEPTH_24_STENCIL_8);
-        GL_CHECK(
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, buffer.getId());
-        ) 
-        break;
-        default:
-        break;
-    }
-
-}*/
 
 /**
  * Assert macro to reduce boiler plate code.
@@ -128,6 +104,24 @@ void FrameBuffer::attachRenderBuffer(const RenderBuffer& buffer, AttachmentType 
         "All call to attachments functions after object finalization are forbidden"); \
     LEVEK_RENDERING_ASSERT(BUFFER_NAME.getWidth() == width && BUFFER_NAME.getHeight() == height, \
         "the dimensions of the attachment must match those of the FrameBuffer");
+
+void FrameBuffer::addColorAttachment(const PixelBuffer* buffer, int index) {
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
+    buffer->bind();
+    buffer->attachToFrameBuffer(FrameBufferProperties::AttachementType::COLOR, index);
+    checkIfComplete();
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    buffer->unbind();
+}
+
+void FrameBuffer::addAttachment(const PixelBuffer* buffer, FrameBufferProperties::AttachementType type) {
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
+    buffer->bind();
+    buffer->attachToFrameBuffer(type);
+    checkIfComplete();
+    GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    buffer->unbind();
+}
 
 void FrameBuffer::addColorAttachment(const Texture& texture) {
     ATTACHMENT_BASIC_ASSERTS(texture);

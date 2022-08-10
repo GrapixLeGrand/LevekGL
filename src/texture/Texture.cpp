@@ -5,8 +5,9 @@
 
 namespace Levek {
 
-Texture::Texture() {
+Texture::Texture(): PixelBuffer(PixelBufferType::TEXTURE) {
 	GL_CHECK(glGenTextures(1, &rendererId));
+	this->setId(rendererId);
 }
 
 Texture::Texture(const std::string& path)
@@ -20,7 +21,7 @@ void get_stbi_image(const std::string& path, uint8_t** ptr, int& w, int& h, int&
 }
 
 Texture::Texture(const std::string& path, unsigned int wrapMode)
-	: filePath(path), width(0), height(0), bpp(0), rendererId(0), textureType(TextureParameters::RGBA) {
+	: filePath(path), width(0), height(0), bpp(0), rendererId(0), textureType(TextureParameters::RGBA), PixelBuffer(PixelBufferType::TEXTURE) {
 	
 	//unsigned char* localBuffer = nullptr; //why conserving this ?
 	//stbi_set_flip_vertically_on_load(1); //flip texture up and down, opengl want the texture to begin on the left bottom corner
@@ -53,7 +54,7 @@ Texture::Texture(int width, int height, TextureParameters::TextureType type)
 
 Texture::Texture(int width, int height, TextureParameters::TextureType type, TextureParameters::TextureWrapMode wrapMode, 
 			TextureParameters::TextureLODFunction minMode, TextureParameters::TextureLODFunction magMode)
-		: width(width), height(height), bpp(0), rendererId(0), textureType(type) {
+		: width(width), height(height), bpp(0), rendererId(0), textureType(type), PixelBuffer(PixelBufferType::TEXTURE) {
 	GL_CHECK(glGenTextures(1, &rendererId));
 	GL_CHECK(glBindTexture(GL_TEXTURE_2D, rendererId));
 	
@@ -137,5 +138,9 @@ const uint8_t* Texture::getData() {
 	return this->data;
 }
 
+
+void Texture::attachToFrameBuffer(FrameBufferProperties::AttachementType type, int index) const {
+	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, OPENGL_ATTACHMENTS[type] + index, GL_TEXTURE_2D, rendererId, 0));
+}
 
 };
