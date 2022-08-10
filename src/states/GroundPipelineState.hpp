@@ -25,13 +25,13 @@ struct GroundPipelineState {
     Levek::IndexBuffer* planeIBO;
     Levek::VertexBufferLayout planeLayout;
     Levek::VertexArray* planeVA;
-    Levek::Texture* unitTexture;
+    Levek::Texture unitTexture;
 
 	GroundPipelineState(ModelLoader* modelLoader, float scale);
 
 	void setUniforms(const glm::mat4& mvp) {
 		planeShader.bind();
-		unitTexture->activateAndBind(0);
+		unitTexture.activateAndBind(0);
 		planeShader.setUniformMat4f("mvp", mvp);
         planeShader.setUniform1i("tex", 0);
         planeShader.setUniform1i("shadowMap", 1);

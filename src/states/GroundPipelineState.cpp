@@ -2,7 +2,7 @@
 #include "../utils/Utils.hpp"
 namespace Levek {
 
-	GroundPipelineState::GroundPipelineState(ModelLoader* modelLoader, float scale): unitTexture(new Texture(RESOURCES_DIRECTORY"/textures/unit.png")) {
+	GroundPipelineState::GroundPipelineState(ModelLoader* modelLoader, float scale) {
         
         this->scale = scale;
         this->scaleInv = 1.0f / scale;
@@ -24,9 +24,10 @@ namespace Levek {
 		planeVA = new VertexArray();
 		planeVA->addBuffer(planeVBO, &planeLayout);
 
+		unitTexture.update(RESOURCES_DIRECTORY"/textures/unit.png");
 		//Texture* unitTexture = new Texture(LUSTRINE_EXPERIMENTS_DIRECTORY"/resources/unit.png");
-    	unitTexture->set(TextureParameters::TextureWrapMode::REPEAT);
-    	unitTexture->set(TextureParameters::TextureLODFunction::LINEAR, TextureParameters::TextureLODFunction::LINEAR);
+    	unitTexture.set(TextureParameters::TextureWrapMode::REPEAT);
+    	unitTexture.set(TextureParameters::TextureLODFunction::LINEAR, TextureParameters::TextureLODFunction::LINEAR);
 
         planeShader = ShaderFactory::makeFromFile(
             RESOURCES_DIRECTORY"/shaders/ground.vert",

@@ -81,18 +81,39 @@ void FrameBuffer::checkIfComplete() {
     switch (status) {
         case GL_FRAMEBUFFER_COMPLETE:
             complete = true;
+            if (hasDepth) {
+                clearBits |= GL_DEPTH_BUFFER_BIT;
+                GL_CHECK(glClearDepth(clearDepth));
+            }
+
+            if (hasDepthStencil) {
+                clearBits |= GL_STENCIL_BUFFER_BIT;
+                GL_CHECK(glClearStencil(clearStencil));
+            }
+
+            if (hasColor) {
+                clearBits |= GL_COLOR_BUFFER_BIT;
+                GL_CHECK(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
+            }
+
+            bind();
+            if (!hasColor) {
+                LEVEK_MESSAGE("framebuffer with id %d has no color attachment\n", id);
+                GL_CHECK(glDrawBuffer(GL_NONE));
+                GL_CHECK(glReadBuffer(GL_NONE));
+            }
             LEVEK_MESSAGE("framebuffer with id %d is completed and usable\n", id);
         break;
         case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
         case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
         case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER:
         case GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER:
-            LEVEK_MESSAGE("framebuffer with id %d is incomplete or missing attachments (code %d)\n", id, status);
+            LEVEK_MESSAGE("framebuffer with id %d is incomplete or missing attachments (code %x)\n", id, status);
         break;
         case GL_FRAMEBUFFER_UNSUPPORTED:
             LEVEK_ERROR("framebuffer with id %d has uncompatible attachments\n", id);
         default:
-            LEVEK_WARNING("framebuffer with id %d was checked but the result is unknown %d\n", id, status);
+            LEVEK_WARNING("framebuffer with id %d was checked but the result is unknown %x\n", id, status);
     }
 }
 
@@ -106,6 +127,7 @@ void FrameBuffer::checkIfComplete() {
         "the dimensions of the attachment must match those of the FrameBuffer");
 
 void FrameBuffer::addColorAttachment(const PixelBuffer* buffer, int index) {
+    hasColor = true;
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
     buffer->bind();
     buffer->attachToFrameBuffer(FrameBufferProperties::AttachementType::COLOR, index);
@@ -114,7 +136,20 @@ void FrameBuffer::addColorAttachment(const PixelBuffer* buffer, int index) {
     buffer->unbind();
 }
 
-void FrameBuffer::addAttachment(const PixelBuffer* buffer, FrameBufferProperties::AttachementType type) {
+void FrameBuffer::addAttachment(const PixelBuffer* buffer, FrameBufferProperties::AttachementType type) {   
+    switch (type) {
+        case FrameBufferProperties::AttachementType::COLOR:
+            hasColor = true;
+        break;
+        case FrameBufferProperties::AttachementType::DEPTH:
+            hasDepth = true;
+        break;
+        case FrameBufferProperties::AttachementType::DEPTH_STENCIL:
+            hasDepthStencil = true;
+        break;
+        default:
+        assert(false);
+    }
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, id));
     buffer->bind();
     buffer->attachToFrameBuffer(type);
@@ -298,7 +333,8 @@ void FrameBuffer::finalize() {
         GL_CHECK(glDrawBuffer(GL_NONE));
         GL_CHECK(glReadBuffer(GL_NONE));
     }
-    GL_CHECK(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
+    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    GL_CHECK(status == GL_FRAMEBUFFER_COMPLETE);
 }
 
 void FrameBuffer::clear() const {

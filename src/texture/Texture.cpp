@@ -119,7 +119,7 @@ void Texture::update(const std::string& path) {
 
 	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[TextureParameters::TextureType::RGBA];
 	bind();
-	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, properties.internalFormat, width, height, 0, properties.format, properties.type, 0));
+	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, properties.internalFormat, width, height, 0, properties.format, properties.type, data));
 }
 
 void Texture::update(uint8_t* data, int w, int h, TextureParameters::TextureType type) {
@@ -127,8 +127,11 @@ void Texture::update(uint8_t* data, int w, int h, TextureParameters::TextureType
 		stbi_image_free(this->data);
 	}
 	initFromStbi = false;
+	this->width = w;
+	this->height = h;
 	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[type];
-	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, properties.internalFormat, width, height, 0, properties.format, properties.type, 0));
+	bind();
+	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, properties.internalFormat, width, height, 0, properties.format, properties.type, data));
 }
 
 const uint8_t* Texture::getData() {

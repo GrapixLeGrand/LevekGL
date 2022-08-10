@@ -47,6 +47,7 @@ public:
 
 	void update(const std::string& filename);
 	void update(uint8_t* data, int w, int h, TextureParameters::TextureType type);
+	//void update(uint8_t* data, int w, int h, TextureParameters::TextureType type);
 
 	void activateAndBind(unsigned int slot = 0) const; //various slots because you want to bind multiple textures at the same time
 	virtual void bind() const;
