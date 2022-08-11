@@ -3,9 +3,9 @@
 #include "ForwardRenderingPassData.hpp"
 
 namespace Levek {
-class ForwardRenderingState {
+class IForwardRenderingState {
 public:
-    virtual ~ForwardRenderingState() = 0;
+    virtual ~IForwardRenderingState() = 0;
     virtual void render(const ForwardRenderingPassData* data) = 0;
 };
 }

@@ -1,20 +1,21 @@
 #pragma once
 
 #include "RenderingPass.hpp"
-#include "ForwardRenderingState.hpp"
+#include "IForwardRenderingState.hpp"
 #include <vector>
 #include <unordered_map>
 
 namespace Levek {
 class ForwardRenderingPass : public RenderingPass {
 private:
-    std::vector<ForwardRenderingState*> states;
+    ForwardRenderingPassData data;
+    std::vector<IForwardRenderingState*> states;
     int nextStateId = 0;
 public:
 
-    ForwardRenderingPass(std::vector<ForwardRenderingState>& states);
+    ForwardRenderingPass(std::vector<IForwardRenderingState>& states);
     ForwardRenderingPass();
-    int addState(ForwardRenderingState* state);
+    int addState(IForwardRenderingState* state);
     virtual void render();
 
 };

@@ -1,6 +1,8 @@
 #pragma once
 
 #include "../texture/PixelBuffer.hpp"
+#include "../texture/Texture.hpp"
+#include "../texture/RenderBuffer.hpp"
 #include "../buffer/FrameBuffer.hpp"
 #include "RenderingPass.hpp"
 
@@ -10,8 +12,10 @@ namespace Levek {
 
 class Pipeline {
 private:
-    std::vector<PixelBuffer*> pixelBuffers;
+    std::vector<Texture*> textures;
+    std::vector<RenderBuffer*> renderBuffers;
     std::vector<FrameBuffer*> frameBuffers;
+    
     std::vector<RenderingPass*> renderingPasses;
 
     FrameBuffer* frame = nullptr;
