@@ -31,6 +31,8 @@
 #include "scene/PerspectiveCamera.hpp"
 #include "scene/OrthographicCamera.hpp"
 #include "scene/ArcballCamera.hpp"
+#include "scene/FpsCamera.hpp"
+#include "scene/CameraBase.hpp"
 
 #include "utils/Utils.hpp"
 

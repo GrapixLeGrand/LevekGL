@@ -1,4 +1,5 @@
 #pragma once
+
 #include "Camera.hpp"
 #include "glm/gtx/euler_angles.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -10,20 +11,19 @@
 
 namespace Levek {
 
-/**
- * @brief Taken in parts from xna-4-3d-game-development-by-example-beginners-guide
- * 
- */
-class ArcballCamera : public CameraBase { // : public Camera
+class FpsCamera : public CameraBase {
 
     glm::vec3 cameraPosition = glm::vec3(0.0);
-    glm::vec3 targetPosition = glm::vec3(0.0);
+    
     float elevation = -glm::half_pi<float>() * 0.5f; //
     float rotation = 0.0f;//glm::half_pi<float>();
+
     float minDistance = 0.01f;
     float maxDistance = std::numeric_limits<float>::max();
+
     float viewDistance = 22.0f;
     glm::vec3 baseCameraReference = glm::vec3(0, 0, 1);
+    glm::vec3 lookAt = glm::vec3(0);
 
     float nearPlane = 0.01f;
     float farPlane = 1000.0f;
@@ -49,52 +49,48 @@ class ArcballCamera : public CameraBase { // : public Camera
 public:
 
     bool printDebug = true;
-    ArcballCamera(
-        glm::vec3 targetPosition,
+    FpsCamera(
+        glm::vec3 initialPosition,
         float initialElevation,
         float initialRotation,
-        float minDistance,
-        float maxDistance,
-        float initialDistance,
         float aspectRatio,
         float nearPlane,
         float farPlane
     ) {
-        this->targetPosition = targetPosition;
-        elevation = initialElevation;
-        rotation = initialRotation;
+        this->cameraPosition = initialPosition;
+        this->elevation = initialElevation;
+        this->rotation = initialRotation;
         this->minDistance = minDistance;
         this->maxDistance = maxDistance;
-        viewDistance = initialDistance;
         this->nearPlane = nearPlane;
         this->farPlane = farPlane;
 
-        projection = glm::perspective(glm::radians(45.0f), aspectRatio, nearPlane, farPlane);
+        this->projection = glm::perspective(glm::radians(45.0f), aspectRatio, nearPlane, farPlane);
         
     }
 
-    ArcballCamera() {}
+    FpsCamera() {}
     
 
     void updateCameraTargetWASD(InputController* inputController, float dt) {
         
         if (inputController->isKeyPressed(Levek::LevekKey::LEVEK_KEY_W)) {
-            targetPosition.z -= targetMoveSpeed * dt;
+            cameraPosition.z -= targetMoveSpeed * dt;
             needViewResync = true;
         }
 
         if (inputController->isKeyPressed(Levek::LevekKey::LEVEK_KEY_S)) {
-            targetPosition.z += targetMoveSpeed * dt;
+            cameraPosition.z += targetMoveSpeed * dt;
             needViewResync = true;
         }
 
         if (inputController->isKeyPressed(Levek::LevekKey::LEVEK_KEY_A)) {
-            targetPosition.x -= targetMoveSpeed * dt;
+            cameraPosition.x -= targetMoveSpeed * dt;
             needViewResync = true;
         }
 
         if (inputController->isKeyPressed(Levek::LevekKey::LEVEK_KEY_D)) {
-            targetPosition.x += targetMoveSpeed * dt;
+            cameraPosition.x += targetMoveSpeed * dt;
             needViewResync = true;
         }
 
@@ -126,7 +122,7 @@ public:
             if (printDebug) {
                 printf("mouseY %f\n", inputController->getMouseY());
                 printf("rotation:%f, elevation:%f, viewDistance:%f\n", rotation, elevation, viewDistance);
-                printf("target: [%f, %f, %f]\n", targetPosition[0], targetPosition[1], targetPosition[2]);
+                printf("position: [%f, %f, %f]\n", cameraPosition[0], cameraPosition[1], cameraPosition[2]);
                 printf("view distance: %f\n", viewDistance);
             }
 
@@ -176,13 +172,14 @@ public:
             0.0f
         );
 
-        cameraPosition = t * baseCameraReference;
-        cameraPosition *= viewDistance;
-        cameraPosition += targetPosition;
+        glm::vec3 lookAtOffset = t * baseCameraReference; //rotate the reference
+        this->lookAt = lookAtOffset + cameraPosition; 
+        //cameraPosition *= viewDistance;
+        //cameraPosition += targetPosition;
 
         view = glm::lookAt(
-            cameraPosition,
-            targetPosition,
+            this->cameraPosition,
+            this->lookAt,
             glm::vec3(0, 1, 0)
         );
 
@@ -191,8 +188,8 @@ public:
         needViewResync = false;
     }
 
-    void setTarget(const glm::vec3& newTarget) {
-        targetPosition = newTarget;
+    void setPosition(const glm::vec3& newPosition) {
+        cameraPosition = newPosition;
         needViewResync = true;
     }
 
@@ -213,15 +210,11 @@ public:
     }
 
     virtual glm::vec3 getDirection() {
-        return targetPosition - cameraPosition;
+        return lookAt;
     }
 
     virtual glm::vec3 getPosition() {
         return cameraPosition;
-    }
-
-    glm::vec3 getTarget() {
-        return targetPosition;
     }
 
     virtual float getRotation() {
@@ -251,4 +244,5 @@ public:
         return projection;
     }
 };
+
 }
