@@ -24,7 +24,7 @@ class FpsCamera : public CameraBase {
     float viewDistance = 22.0f;
     glm::vec3 baseCameraReference = glm::vec3(0, 0, 1);
     glm::vec3 lookAt = glm::vec3(0);
-
+    glm::vec3 lookAtDirection = glm::vec3(0);
     float nearPlane = 0.01f;
     float farPlane = 1000.0f;
 
@@ -42,6 +42,9 @@ class FpsCamera : public CameraBase {
     float wheelSpeed = 10.0f;
     float targetMoveSpeed = 10.0f;
     float rotationSpeed = 40.0f;
+
+    float minElevation = glm::radians(-65.0f);
+    float maxElevation = glm::radians(65.0f);
 
     glm::vec2 saveMouseLastFramePosition = glm::vec2(0.0);
     glm::vec2 saveMouseInitialPosition = glm::vec2(0.0);
@@ -75,22 +78,24 @@ public:
     void updateCameraTargetWASD(InputController* inputController, float dt) {
         
         if (inputController->isKeyPressed(Levek::LevekKey::LEVEK_KEY_W)) {
-            cameraPosition.z -= targetMoveSpeed * dt;
+            cameraPosition += lookAtDirection * targetMoveSpeed * dt;
             needViewResync = true;
         }
 
         if (inputController->isKeyPressed(Levek::LevekKey::LEVEK_KEY_S)) {
-            cameraPosition.z += targetMoveSpeed * dt;
+            cameraPosition -= lookAtDirection * targetMoveSpeed * dt;
             needViewResync = true;
         }
 
         if (inputController->isKeyPressed(Levek::LevekKey::LEVEK_KEY_A)) {
-            cameraPosition.x -= targetMoveSpeed * dt;
+            glm::vec3 cross = glm::cross(lookAtDirection, glm::vec3(0, 1, 0));
+            cameraPosition -= cross * targetMoveSpeed * dt;
             needViewResync = true;
         }
 
         if (inputController->isKeyPressed(Levek::LevekKey::LEVEK_KEY_D)) {
-            cameraPosition.x += targetMoveSpeed * dt;
+            glm::vec3 cross = glm::cross(lookAtDirection, glm::vec3(0, 1, 0));
+            cameraPosition += cross * targetMoveSpeed * dt;
             needViewResync = true;
         }
 
@@ -115,7 +120,7 @@ public:
                 rotationSpeed * dt * glm::radians(
                     (currentMouseY - ((float) windowController->getScreenY()) * 0.5f) / 2.0f
                 );
-                elevation = glm::clamp(elevation, glm::radians(-70.0f), glm::radians(-10.0f));
+                elevation = glm::clamp(elevation, this->minElevation, this->maxElevation);
             //);
 
             
@@ -173,6 +178,7 @@ public:
         );
 
         glm::vec3 lookAtOffset = t * baseCameraReference; //rotate the reference
+        this->lookAtDirection = lookAtOffset;
         this->lookAt = lookAtOffset + cameraPosition; 
         //cameraPosition *= viewDistance;
         //cameraPosition += targetPosition;
