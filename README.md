@@ -15,3 +15,5 @@ sudo apt-get install libassimp-dev libglm-dev libgl1-mesa-dev libglew-dev libglf
 ```
 
 Note that when using CMake, you might need to add the AssimpConfigure.cmake found in the official repo [here](https://github.com/assimp/assimp/blob/master/cmake-modules/Findassimp.cmake) as the installation does not add it by default.
+
+You may have to create a folder `Assimp` in the usr/lib/cmake path and copy the file in the above link under the name `AssimpConfig.cmake`
