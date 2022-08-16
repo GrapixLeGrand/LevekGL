@@ -11,7 +11,7 @@ On Linux:
 
 ```
 sudo apt-get update
-sudo apt-get install libassimp-dev libglm-dev
+sudo apt-get install libassimp-dev libglm-dev libgl1-mesa-dev libglew-dev libglfw3-dev
 ```
 
 Note that when using CMake, you might need to add the AssimpConfigure.cmake found in the official repo [here](https://github.com/assimp/assimp/blob/master/cmake-modules/Findassimp.cmake) as the installation does not add it by default.
