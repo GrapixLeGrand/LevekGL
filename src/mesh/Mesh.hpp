@@ -38,8 +38,8 @@ public:
         mVertices.clear();
         mVertices.reserve(mPositions.size());
 
-        aabb.min = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
-        aabb.max = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
+        //aabb.min = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
+        //aabb.max = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
 
         com = {0, 0, 0};
 
@@ -47,17 +47,18 @@ public:
             Vertex v(this->mPositions[i], this->mTexturesCoords[i], this->mNormals[i]);
             mVertices.push_back(v);
 
-            aabb.min.x = std::min(aabb.min.x, mPositions[i].x);
+            /*aabb.min.x = std::min(aabb.min.x, mPositions[i].x);
             aabb.min.y = std::min(aabb.min.y, mPositions[i].y);
             aabb.min.z = std::min(aabb.min.z, mPositions[i].z);
 
             aabb.max.x = std::max(aabb.max.x, mPositions[i].x);
             aabb.max.y = std::max(aabb.max.y, mPositions[i].y);
             aabb.max.z = std::max(aabb.max.z, mPositions[i].z);
-
+            */
             com += mPositions[i];
         }
 
+        aabb = AABB(mPositions);
         com /= mPositions.size();
 
     }
@@ -158,10 +159,11 @@ public:
      * 
      */
     void makeUnit() {
-        glm::vec3 offset = -aabb.getCenter();
+        glm::vec3 offset = -aabb.getCenter(); //-getHalfDimensions(); //aabb.getCenter();
         for (int i = 0; i < mPositions.size(); i++) {
             mPositions[i] += offset;
         }
+        aabb = AABB(mPositions);
         float factor = 1.0f / aabb.getMaxSide();
         for (int i = 0; i < mPositions.size(); i++) {
             mPositions[i] *= factor;

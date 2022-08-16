@@ -5,6 +5,7 @@
 #include "../texture/RenderBuffer.hpp"
 #include "../buffer/FrameBuffer.hpp"
 #include "RenderingPass.hpp"
+#include "PipelineRegistry.hpp"
 
 #include <vector>
 
@@ -12,17 +13,13 @@ namespace Levek {
 
 class Pipeline {
 private:
-    std::vector<Texture*> textures;
-    std::vector<RenderBuffer*> renderBuffers;
-    std::vector<FrameBuffer*> frameBuffers;
-    
-    std::vector<RenderingPass*> renderingPasses;
-
-    FrameBuffer* frame = nullptr;
+    PipelineRegistry* registry = nullptr;
+    std::vector<RenderingPass*> passes;
 public:
-    void addRenderingPass(RenderingPass* pass);
+    Pipeline(PipelineRegistry* registryarg, std::vector<RenderingPass*>& passesarg): passes(passesarg), registry(registryarg) {};
     void render();
-
+    void renderFrom(int i);
+    void renderUntil(int i);
 };
 
 }

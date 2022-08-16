@@ -14,6 +14,7 @@
 #include "texture/Texture.hpp"
 #include "texture/CubeMap.hpp"
 #include "texture/RenderBuffer.hpp"
+#include "texture/TextureFactory.hpp"
 
 #include "shader/Shader.hpp"
 #include "shader/ShaderFactory.hpp"
@@ -45,6 +46,8 @@
 #include "states/VoxelPipelineState.hpp"
 
 #include "pipeline/Pipeline.hpp"
+#include "pipeline/RenderingPass.hpp"
+#include "pipeline/ForwardRenderingPass.hpp"
 
 #ifdef LEVEK_INCLUDE_IMGUI
 #include "imgui.h"

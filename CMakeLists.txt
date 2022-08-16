@@ -84,6 +84,7 @@ set(LEVEKGL_SOURCES
     "src/texture/CubeMap.cpp"
     "src/texture/RenderBuffer.cpp"
     "src/texture/TextureProperties.cpp"
+    "src/texture/TextureFactory.cpp"
 
     "src/input/GLFWInputController.cpp"
     "src/window/GLFWWindowController.cpp"
@@ -101,6 +102,9 @@ set(LEVEKGL_SOURCES
     "src/states/MeshPipelineState.cpp"
     "src/states/VoxelPipelineState.cpp"
     "src/utils/Utils.cpp"
+
+    "src/pipeline/Pipeline.cpp"
+    "src/pipeline/ForwardRenderingPass.cpp"
 )
 
 set(IMGUI_SRC 

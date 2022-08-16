@@ -14,8 +14,40 @@
 
 namespace Levek {
 
+struct MeshPipelineStateDataEntry {
+    glm::vec3 position;
+    glm::vec3 scale;
+    glm::quat rotation;
+};
+
+class MeshPipelineStateData {
+    std::vector<glm::vec3> positions;
+    std::vector<glm::vec3> scale;
+    std::vector<glm::quat> rotations;
+    Mesh* geometry = nullptr;
+public:
+    MeshPipelineStateData(Mesh* geometry);
+    void addEntry(MeshPipelineStateDataEntry& entry);
+};
+
+class Material {
+
+}; 
+
 class MeshPipelineState : IForwardRenderingState {
 public:
+
+    //std::vector<glm::vec3> positions;
+    //std::vector<glm::vec3> scale;
+    //std::vector<glm::quat> rotations;
+    //std::vector<bool> enabled;
+    
+    //then we could use the visitor pattern in Material to select for example Forward shader or deferred shader
+    MeshPipelineState(Mesh* geometry, MeshPipelineStateData* data, Material* mat);
+
+    //std::vector<MeshPipelineStateData> data;
+    //std::vector<int> ids;
+
     glm::vec3 position {0.0f, 0.0f, 0.0f};
     glm::vec3 scale {0.0f, 0.0f, 0.0f};
     glm::quat rotation {glm::vec3{0.0f, 0.0f, 0.0f}};

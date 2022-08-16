@@ -5,16 +5,16 @@
 #include <vector>
 #include <unordered_map>
 
+#include "PipelineRegistry.hpp"
+
 namespace Levek {
 class ForwardRenderingPass : public RenderingPass {
 private:
     ForwardRenderingPassData data;
     std::vector<IForwardRenderingState*> states;
-    int nextStateId = 0;
 public:
-
-    ForwardRenderingPass(std::vector<IForwardRenderingState>& states);
-    ForwardRenderingPass();
+    //ForwardRenderingPass(std::vector<IForwardRenderingState>& states);
+    ForwardRenderingPass(PipelineRegistry* registry); //: RenderingPass(registry) {};
     int addState(IForwardRenderingState* state);
     virtual void render();
 
