@@ -146,4 +146,23 @@ void Texture::attachToFrameBuffer(FrameBufferProperties::AttachementType type, i
 	GL_CHECK(glFramebufferTexture2D(GL_FRAMEBUFFER, OPENGL_ATTACHMENTS[type] + index, GL_TEXTURE_2D, rendererId, 0));
 }
 
+void Texture::clear(glm::uvec4 color) {
+	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[textureType];
+	LEVEK_ASSERT(properties.type == GL_RGB || properties.type == GL_RGBA, "The texture must be either RGB or RGBA\n");
+	bind();
+	GL_CHECK(glClearTexImage(rendererId, 0, properties.internalFormat, properties.type, &color[0]));
+}
+
+void Texture::clear(float value) {
+	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[textureType];
+	LEVEK_ASSERT(properties.type == GL_FLOAT, "The texture must be of data type float and single component\n");
+	bind();
+	GL_CHECK(glClearTexImage(rendererId, 0, GL_DEPTH_COMPONENT, GL_FLOAT, &glm::vec1(value)[0]));
+}
+
+void Texture::set(glm::vec4 clampToBorderColor) {
+	bind();
+	GL_CHECK(glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR,  &clampToBorderColor[0]));
+}
+
 };

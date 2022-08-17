@@ -215,6 +215,10 @@ public:
         needViewResync = true;
     }
 
+    void setRotationSpeed(float newSpeed) {
+        this->rotationSpeed = newSpeed;
+    }
+
     virtual glm::vec3 getDirection() {
         return lookAt;
     }
@@ -249,6 +253,11 @@ public:
     virtual glm::mat4& getProjection() {
         return projection;
     }
+    
+    void setMoveSpeed(float newSpeed) {
+        this->targetMoveSpeed = newSpeed;
+    }
+
 };
 
 }

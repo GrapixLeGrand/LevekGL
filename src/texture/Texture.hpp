@@ -4,6 +4,7 @@
 //#include "../renderer/Renderer.h"
 #include "TextureProperties.hpp"
 #include "PixelBuffer.hpp"
+#include "glm/glm.hpp"
 
 namespace Levek {
 
@@ -53,8 +54,13 @@ public:
 	virtual void bind() const;
 	virtual void unbind() const;
 
+	void clear(glm::uvec4 color);
+	void clear(float value);
+
 	void set(TextureParameters::TextureWrapMode wrapMode);
 	void set(TextureParameters::TextureLODFunction minMode, TextureParameters::TextureLODFunction magMode);
+
+	void set(glm::vec4 clampToBorderColor);
 
 	inline int getWidth()  const { return width; }
 	inline int getHeight() const { return height; }
