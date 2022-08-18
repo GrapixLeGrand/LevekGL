@@ -7,7 +7,7 @@ namespace Levek {
 VoxelPipelineState::VoxelPipelineState(Levek::ModelLoader* modelLoader, std::vector<uint16_t>& grid, std::vector<glm::vec4>& palette_arg, int X, int Y, int Z, glm::vec3 position, float scale) 
 : voxelShader(ShaderFactory::makeFromFile(LEVEKGL_RESOURCES_DIRECTORY"/shaders/voxel.vert", LEVEKGL_RESOURCES_DIRECTORY"/shaders/voxel.frag")) {
 
-    LEVEK_RENDERING_ASSERT(palette_arg.size() < PALETTE_MAX_SIZE, "palette size must be smaller or equal to 1024\n");
+    LEVEK_RENDERING_ASSERT(palette_arg.size() < PALETTE_MAX_SIZE, "palette size must be smaller to 1024\n");
 
     this->X = X;
     this->Y = Y;
@@ -25,8 +25,8 @@ VoxelPipelineState::VoxelPipelineState(Levek::ModelLoader* modelLoader, std::vec
                     relative_pos *= this->scale;
                     relative_pos += this->position;
                     this->positions.push_back(relative_pos);
-                    this->colors.push_back(grid[index]);
-                    assert(grid[index] < palette_arg.size());
+                    this->colors.push_back(grid[index] - 1);
+                    //assert(grid[index] < palette_arg.size());
                     this->num_voxels++;
                 }
             }

@@ -7,7 +7,7 @@ namespace Levek {
 class VoxelPipelineState {
     
     const static int PALETTE_MAX_SIZE = 1024;
-    const static int PALETTE_EMPTY_INDEX = 1024;
+    const static int PALETTE_EMPTY_INDEX = 0;
 
     VertexBuffer* cubeVb = nullptr;
     IndexBuffer* cubeIb = nullptr;
