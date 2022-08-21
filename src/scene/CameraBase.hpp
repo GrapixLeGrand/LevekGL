@@ -11,6 +11,7 @@ public:
     virtual glm::mat3& getNormalView() = 0;
     virtual glm::mat4& getViewProjection() = 0;
     virtual glm::mat4& getProjection() = 0;
+    virtual glm::mat3& getViewInv() = 0;
     
     //virtual void setMaxElevation(float maxElevation);
     //virtual void setMinElevation(float minElevation);

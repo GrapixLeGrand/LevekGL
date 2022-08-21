@@ -35,6 +35,7 @@ class ArcballCamera : public CameraBase { // : public Camera
     glm::mat3 normalView; //precomputed normal view matrix
     glm::mat4 vp; //precomputed view * projection
 
+    glm::mat3 viewInv;
 
     bool moveMode = false;
     bool mouseReleasedLastFrame = false;
@@ -188,6 +189,7 @@ public:
 
         vp = projection * view;
         normalView = glm::inverse(glm::transpose(view));
+        viewInv = glm::inverse(glm::mat3(view));
         needViewResync = false;
     }
 
@@ -235,6 +237,11 @@ public:
     virtual glm::mat4& getView() {
         updateViewMatrix();
         return view;
+    }
+
+    virtual glm::mat3& getViewInv() {
+        updateViewMatrix();
+        return viewInv;
     }
 
     virtual glm::mat3& getNormalView() {

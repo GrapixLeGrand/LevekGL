@@ -32,7 +32,8 @@ OPTION(LEVEKGL_USE_INTERNAL_GLM
 
 message("LevekGL: use internal GLM state: $ENV{LEVEKGL_USE_INTERNAL_GLM}")
 
-add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources")
+add_compile_definitions(RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources") #todo remove
+add_compile_definitions(LEVEKGL_RESOURCES_DIRECTORY="${LevekGL_SOURCE_DIR}/src/resources")
 
 set(OpenGL_GL_PREFERENCE "GLVND") #between GLVND and LEGACY
 

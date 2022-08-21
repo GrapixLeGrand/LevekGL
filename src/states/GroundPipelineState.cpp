@@ -2,8 +2,11 @@
 #include "../utils/Utils.hpp"
 namespace Levek {
 
-	GroundPipelineState::GroundPipelineState(ModelLoader* modelLoader, float scale) {
+	GroundPipelineState::GroundPipelineState(ModelLoader* modelLoader, float scale): GroundPipelineState(modelLoader, scale, true) {}
+
+	GroundPipelineState::GroundPipelineState(ModelLoader* modelLoader, float scale, bool shadows) {
         
+		this->shadows = shadows;
         this->scale = scale;
         this->scaleInv = 1.0f / scale;
         model = glm::mat4(scale);
