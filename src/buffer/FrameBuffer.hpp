@@ -6,6 +6,7 @@
 #include "glm/glm.hpp"
 #include "../buffer/FrameBufferProperties.hpp"
 
+#include <set>
 
 namespace Levek {
 
@@ -37,10 +38,11 @@ private:
     const static int COLOR_ATTACHMENT_SLOTS[MAX_COLOR_ATTACHMENT_SLOTS];
     
     unsigned int id;
-    int width = 0;
-    int height = 0;
+    int width = 500;
+    int height = 500;
     bool complete = false;
 
+    std::set<int> colorAttachments;//set of the attachments (with indices) used at the moment
 
     bool finalized;
     //how many color attachments are expected, default is 1
@@ -58,6 +60,7 @@ private:
     unsigned int clearBits = 0;
 
     void checkIfComplete();
+
 public:
 
     FrameBuffer();

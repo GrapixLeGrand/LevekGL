@@ -94,6 +94,14 @@ void FrameBuffer::checkIfComplete() {
             if (hasColor) {
                 clearBits |= GL_COLOR_BUFFER_BIT;
                 GL_CHECK(glClearColor(clearColor.r, clearColor.g, clearColor.b, clearColor.a));
+
+                int numAttachment = colorAttachments.size();
+                std::vector<GLenum> openGLAttachmentsList;
+                openGLAttachmentsList.reserve(numAttachment);
+                for (int a : colorAttachments) {
+                    openGLAttachmentsList.push_back(COLOR_ATTACHMENT_SLOTS[a]);
+                }
+                GL_CHECK(glDrawBuffers(numAttachment, openGLAttachmentsList.data()));
             }
 
             bind();
@@ -134,11 +142,13 @@ void FrameBuffer::addColorAttachment(const PixelBuffer* buffer, int index) {
     checkIfComplete();
     GL_CHECK(glBindFramebuffer(GL_FRAMEBUFFER, 0));
     buffer->unbind();
+    colorAttachments.insert(index);
 }
 
 void FrameBuffer::addAttachment(const PixelBuffer* buffer, FrameBufferProperties::AttachementType type) {   
     switch (type) {
         case FrameBufferProperties::AttachementType::COLOR:
+            colorAttachments.insert(0);//will be attached to 0 attachment index
             hasColor = true;
         break;
         case FrameBufferProperties::AttachementType::DEPTH:

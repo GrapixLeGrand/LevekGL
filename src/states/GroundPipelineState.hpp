@@ -46,6 +46,11 @@ struct GroundPipelineState {
 		renderer->draw(planeVA, planeIBO, &planeShader);
 	}
 
+    void draw(Levek::FrameBuffer* fb, Levek::Renderer* renderer, const glm::mat4& vp) {
+        setUniforms(vp * model);
+		renderer->draw(fb, planeVA, planeIBO, &planeShader);
+	}
+
     void draw(Levek::Renderer* renderer, const Texture* depthTexture, const glm::mat4& vp, const glm::mat4& light_vp) {
         setUniforms(vp * model);
         depthTexture->activateAndBind(1);

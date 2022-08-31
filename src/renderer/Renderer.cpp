@@ -232,6 +232,14 @@ void Renderer::draw(const VertexArray* va, const Shader* shader) const {
     GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, (unsigned int) va->getVerticesNum())); /* WARNING just for now !!! (I think its okay now before was 3?) */
 }
 
+void Renderer::draw(const FrameBuffer* fb, const VertexArray* va, const Shader* shader) const {
+    glViewport(0, 0, fb->getWidth(), fb->getHeight());
+    fb->bind();
+    shader->bind();
+    va->bind();
+    GL_CHECK(glDrawArrays(GL_TRIANGLES, 0, (unsigned int) va->getVerticesNum())); /* WARNING just for now !!! (I think its okay now before was 3?) */
+}
+
 
 void Renderer::draw(const FrameBuffer* frameBuffer, const VertexArray* va, const IndexBuffer* ib, const Shader* shader) const {
     glViewport(0, 0, frameBuffer->getWidth(), frameBuffer->getHeight());

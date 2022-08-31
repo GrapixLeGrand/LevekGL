@@ -117,6 +117,7 @@ set(IMGUI_SRC
     "thirdparty/imgui-1.83/imgui_draw.cpp"
     "thirdparty/imgui-1.83/backends/imgui_impl_opengl3.cpp"
     "thirdparty/imgui-1.83/backends/imgui_impl_glfw.cpp"
+    "thirdparty/imGuIZMO.quat-3.0/imGuIZMO.quat/imGuIZMOquat.cpp"
 )
 
 set(STB_IMAGE_SRC 
@@ -148,6 +149,7 @@ endif()
 set(LEVEKGL_TARGET_INCLUDE_DIRS 
     PUBLIC "thirdparty/imgui-1.83"
     PUBLIC "thirdparty/imgui-1.83/backends"
+    PUBLIC "thirdparty/imGuIZMO.quat-3.0"
     PUBLIC "thirdparty/stb_image-2.27"
     PUBLIC "${LevekGL_SOURCE_DIR}/src"
     PUBLIC "${GLM_INCLUDE_DIR}"

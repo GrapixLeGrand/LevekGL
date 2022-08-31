@@ -34,8 +34,9 @@ struct SkyBoxPipelineState {
      * @param vp view projection matrix
      */
 	void draw(Renderer *renderer, glm::mat4& vp);
-    
     void draw(Levek::Renderer *renderer, glm::mat4 view, glm::mat4& projection);
+    
+    void draw(const FrameBuffer* fb, Levek::Renderer *renderer, glm::mat4 view, glm::mat4& projection);
 };
 
 

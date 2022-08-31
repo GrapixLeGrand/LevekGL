@@ -34,6 +34,7 @@ private:
 public:
     
     RenderingEngine(int width, int height);
+    RenderingEngine(int width, int height, bool fullscreen);
     ~RenderingEngine();
   
     /*

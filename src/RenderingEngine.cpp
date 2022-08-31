@@ -9,6 +9,9 @@
 namespace Levek {
 
 RenderingEngine::RenderingEngine(int width, int height)
+    : RenderingEngine(width, height, false) {};
+
+RenderingEngine::RenderingEngine(int width, int height, bool fullscreen)
     : windowWidth(width),
     windowHeight(height) {
         /* Initialize the library */
@@ -29,7 +32,7 @@ RenderingEngine::RenderingEngine(int width, int height)
         glfwWindowHint(GLFW_SAMPLES, 1); //For antialiasing
 
         //Create a windowed mode window and its OpenGL context
-        GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Levek Engine", NULL, NULL);
+        GLFWwindow* window = glfwCreateWindow(windowWidth, windowHeight, "Levek Engine", fullscreen ? glfwGetPrimaryMonitor() : NULL, NULL);
         if (!window) {
             glfwTerminate();
             LEVEK_RENDERING_FAIL("Failed to initialize the window");   

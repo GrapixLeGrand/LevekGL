@@ -11,7 +11,9 @@ enum TextureType {
 	RGB,
 	RGBA,				//32 bits each 8 bits channels
 	DEPTH,			//24 bits single channel
-	DEPTH_STENCIL 	//24 bits for the depth and 8 bits for stencil (TODO)
+	DEPTH_STENCIL, 	//24 bits for the depth and 8 bits for stencil (TODO)
+	RGBA_FLOAT,
+	R_FLOAT
 };
 
 enum TextureWrapMode {
@@ -27,14 +29,14 @@ enum TextureLODFunction {
 };
 
 struct OpenGLTextureProperties {
-	int internalFormat;
-	int format;
-	int type;
+	int internalFormat; //component wise bit use (I think)
+	int format; //component R G B A
+	int type; //type of each component: byte, float etc..
 };
 
 };
 
-#define OPENGL_TEXTURES_PROPERTIES_N 4
+#define OPENGL_TEXTURES_PROPERTIES_N 6
 #define OPENGL_WRAP_MODES_N 4
 #define OPENGL_MIN_MAG_MODES_N 2
 

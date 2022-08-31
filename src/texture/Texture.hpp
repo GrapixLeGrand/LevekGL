@@ -56,6 +56,7 @@ public:
 
 	void clear(glm::uvec4 color);
 	void clear(float value);
+	void clear(glm::vec4 color);
 
 	void set(TextureParameters::TextureWrapMode wrapMode);
 	void set(TextureParameters::TextureLODFunction minMode, TextureParameters::TextureLODFunction magMode);
