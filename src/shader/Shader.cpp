@@ -95,6 +95,10 @@ void Shader::setUniform1f(const std::string& name, float v) const {
 	GL_CHECK(glUniform1f(ShaderManager::getUniformLocation(renderer_id, name), v));
 }
 
+void Shader::setUniform1f(const std::string& name, float* v, size_t size) const {
+	GL_CHECK(glUniform1fv(ShaderManager::getUniformLocation(renderer_id, name), size, (const GLfloat*)&v[0]));
+}
+
 void Shader::setUniform2f(const std::string& name, const glm::vec2& v) const {
 	GL_CHECK(glUniform2f(ShaderManager::getUniformLocation(renderer_id, name), v.x, v.y));
 }

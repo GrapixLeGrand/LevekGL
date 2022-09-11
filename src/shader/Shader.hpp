@@ -72,6 +72,7 @@ public:
 
 	void setUniform1i(const std::string& name, int v) const;
 	void setUniform1f(const std::string& name, float v) const;
+	void setUniform1f(const std::string& name, float* v, size_t size) const;
 	void setUniformMat3f(const std::string& name, const glm::mat3& m) const;
 	//void setUniformMat3f(const std::string& name, const std::vector<glm::mat3>& arr) const;
 	void setUniformMat4f(const std::string& name, const glm::mat4& m) const;

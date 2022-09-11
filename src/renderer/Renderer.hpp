@@ -85,6 +85,9 @@ public:
     void setCullFaceMode(CullFaceMode mode) const;
     void clear(const FrameBuffer& frameBuffer) const;
     void clear(const FrameBuffer* frameBuffer) const;
+
+    
+
     /**
      * Draw the content of the buffers with the given shader on the default framebuffer.
      * @param va : vertex array
