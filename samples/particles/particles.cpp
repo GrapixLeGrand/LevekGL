@@ -119,7 +119,7 @@ int main(void) {
         //sim here
         simulate(&simulation);
 
-        particlesPositionsVBO.Update(simulation.positions.data(), simulation.positions.size() * 3 * 4);
+        particlesPositionsVBO.update(simulation.positions.data(), simulation.positions.size() * 3 * 4);
         renderer->clear();
 
         UpdateCameraPositionWASD(inputController, camera, windowController->getDeltaTime(), 10.f);

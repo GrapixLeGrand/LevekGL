@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Common.hpp"
+
 #include "buffer/FrameBuffer.hpp"
 #include "buffer/IndexBuffer.hpp"
 #include "buffer/VertexArray.hpp"
@@ -48,6 +50,9 @@
 #include "pipeline/Pipeline.hpp"
 #include "pipeline/RenderingPass.hpp"
 #include "pipeline/ForwardRenderingPass.hpp"
+
+#include "Application.hpp"
+#include "objects/Scene.hpp"
 
 #ifdef LEVEK_INCLUDE_IMGUI
 #include "imgui.h"

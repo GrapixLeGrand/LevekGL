@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<scene id="base">
+
+<renderingpipeline type="forward"/>
+
+<camera>
+</camera>
+
+<!-- declaration part -->
+
+<texture id="cat_texture">
+    <string name="filename" value="TODO"/>
+</texture>
+
+<modelgroup>
+    <string name="filename" value="cat.dea"/>
+</modelgroup>
+
+<!-- instantiation part -->
+
+<object type="default">
+    <texture name="albedo" id="cat_texture"/>
+    <texture name="normal" id="cat_texture_normal"/>
+    <mesh name="mesh" id="cat1"/>
+</object>
+
+</scene>

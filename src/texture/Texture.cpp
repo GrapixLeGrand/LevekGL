@@ -3,6 +3,8 @@
 #include "stb_image.h"
 #include <GL/glew.h>
 
+#include "../Common.hpp"
+
 namespace Levek {
 
 Texture::Texture(): PixelBuffer(PixelBufferType::TEXTURE) {
@@ -17,7 +19,10 @@ Texture::Texture(const std::string& path)
 void get_stbi_image(const std::string& path, uint8_t** ptr, int& w, int& h, int& bpp) {
 	stbi_set_flip_vertically_on_load(1); //flip texture up and down, opengl want the texture to begin on the left bottom corner
 	*ptr = stbi_load(path.c_str(), &w, &h, &bpp, 4);
-	LEVEK_RENDERING_ASSERT(*ptr, "What?");
+	if (*ptr == nullptr) {
+		throw LevekException("stbi image load failed! with path %s", path.c_str());
+	}
+	//LEVEK_RENDERING_ASSERT(*ptr, "What?");
 }
 
 Texture::Texture(const std::string& path, unsigned int wrapMode)
@@ -82,7 +87,10 @@ Texture::~Texture() {
 }
 
 void Texture::activateAndBind(unsigned int slot) const {
-	ASSERT(slot >= 0 && slot < 32);
+	//ASSERT(slot >= 0 && slot < 32);
+	if (slot < 0 || slot >= 32) {
+		throw LevekException("slot must be in [0, 31] but was %d", slot);
+	}
 	GL_CHECK(glActiveTexture(GL_TEXTURE0 + slot));
 	bind();
 }
@@ -117,6 +125,10 @@ void Texture::update(const std::string& path) {
 	initFromStbi = true;
 	get_stbi_image(path, &data, this->width, this->height, this->bpp);
 
+	if (data == nullptr) {
+		throw LevekException("failed to load stbi image in update with path %s", path.c_str());
+	}
+
 	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[TextureParameters::TextureType::RGBA];
 	bind();
 	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, properties.internalFormat, width, height, 0, properties.format, properties.type, data));
@@ -149,15 +161,20 @@ void Texture::attachToFrameBuffer(FrameBufferProperties::AttachementType type, i
 
 void Texture::clear(glm::uvec4 color) {
 	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[textureType];
-	//printf("type :%d\n", textureType);
-	LEVEK_ASSERT(properties.internalFormat == GL_RGB || properties.internalFormat == GL_RGBA, "The texture must be either RGB or RGBA\n");
+	if (!(properties.internalFormat == GL_RGB || properties.internalFormat == GL_RGBA)) {
+		throw LevekException("The texture must be either RGB or RGBA but internal format was %d", properties.internalFormat);
+	}
+	//LEVEK_ASSERT(properties.internalFormat == GL_RGB || properties.internalFormat == GL_RGBA, "The texture must be either RGB or RGBA\n");
 	bind();
 	GL_CHECK(glClearTexImage(rendererId, 0, properties.format, properties.type, &color[0]));
 }
 
 void Texture::clear(glm::vec4 color) {
 	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[textureType];
-	LEVEK_ASSERT(properties.internalFormat == GL_RGBA16F, "The texture must be either RGB or RGBA\n");
+	if (properties.internalFormat != GL_RGBA16F) {
+		throw LevekException("The texture must be RGBA 16 bit but internal format was %d", properties.internalFormat);
+	}
+	//LEVEK_ASSERT(properties.internalFormat == GL_RGBA16F, "The texture must be either RGB or RGBA\n");
 	bind();
 	GL_CHECK(glClearTexImage(rendererId, 0, properties.format, properties.type, &color[0]));
 }
@@ -165,7 +182,10 @@ void Texture::clear(glm::vec4 color) {
 
 void Texture::clear(float value) {
 	const TextureParameters::OpenGLTextureProperties properties = OPENGL_TEXTURES_PROPERTIES[textureType];
-	LEVEK_ASSERT(properties.type == GL_FLOAT, "The texture must be of data type float and single component\n");
+	//LEVEK_ASSERT(properties.type == GL_FLOAT, "The texture must be of data type float and single component\n");
+	if (properties.type != GL_FLOAT) {
+		throw LevekException("The texture must be of data type float and single component but the type was %d", properties.type);
+	}
 	bind();
 	GL_CHECK(glClearTexImage(rendererId, 0, properties.format, GL_FLOAT, &glm::vec1(value)[0]));
 }

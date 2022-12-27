@@ -106,6 +106,11 @@ set(LEVEKGL_SOURCES
 
     "src/pipeline/Pipeline.cpp"
     "src/pipeline/ForwardRenderingPass.cpp"
+
+    "src/Common.cpp"
+    "src/Object.cpp"
+    "src/Application.cpp"
+    "src/objects/Scene.cpp"
 )
 
 set(IMGUI_SRC 
@@ -124,10 +129,19 @@ set(STB_IMAGE_SRC
     "thirdparty/stb_image-2.27/stb_image.cpp"
 )
 
-set(LEVEKGL_ALL_SOURCES ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
+set(PUGIXML_SRC
+    "thirdparty/pugixml-1.13/src/pugixml.cpp"
+)
+
+set(PUGIXML_INCLUDES
+    "thirdparty/pugixml-1.13/src"
+)
+
+
+#set(LEVEKGL_ALL_SOURCES ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES} ${PUGIXML_SRC})
 
 #compile the project as a library
-add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES})
+add_library(LevekGL STATIC ${IMGUI_SRC} ${STB_IMAGE_SRC} ${LEVEKGL_SOURCES} ${PUGIXML_SRC})
 
 if (UNIX)
     find_package(Assimp REQUIRED)
@@ -155,6 +169,9 @@ set(LEVEKGL_TARGET_INCLUDE_DIRS
     PUBLIC "${GLM_INCLUDE_DIR}"
     PUBLIC "${ASSIMP_INCLUDE_DIR}"
     PUBLIC "thirdparty/glslang"
+    PUBLIC "thirdparty/tinyformat"
+    PUBLIC "thirdparty/filesystem"
+    PUBLIC ${PUGIXML_INCLUDES}
 )
 
 
