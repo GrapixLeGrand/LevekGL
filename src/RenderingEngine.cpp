@@ -75,7 +75,7 @@ RenderingEngine::RenderingEngine(int width, int height, bool fullscreen)
         //glEnable(GL_DEBUG_OUTPUT);
         //glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS); 
         glDebugMessageCallback(MessageCallback, nullptr);
-        unsigned int severity = GL_DEBUG_SEVERITY_HIGH;
+        unsigned int severity = GL_DEBUG_SEVERITY_LOW;
 
         glDebugMessageControl(GL_DEBUG_SOURCE_API, GL_DEBUG_TYPE_ERROR, severity, 0, NULL, GL_TRUE);
         glDebugMessageControl(GL_DEBUG_SOURCE_SHADER_COMPILER, GL_DEBUG_TYPE_ERROR, severity, 0, NULL, GL_TRUE); 
@@ -98,6 +98,7 @@ RenderingEngine::RenderingEngine(int width, int height, bool fullscreen)
         delete pointRenderer;
         delete inputController;
         delete windowController;
+        delete modelLoader;
         glfwTerminate();
     }
 };

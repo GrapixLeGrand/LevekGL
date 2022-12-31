@@ -365,6 +365,8 @@ bool compile(const std::string& filename, const std::string& source) {
 
     //std::cout << mErrorMessage << std::endl;
 
+    DeleteCompiler(compiler);
+
     return ret;
 }
 

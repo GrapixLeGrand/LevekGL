@@ -85,6 +85,13 @@ Model* AssimpModelLoader::loadFromFile(const std::string& path) {
     }
 
     Model* model = new Model(path); //WARNING: Need to store its reference
+    
+    ModelPaylaod payload;
+    payload.name = scene->mName.C_Str();
+    payload.path = path;
+    payload.model = model;
+
+    mModelsTable[model] = payload;
 
     size_t meshNumber = scene->mRootNode->mNumChildren; //for now we only take the direct children
     //std::vector<SceneData> result;
