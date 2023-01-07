@@ -68,7 +68,7 @@ void VertexArray::addBuffer(const VertexBuffer* vb, const VertexBufferLayout* la
 	}
 
 	//unbind(); //added this to debug
-	//vb.unbind();
+	//vb->unbind();
 	
 }
 

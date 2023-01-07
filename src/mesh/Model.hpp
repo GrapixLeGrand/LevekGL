@@ -7,11 +7,16 @@
 #include "Transform.hpp"
 
 #include "Mesh.hpp"
+//#include <unordered_map>
+
 
 namespace Levek {
+
+
 class Model {
 
 private:
+
     const std::string mPath;
     std::vector<Mesh*> mMeshes;
     std::vector<Transform*> mTransforms;
@@ -20,6 +25,16 @@ public:
     Model(const std::string& path): mPath(path) {
         //here use ModelLoade 
         //std::cout << "I do nothing for now" << std::endl;
+    }
+
+    ~Model() {
+        for (auto m : mMeshes) {
+            delete m;
+        }
+
+        for (auto t : mTransforms) {
+            delete t;
+        }
     }
 
     void addMesh(Mesh* mesh, Transform* transform) {
