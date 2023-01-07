@@ -22,7 +22,9 @@ Application::Application(const std::string& xmlFile) {
     }
 
     for (pugi::xml_node n : sceneNode) {
+        
         std::cout << n.name() << std::endl;
+        //if (n.)
     }
 
 }

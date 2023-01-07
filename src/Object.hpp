@@ -17,7 +17,8 @@ public:
         EScene = 0,
         ETexture,
         EMesh,
-        ECamera
+        ECamera,
+        EObject
     };
 
     static std::string classTypeName(EClassType type) {
