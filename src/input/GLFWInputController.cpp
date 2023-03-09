@@ -1,5 +1,6 @@
 
 #include "GLFWInputController.hpp"
+#include <iostream>
 
 namespace Levek {
 
@@ -31,6 +32,22 @@ namespace Levek {
         GLFW_KEY_Y,
         GLFW_KEY_Z
     };
+
+    const int GLFWInputController::GlfwJoysticks[4] = {
+        GLFW_JOYSTICK_1,
+        GLFW_JOYSTICK_2,
+        GLFW_JOYSTICK_3,
+        GLFW_JOYSTICK_4
+    };
+
+    const int GLFWInputController::GlfwGamePadButtons[4] = {
+        GLFW_GAMEPAD_BUTTON_A,
+        GLFW_GAMEPAD_BUTTON_B,
+        GLFW_GAMEPAD_BUTTON_X,
+        GLFW_GAMEPAD_BUTTON_Y
+    };
+
+
     #include <stdio.h>
     static float scrollCounterX = 0.0f;
     static float scrollCounterY = 0.0f;
@@ -94,4 +111,31 @@ namespace Levek {
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
         }
     }
+
+
+    float GLFWInputController::gamePadAxis(Joystick index, int axisIndex) {
+        GLFWgamepadstate state;
+        if (glfwGetGamepadState(GlfwJoysticks[index], &state))
+        {
+            return state.axes[axisIndex];
+        } else {
+            std::cout << "the requied joystick=" << index << " is not connected, returning 0.0" << std::endl;
+            return 0.0f;
+        }
+    }
+
+    bool GLFWInputController::gamePadButton(Joystick index, GamePadButton button) {
+        
+        GLFWgamepadstate state;
+        if (glfwGetGamepadState(GlfwJoysticks[index], &state))
+        {
+            return state.buttons[GlfwGamePadButtons[button]];
+        } else {
+            std::cout << "the requied joystick=" << index << " is not connected, returning false" << std::endl;
+            return false;
+        }
+
+
+    }
+
 }

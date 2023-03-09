@@ -9,6 +9,8 @@ namespace Levek {
 class GLFWInputController : public InputController {
 private:
     static const int LEVEK_GLFW_KEYBINDINGS[26];
+    static const int GlfwJoysticks[4];
+    static const int GlfwGamePadButtons[4];
     GLFWwindow* window = nullptr;
 public:
 
@@ -29,5 +31,8 @@ public:
     virtual float getMouseScrollY();
     virtual void setMousePosition(glm::vec2 position);
     virtual void setMouseVisible(bool isVisible);
+
+    virtual float gamePadAxis(Joystick index, int axisIndex);
+    virtual bool gamePadButton(Joystick index, GamePadButton button);
 };
 }

@@ -43,6 +43,21 @@ enum LevekKey {
     LEVEK_KEY_Z
 };
 
+enum Joystick {
+    LEVEK_JOYSTICK_1,
+    LEVEK_JOYSTICK_2,
+    LEVEK_JOYSTICK_3,
+    LEVEK_JOYSTICK_4
+};
+
+enum GamePadButton {
+    LEVEK_BUTTON_A,
+    LEVEK_BUTTON_B,
+    LEVEK_BUTTON_X,
+    LEVEK_BUTTON_Y
+};
+
+
 /**
  * @interface for IO with Mouse / Keyboard
  */
@@ -98,6 +113,15 @@ public:
     virtual float getMouseScrollY() = 0;
     virtual void setMousePosition(glm::vec2 position) = 0;
     virtual void setMouseVisible(bool isVisible) = 0;
+
+
+    // joystick related
+
+    virtual float gamePadAxis(Joystick index, int axisIndex) = 0;
+    virtual bool gamePadButton(Joystick index, GamePadButton button) = 0;
+
+
+
 
 };
 
